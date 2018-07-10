@@ -1,0 +1,22 @@
+#table-container .mat-header-row, .mat-row {
+    width: 300%;
+}
+
+#table-container .mat-cell, .mat-header-cell {
+    padding: 5px 15px;
+}
+
+.mat-column-isSelected {
+    flex: 0 0 2%;
+    margin: 10px;
+    overflow: visible;
+}
+
+#form-consult-copayments {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#form-consult-copayments .mat-form-field {
+    margin-right: 10px;
+}

@@ -1,0 +1,137 @@
+<div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+</div>
+
+<mat-card class="graphic-container">
+    <mat-card-title>
+        <h4>ENFERMERÍA (HORAS)</h4>
+    </mat-card-title>
+
+    <mat-card-content *ngIf="showChart">
+        <canvas baseChart [datasets]="barChartNursingData" [labels]="barChartNursingLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType"></canvas>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="graphic-container">
+    <mat-card-title>
+        <h4>TERAPIAS (VISITAS)</h4>
+    </mat-card-title>
+
+    <mat-card-content *ngIf="showChart">
+        <canvas baseChart [datasets]="barChartTherapyData" [labels]="barChartTherapyLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType"></canvas>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+    <mat-card-title>
+        <h4>Servicios Irregulares</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterIrregularServices, 'irregularServ')" [(ngModel)]="filterIrregularServices">
+            </mat-toolbar>
+
+            <mat-table #irregularServTable="matSort" [dataSource]="irregularServices" matSort>
+                <ng-container matColumnDef="AssignServiceId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button class="btn-edit" mat-raised-button color="default" (click)="showMoreDatails(element.PatientId, element.AssignServiceId)">VER MAS
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PatientName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.PatientName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="ServiceName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.ServiceName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Reason">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Motivo </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Reason}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="irregularServiceColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: irregularServiceColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!irregularServices.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator #irregularServPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+    <mat-card-title>
+        <h4>Pacientes sin profesional asignado</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterWithoutProfessional, 'noProfessional')" [(ngModel)]="filterWithoutProfessional">
+            </mat-toolbar>
+
+            <mat-table #noProfessionalTable="matSort" [dataSource]="withoutProfessional" matSort>
+                <ng-container matColumnDef="AssignServiceId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button class="btn-edit" mat-raised-button color="default" (click)="showMoreDatails(element.PatientId, element.AssignServiceId)">VER MAS
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PatientName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.PatientName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="ServiceName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.ServiceName}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="withoutProfessionalColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: withoutProfessionalColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!withoutProfessional.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator #noProfessionalPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+    <mat-card-title>
+        <h4>Profesionales - Copagos sin entregar</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterCopayments, 'copayments')" [(ngModel)]="filterCopayments">
+            </mat-toolbar>
+
+            <mat-table #copaymentTable="matSort" [dataSource]="copayments" matSort>
+                <ng-container matColumnDef="NameCompleted">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Profesional </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.NameCompleted}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="ReceivedAmount">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Monto </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.ReceivedAmount | currency }} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="copaymentColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: copaymentColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!copayments.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator #copaymentPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

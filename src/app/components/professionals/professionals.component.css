@@ -1,0 +1,25 @@
+#form-professional form {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.mat-card-form {
+    width: 900px;
+    margin: auto;
+}
+
+.mat-form-field {
+    margin-right: 15px;
+}
+
+.mat-column-professionalId {
+    flex: 0 0 6%;
+    display: flex;
+    justify-content: center;
+}
+
+.mat-column-state {
+    flex: 0 0 15%;
+    display: flex;
+    justify-content: center;
+}

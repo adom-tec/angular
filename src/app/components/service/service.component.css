@@ -1,0 +1,29 @@
+.mat-form-field,
+#value-container {
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+#form-service {
+    width: 60%;
+    margin: auto;
+}
+
+form {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+#value-container .flex-group {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#value-container .flex-group .mat-form-field {
+    width: 40%;
+    margin-bottom: 10px;
+}

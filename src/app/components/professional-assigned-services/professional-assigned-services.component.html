@@ -1,0 +1,290 @@
+<div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+</div>
+
+<mat-card [hidden]="formActive">
+    <mat-card-title>
+        <h4>Mis servicios en proceso</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter, 'main')" [(ngModel)]="filter">
+            </mat-toolbar>
+
+            <mat-table #inProcessTable="matSort" [dataSource]="servicesInProcessSource" matSort>
+                <ng-container matColumnDef="assignServiceId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button class="btn-edit" mat-raised-button color="default" (click)="showForm(element.assignServiceId, 'process')">
+							Ver detalles
+						</button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="patientName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.patientName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="document">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Documento </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.document}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="serviceName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.serviceName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="initDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> F. Inicio </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.initDate}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="completed">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Ejecucion </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.completed}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="servicesInProcessColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: servicesInProcessColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!servicesInProcessSource.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator #inProcessPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card [hidden]="formActive">
+    <mat-card-title>
+        <h4>Historial de servicios completados</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter, 'main')" [(ngModel)]="filter">
+            </mat-toolbar>
+
+            <mat-table #historyTable="matSort" [dataSource]="historySource" matSort>
+                <ng-container matColumnDef="assignServiceId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button class="btn-edit" mat-raised-button color="default" (click)="showForm(element.assignServiceId, 'history')">
+							Ver detalles
+						</button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="patientName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.patientName }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="document">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Documento </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.document }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="serviceName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.serviceName }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="finalDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> F. Finalización </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.finalDate }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="copaymentReceived">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Copagos Recaudados </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.copaymentReceived | currency }} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="historyColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: historyColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!historySource.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator #historyPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card id="form-professional-assined-service" class="mat-card-form" *ngIf="formActive">
+    <mat-card-title>
+        <h4>Datos del Servicio</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div id="patient-info-container">
+            <fieldset>
+                <legend>Datos del paciente</legend>
+
+                <p>
+                    <strong>Tipo de Documento:</strong> {{ currentPatient.document_type.Name }}</p>
+                <p>
+                    <strong>Numero de Documento:</strong> {{ currentPatient.Document }}</p>
+                <p>
+                    <strong>Nombre completo:</strong> {{ currentAssignService.patient.NameCompleted }}
+                </p>
+                <p>
+                    <strong>Sexo:</strong> {{ currentPatient.gender.Name }}</p>
+                <p>
+                    <strong>Tipo de Paciente:</strong> {{ currentPatient.patient_type.Name }}</p>
+                <p>
+                    <strong>Fecha de Nacimiento:</strong> {{ currentPatient.BirthDate | date:'dd/MM/yyyy' }}</p>
+                <p>
+                    <strong>Edad:</strong> {{ currentPatient.Age }}</p>
+                <p>
+                    <strong>Unidad:</strong> {{ currentPatient.unit_time.Name }}</p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos del Servicio</legend>
+
+                <p>
+                    <strong>Entidad:</strong> {{ currentAssignService.entity.Name }}</p>
+                <p>
+                    <strong>Nro. de Contrato:</strong> {{ currentAssignService.ContractNumber }}</p>
+                <p>
+                    <strong>Nro. de Autorización:</strong> {{ currentAssignService.AuthorizationNumber }}</p>
+                <p>
+                    <strong>Valor de Copago:</strong> {{ currentAssignService.CoPaymentAmount | currency }}</p>
+                <p>
+                    <strong>Frecuencia de Copago:</strong> {{ currentAssignService.co_payment_frecuency.Name }}</p>
+                <p>
+                    <strong>Servicio:</strong> {{ currentAssignService.service.Name }}</p>
+                <p>
+                    <strong>Frecuencia del Servicio:</strong> {{ currentAssignService.service_frecuency.Name }}</p>
+                <p>
+                    <strong>Des. CIE10:</strong> {{ currentAssignService.DescriptionCie10 }}</p>
+            </fieldset>
+        </div>
+
+        <div class="form-button" style="width: 100%;">
+            <button mat-button (click)="hideForm()">VOLVER</button>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card id="form-visits-detail" class="mat-card-form" *ngIf="formActive">
+    <div class="spinner-container" *ngIf="visitsSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+    <mat-card-title>
+        <h4>Detalle de Visitas</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div class="table-container mat-elevation-z2">
+            <table class="table-info" *ngIf="assignSeriviceDetail.length ? true : false">
+                <thead>
+                    <tr>
+                        <th># Visita</th>
+                        <th>Fecha</th>
+                        <th>Tipo de Tarifa</th>
+                        <th>Tarifa</th>
+                        <th>Medio de Pago</th>
+                        <th>Valor Recibido</th>
+                        <th>Pin</th>
+                        <th>Otro Valor</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let visit of assignSeriviceDetail">
+                        <td>{{ visit.Consecutive }}</td>
+                        <td>
+                            <div *ngIf="visit.StateId === 1; then dateContent else dateVisit">here is ignored</div>
+                            <ng-template #dateContent>
+                                <mat-form-field>
+                                    <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit">
+                                    <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                                    <mat-datepicker #date></mat-datepicker>
+                                </mat-form-field>
+                            </ng-template>
+                            <ng-template #dateVisit>
+                                {{ visit.DateVisit.format('DD/MM/YYYY') }}
+                            </ng-template>
+                        </td>
+                        <td>
+                            <div *ngIf="visit.StateId === 1; then rateContent else rateVisit">here is ignored</div>
+                            <ng-template #rateContent>
+                                <mat-form-field>
+                                    <mat-select placeholder="Tarifa" [attr.name]="'professionalRate-' + visit.AssignServiceDetailId" [(ngModel)]="visit.professional_rate_id">
+                                        <mat-option *ngFor="let professionalRate of professionalRates" [value]="professionalRate.id">
+                                            {{ professionalRate.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-template>
+                            <ng-template #rateVisit>
+                                {{ visit.professional_rate_id ? getRateName(+visit.professional_rate_id) : 'No se selecciono' }}
+                            </ng-template>
+                        </td>
+                        <td>
+                            {{ getRateValue(visit.professional_rate_id) | currency }}
+                        </td>
+                        <td>
+                            <div *ngIf="visit.StateId === 1; then paymentContent else paymentVisit">here is ignored</div>
+                            <ng-template #paymentContent>
+                                <mat-form-field>
+                                    <mat-select placeholder="Metodo de pago" [attr.name]="'paymentType-' + visit.AssignServiceDetailId" [(ngModel)]="visit.PaymentType" (change)="clearValues(visit)">
+                                        <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType.Id">
+                                            {{ paymentType.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-template>
+                            <ng-template #paymentVisit>
+                                {{ getPaymentTypeName(+visit.PaymentType) }}
+                            </ng-template>
+                        </td>
+                        <td>
+                            <div *ngIf="visit.StateId === 1; then amountContent else amountVisit">here is ignored</div>
+                            <ng-template #amountContent>
+                                <mat-form-field *ngIf="visit.PaymentType !== 2">
+                                    <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.ReceivedAmount">
+                                </mat-form-field>
+                            </ng-template>
+                            <ng-template #amountVisit>
+                                {{ visit.ReceivedAmount | currency }}
+                            </ng-template>
+                        </td>
+                        <td>
+                            <div *ngIf="visit.StateId === 1; then pinContent else pinVisit">here is ignored</div>
+                            <ng-template #pinContent>
+                                <mat-form-field *ngIf="visit.PaymentType === 2">
+                                    <input matInput (keydown)="validateKey($event)" placeholder="Numero de pin" [attr.name]="'pin' + visit.AssignServiceDetailId" [(ngModel)]="visit.Pin">
+                                </mat-form-field>
+                            </ng-template>
+                            <ng-template #pinVisit>
+                                {{ visit.Pin }}
+                            </ng-template>
+                        </td>
+                        <td>
+                            <div *ngIf="visit.StateId === 1; then otherAmountContent else otherAmountVisit">here is ignored</div>
+                            <ng-template #otherAmountContent>
+                                <mat-form-field>
+                                    <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'otherAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.OtherAmount">
+                                </mat-form-field>
+                            </ng-template>
+                            <ng-template #otherAmountVisit>
+                                {{ visit.OtherAmount | currency }}
+                            </ng-template>
+                        </td>
+                        <td>
+                            {{ visit.state.Name }}
+                        </td>
+                        <td>
+                            <button mat-raised-button class="button-purple" (click)="saveRow(visit)" *ngIf="visit.StateId === 1">GUARDAR</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>

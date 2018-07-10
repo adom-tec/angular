@@ -1,0 +1,13 @@
+#form-patients form {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.mat-card-form {
+    width: 900px;
+    margin: auto;
+}
+
+.mat-form-field {
+    margin-right: 15px;
+}

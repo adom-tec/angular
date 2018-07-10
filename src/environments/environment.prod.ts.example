@@ -1,0 +1,7 @@
+export const environment = {
+  production: true,
+  debugging: false,
+  apiUrl: "http://ruta",
+  client_secret: "",
+  client_id: ""
+};

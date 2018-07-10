@@ -1,0 +1,38 @@
+<div class="spinner-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+
+<h2 mat-dialog-title>Test de calidad del servicio
+    <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<p class="title-comment">Los campos con * son obligatorios</p>
+
+<mat-dialog-content>
+    <form novalidate autocomplete="off" id="form-quality-test">
+        <table style="width: 100%;" *ngIf="questions.length ? true : false">
+            <tr *ngFor="let question of questions; let i = index;">
+                <td>{{ question.QuestionText }}</td>
+                <td>
+                    <mat-form-field>
+                        <mat-select placeholder="Respuesta" [(ngModel)]="question.AnswerId" [name]="'answer-' + i" required>
+                            <mat-option *ngFor="let answer of answers" [value]="answer.AnswerId">
+                                {{ answer.Description }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="form-button">
+        <button mat-button mat-dialog-close>SALIR</button>
+        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm(questions)" [disabled]="formInvalid()">GUARDAR
+      <mat-icon style="margin-left: 10px;">save</mat-icon>
+    </button>
+    </div>
+</mat-dialog-actions>

@@ -1,0 +1,22 @@
+.mat-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.mat-dialog-content {
+    overflow: visible;
+    max-height: none;
+    margin-bottom: 30px;
+}
+
+.mat-form-field {
+    width: 45%;
+    margin-bottom: 15px;
+}
+
+#form-assign-services {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}

@@ -1,0 +1,142 @@
+<mat-card #list [hidden]="formActive">
+    <div class="spinner-container" *ngIf="mainSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-card-title>
+        <h4>Lista de Servicios</h4>
+    </mat-card-title>
+
+    <mat-card-content *ngIf="auth.hasActionResource('Create')">
+        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="showForm()">
+      <mat-icon>add</mat-icon> NUEVO SERVICIO</button>
+    </mat-card-content>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+            </mat-toolbar>
+
+            <mat-table #table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="serviceId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.serviceId)" *ngIf="auth.hasActionResource('Update')">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="code">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Código </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.code}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="serviceType">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.serviceType}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="classification">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Clasificación </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.classification}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="value">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Valor a pagar </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.value | currency }} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card #form id="form-service" class="mat-card-form" *ngIf="formActive">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <mat-card-title>
+        <h4>{{ currentService ? 'Editar Servicio' : 'Nuevo Servicio' }}</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form novalidate autocomplete="off">
+            <mat-form-field>
+                <input matInput placeholder="Nombre del servicio" [(ngModel)]="service.Name" name="name" [formControl]="validator.name" required>
+                <mat-error *ngIf="validator.name.invalid">{{ getErrorMessage(validator.name) }}</mat-error>
+            </mat-form-field>
+
+            <fieldset id="value-container">
+                <legend>Valor a pagar al profesional</legend>
+
+                <div class="flex-group">
+                    <mat-form-field>
+                        <input matInput type="number" placeholder="Tarifa Estandar" [(ngModel)]="service.Value" name="value" [formControl]="validator.value" min="1" required>
+                        <mat-error *ngIf="validator.value.invalid">{{ getErrorMessage(validator.value) }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput type="number" placeholder="Tarifa Especial" [(ngModel)]="service.special_value" name="special_value" [formControl]="validator.special_value" min="1" required>
+                        <mat-error *ngIf="validator.special_value.invalid">{{ getErrorMessage(validator.special_value) }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput type="number" placeholder="Tarifa Particular" [(ngModel)]="service.particular_value" name="particular_value" [formControl]="validator.particular_value" min="1" required>
+                        <mat-error *ngIf="validator.particular_value.invalid">{{ getErrorMessage(validator.particular_value) }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput type="number" placeholder="Tarifa Dominical y Festivos" [(ngModel)]="service.holiday_value" name="holiday_value" [formControl]="validator.holiday_value" min="1" required>
+                        <mat-error *ngIf="validator.holiday_value.invalid">{{ getErrorMessage(validator.holiday_value) }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </fieldset>
+
+            <mat-form-field>
+                <input matInput placeholder="Código del servicio (CUPS)" [(ngModel)]="service.Code" name="code" [formControl]="validator.code" required>
+                <mat-error *ngIf="validator.code.invalid">{{ getErrorMessage(validator.code) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Clasificación" [(ngModel)]="service.ClassificationId" name="classificationId" [formControl]="validator.classificationId" required>
+                    <mat-option *ngFor="let clasification of clasifications" [value]="clasification.Id">
+                        {{ clasification.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.classificationId.invalid">{{ getErrorMessage(validator.classificationId) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Tipo de servicio" [(ngModel)]="service.ServiceTypeId" name="serviceTypeId" [formControl]="validator.serviceTypeId" required>
+                    <mat-option *ngFor="let serviceType of serviceTypes" [value]="serviceType.Id">
+                        {{ serviceType.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.serviceTypeId.invalid">{{ getErrorMessage(validator.serviceTypeId) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Horas a invertir" type="number" [(ngModel)]="service.HoursToInvest" name="hoursToInvest" [formControl]="validator.hoursToInvest" min="1" required>
+                <mat-error *ngIf="validator.hoursToInvest.invalid">{{ getErrorMessage(validator.hoursToInvest) }}</mat-error>
+            </mat-form-field>
+
+            <div class="form-button">
+                <button mat-button style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
+
+                <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentService, 'button-green': currentService}" style="margin-bottom: 15px;" (click)="submitForm(service)">{{ currentService ? 'MODIFICAR' : 'GUARDAR' }}
+          <mat-icon style="margin-left: 10px;">save</mat-icon>
+        </button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

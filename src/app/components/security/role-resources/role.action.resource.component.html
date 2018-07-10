@@ -1,0 +1,61 @@
+<mat-card #form id="form-role" class="mat-card-form">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <mat-card-title>
+        <h4>Asignar Recursos a Roles</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form novalidate autocomplete="off">
+            <mat-form-field style="margin-right: 20px;">
+                <mat-select #selectRoles placeholder="Roles" [(ngModel)]="currentRole" name="roles" (change)="getRoleActionsResources(currentRole)" (openedChange)="resetSelectList()">
+                    <ngx-mat-select-search [(ngModel)]="roleFilter" name="rolefilter" (keyup)="filterRoles(roleFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+                    <mat-option *ngFor="let role of filteredRoles | async" [value]="role.RoleId">
+                        {{ role.Name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="margin-right: 20px;">
+                <mat-select placeholder="Modulos" [(ngModel)]="currentModule" name="modules" (change)="getModuleActionsResources(currentModule)" [disabled]="!(currentRole && modules.length)">
+                    <mat-option *ngFor="let module of modules" [value]="module.ModuleId">
+                        {{ module.Name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm()" [disabled]="!dataSource.data.length || loading" *ngIf="auth.hasActionResource('Update')">GUARDAR</button>
+
+            <div class="mat-elevation-z2" [hidden]="dataSource.data.length ? false : true">
+                <mat-toolbar class="table-search">
+                    <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter" name="filter">
+                </mat-toolbar>
+
+                <mat-table #rolesTable [dataSource]="dataSource" matSort>
+                    <!-- actions -->
+                    <ng-container matColumnDef="actionResourceId">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <mat-checkbox (change)="toogleState(element)" [checked]="element.actionResourceId.state"></mat-checkbox>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="resource">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{ element.resource }} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Accion </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.action }} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+                <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+                <mat-paginator [pageSize]="50" [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,8 @@
+.mat-cell.cdk-column-actionResourceId.mat-column-actionResourceId {
+    height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-flow: row wrap;
+    overflow: visible;
+}

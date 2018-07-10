@@ -1,0 +1,75 @@
+.mat-card.mat-card-form .mat-card-title {
+    padding: 1px 24px 0 24px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    background-color: #FFF;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.mat-card.mat-card-form .mat-card-title h4 {
+    padding: 15px 0;
+    margin: 0;
+}
+
+.mat-card-form .mat-card-content {
+    background-color: whitesmoke;
+    overflow-y: scroll;
+    height: calc(80vh - 265px);
+    margin-top: 59px;
+}
+
+.mat-card-form .mat-progress-bar {
+    z-index: 2;
+}
+
+.mat-card-form {
+    height: 80vh;
+    overflow: hidden;
+    background-color: whitesmoke;
+}
+
+.notices-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.notices-list .notice-item .notice-title {
+    margin-bottom: 0;
+}
+
+.notices-list .notice-item .notice-text {
+    padding: 20px;
+}
+
+.notices-list .notice-item .notice-info {
+    font-style: italic;
+    font-size: 12px;
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+.notices-list .notice-item {
+    background-color: #FFF;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+
+#form-notice {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 50px);
+    height: 150px;
+    background: #FFF;
+    flex-flow: row wrap;
+    padding: 25px;
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: 0px -1px 1px 1px rgba(0, 0, 0, .15);
+}

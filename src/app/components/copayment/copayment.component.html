@@ -1,0 +1,177 @@
+<mat-card>
+    <div class="spinner-container" *ngIf="mainSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-card-title>
+        <h4>Lista de copagos por profesional</h4>
+    </mat-card-title>
+
+    <mat-card-content *ngIf="auth.hasActionResource('Create')">
+        <form novalidate id="form-consult-copayments">
+            <mat-form-field style="width: 40%;">
+
+                <mat-select id="professionals" placeholder="Profesional" [(ngModel)]="copaymentParams.professionalId" name="professionalId" [formControl]="validator.professionalId" required (openedChange)="resetSelectList()" #selectProfessionals>
+
+                    <ngx-mat-select-search [(ngModel)]="selectFilter" name="selectFilter" (keyup)="selectFilterData(selectFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+
+                    <mat-option *ngFor="let pro of selectFilteredData | async" [value]="pro.ProfessionalId">
+                        {{ (pro.user.FirstName + ' ' + (pro.user.SecondName || '') + ' ' + pro.user.Surname + ' ' + (pro.user.SecondSurname || '')).trim().toUpperCase() }}
+                    </mat-option>
+                </mat-select>
+
+                <mat-error *ngIf="validator.professionalId.invalid">{{ getErrorMessage(validator.professionalId) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 20%;">
+                <mat-select placeholder="Estado del servicio" [(ngModel)]="copaymentParams.serviceState" name="serviceState" [formControl]="validator.serviceState" required>
+                    <mat-option *ngFor="let serviceState of serviceStates" [value]="serviceState.Id">
+                        {{ serviceState.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.serviceState.invalid">{{ getErrorMessage(validator.serviceState) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 20%;">
+                <mat-select placeholder="Estado del Copago" [(ngModel)]="copaymentParams.copaymentState" name="copaymentState" [formControl]="validator.copaymentState" required>
+                    <mat-option *ngFor="let copaymentState of copaymentStates" [value]="copaymentState.Id">
+                        {{ copaymentState.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.copaymentState.invalid">{{ getErrorMessage(validator.copaymentState) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 25%;">
+                <input matInput [matDatepicker]="initDate" placeholder="Fecha desde" [(ngModel)]="copaymentParams.initDate" name="initDate" [formControl]="validator.initDate" required>
+                <mat-datepicker-toggle matSuffix [for]="initDate"></mat-datepicker-toggle>
+                <mat-datepicker #initDate></mat-datepicker>
+                <mat-error *ngIf="validator.initDate.invalid">{{ getErrorMessage(validator.initDate) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 25%;">
+                <input matInput [matDatepicker]="finalDate" placeholder="Fecha hasta" [(ngModel)]="copaymentParams.finalDate" name="finalDate" [formControl]="validator.finalDate" required>
+                <mat-datepicker-toggle matSuffix [for]="finalDate"></mat-datepicker-toggle>
+                <mat-datepicker #finalDate></mat-datepicker>
+                <mat-error *ngIf="validator.finalDate.invalid">{{ getErrorMessage(validator.finalDate) }}</mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="getCopayments(copaymentParams)" [disabled]="formInvalid()">
+              <mat-icon>search</mat-icon> BUSCAR
+            </button>
+        </form>
+    </mat-card-content>
+
+    <mat-card-content *ngIf="dataSource.data.length ? true : false">
+        <div class="mat-elevation-z2" id="table-container">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+            </mat-toolbar>
+
+            <mat-table [dataSource]="dataSource" matSort>
+                <!-- actions -->
+                <ng-container matColumnDef="isSelected">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-checkbox (change)="toogleState(element)" [checked]="element.isSelected"></mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PatientDocument">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> N° DOCUMENTO DEL PACIENTE </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.PatientDocument }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PatientName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE COMPLETO DEL PACIENTE </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.PatientName.toUpperCase() }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="EntityName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> ENTIDAD </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.EntityName.toUpperCase() }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="AuthorizationNumber">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> AUTORIZACIÓN </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.AuthorizationNumber }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="ServiceName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> TIPO DE TERAPIA </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.ServiceName.toUpperCase() }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PaymentProfessional">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR A PAGAR AL PROFESIONAL POR TERAPIA </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.PaymentProfessional | currency }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Quantity">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> CANTIDAD DE TERAPIAS REALIZADAS</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.Quantity }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="CoPaymentAmount">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> COPAGO </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.CoPaymentAmount | currency }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="CoPaymentFrecuency">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> FRECUENCIA COPAGO </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.CoPaymentFrecuency.toUpperCase() }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="TotalCopaymentReceived">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR TOTAL RECAUDO COPAGOS </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.TotalCopaymentReceived | currency }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="TotalCopaymentDelivered">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR A ENTREGAR </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.TotalCopaymentDelivered | currency }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Pin">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> VALE/PIN </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.Pin ? element.Pin : "NO APLICA" }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PatientDocumentType">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> TIPO DE DOCUMENTO DEL PACIENTE </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.PatientDocumentType.toUpperCase() }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="KITMNB">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> KIT MNB </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.KITMNB }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="QuantityKITMNB">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> CUANTOS KIT UTILIZO </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.QuantityKITMNB }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="SubTotal">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> SUBTOTAL </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.SubTotal | currency }} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="OtherValuesReceived">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> TOTAL OTROS VALORES RECIBIDOS </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{ element.OtherValuesReceived | currency }} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+
+    <mat-card-content style="overflow: hidden;">
+        <button mat-raised-button class="button-purple" style="float: right;" (click)="openDialog()" [disabled]="nothingSelected()" *ngIf="dataSource.data.length && copaymentParams.copaymentState !== 1">
+            ENTREGAR COPAGOS
+        </button>
+    </mat-card-content>
+</mat-card>

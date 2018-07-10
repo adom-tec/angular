@@ -1,0 +1,46 @@
+<div class="spinner-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+
+<h2 mat-dialog-title>Añadir nuevo insumo
+    <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<p class="title-comment">Los campos con * son obligatorios</p>
+
+<mat-dialog-content>
+    <form novalidate autocomplete="off" id="form-services-supply">
+        <mat-form-field>
+            <mat-select placeholder="Insumo" [(ngModel)]="serviceSupply.SupplyId" name="supplyId" [formControl]="validator.supplyId" required>
+                <mat-option *ngFor="let supply of suplies" [value]="supply.SupplyId">
+                    {{ supply.Name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="validator.supplyId.invalid">{{ getErrorMessage(validator.supplyId) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="number" placeholder="Cantidad" [(ngModel)]="serviceSupply.Quantity" name="quantity" [formControl]="validator.quantity" min="1" required>
+            <mat-error *ngIf="validator.quantity.invalid">{{ getErrorMessage(validator.quantity) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="Facturado a" [(ngModel)]="serviceSupply.BilledToId" name="billedToId" [formControl]="validator.billedToId" required>
+                <mat-option *ngFor="let billedTo of billedToOptions" [value]="billedTo.Id">
+                    {{ billedTo.Name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="validator.billedToId.invalid">{{ getErrorMessage(validator.billedToId) }}</mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="form-button">
+        <button mat-button mat-dialog-close>SALIR</button>
+        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm(serviceSupply)" [disabled]="formInvalid()">GUARDAR
+      <mat-icon style="margin-left: 10px;">save</mat-icon>
+    </button>
+    </div>
+</mat-dialog-actions>

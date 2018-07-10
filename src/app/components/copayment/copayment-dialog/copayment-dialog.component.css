@@ -1,0 +1,49 @@
+#table-container .mat-header-row,
+.mat-row {
+    width: 300%;
+}
+
+#table-container .mat-cell,
+.mat-header-cell {
+    padding: 5px 15px;
+}
+
+fieldset {
+    overflow: hidden;
+}
+
+fieldset span {
+    float: left;
+    margin: 20px 20px 20px 0;
+}
+
+.table-info {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 20px 0;
+}
+
+.table-info h3 {
+    font-weight: 500;
+    font-size: 24px;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.table-info th {
+    background-color: #566E82;
+    color: #FFF;
+    font-weight: normal;
+}
+
+.table-info td,
+.table-info th {
+    padding: 6px;
+    text-align: center;
+    border: solid 1px rgba(0, 0, 0, .15);
+}
+
+.table-info tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}

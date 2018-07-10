@@ -1,0 +1,49 @@
+#observations-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 40px;
+    overflow-y: scroll;
+    max-height: 340px;
+    padding: 10px 20px;
+}
+
+#observations-list li {
+    /* border-bottom: solid 1px rgba(0, 0, 0, .15); */
+    margin-bottom: 20px;
+}
+
+#observations-list h4 {
+    position: relative;
+    font-weight: normal;
+    padding: 10px;
+    background-color: #c3c3c378;
+    margin: 0;
+    color: #7b7b7b;
+}
+
+#observations-list p {
+    margin: 0;
+    padding: 15px;
+    font-size: 16px;
+    font-style: italic;
+    color: #00AFD3;
+}
+
+#observations-list .mat-icon-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.mat-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+/* .mat-dialog-content {
+    margin-bottom: 30px;
+    max-height: none;
+} */

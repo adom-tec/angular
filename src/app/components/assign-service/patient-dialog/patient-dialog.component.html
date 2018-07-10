@@ -1,0 +1,152 @@
+<div class="spinner-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+<mat-progress-bar mode="indeterminate" *ngIf="loadingBar"></mat-progress-bar>
+
+<h2 mat-dialog-title>Datos del Paciente
+    <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<p class="title-comment">Los campos con * son obligatorios</p>
+
+<mat-dialog-content>
+    <form novalidate autocomplete="off" id="form-patients">
+        <fieldset>
+            <legend>Datos Personales</legend>
+            <mat-form-field>
+                <mat-select placeholder="Tipo de documento" [(ngModel)]="patient.DocumentTypeId" name="typeDocument" [formControl]="validator.documentType" required>
+                    <mat-option *ngFor="let documentType of documentTypes" [value]="documentType.Id">
+                        {{ documentType.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.documentType.invalid">{{ getErrorMessage(validator.documentType) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Nro. Documento" [(ngModel)]="patient.Document" name="Document" [formControl]="validator.document" required>
+                <mat-error *ngIf="validator.document.invalid">{{ getErrorMessage(validator.document) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Primer Nombre" [(ngModel)]="patient.FirstName" name="FirstName" [formControl]="validator.name" required>
+                <mat-error *ngIf="validator.name.invalid">{{ getErrorMessage(validator.name) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Segundo Nombre" [(ngModel)]="patient.SecondName" name="SecondName">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Primer Apellido" [(ngModel)]="patient.Surname" name="Surname" [formControl]="validator.lastname" required>
+                <mat-error *ngIf="validator.lastname.invalid">{{ getErrorMessage(validator.lastname) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Segundo Apellido" [(ngModel)]="patient.SecondSurname" name="SecondSurname">
+            </mat-form-field>
+
+            <fieldset style="width: 38%;">
+                <legend style="position: relative;">Sexo</legend>
+                <mat-radio-group [(ngModel)]="patient.GenderId" name="gender" [formControl]="validator.sex" required>
+                    <mat-radio-button *ngFor="let gender of genders" [value]="gender.Id" style="margin-right: 15px;">{{ gender.Name }}</mat-radio-button>
+                </mat-radio-group>
+            </fieldset>
+
+            <mat-form-field>
+                <input matInput placeholder="Ocupacion" [(ngModel)]="patient.Occupation" name="Occupation">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Perfil" [(ngModel)]="patient.Profile" name="Profile">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Tipos de paciente" [(ngModel)]="patient.PatientTypeId" name="patientType" [formControl]="validator.patientType" required>
+                    <mat-option *ngFor="let patientType of patientTypes" [value]="patientType.Id">
+                        {{ patientType.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.patientType.invalid">{{ getErrorMessage(validator.patientType) }}</mat-error>
+            </mat-form-field>
+        </fieldset>
+
+        <fieldset>
+            <legend>Datos de Nacimiento</legend>
+
+            <mat-form-field style="width: 30%; margin: 0; margin-right: 15px;">
+                <input matInput [matDatepicker]="picker" placeholder="Fecha de nacimiento" [(ngModel)]="patient.BirthDate" name="BirthDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field style="width: 20%; margin: 0; margin-right: 15px;">
+                <input matInput placeholder="Edad" type="number" [(ngModel)]="patient.Age" name="Age" [formControl]="validator.age" min=1 required>
+                <mat-error *ngIf="validator.age.invalid">{{ getErrorMessage(validator.age) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 30%; margin: 0; margin-right: 15px;">
+                <mat-select placeholder="Unidad" [(ngModel)]="patient.UnitTimeId" name="unidad" [formControl]="validator.unitTime" required>
+                    <mat-option *ngFor="let unitTime of unitTimes" [value]="unitTime.Id">
+                        {{ unitTime.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.unitTime.invalid">{{ getErrorMessage(validator.unitTime) }}</mat-error>
+            </mat-form-field>
+        </fieldset>
+
+        <fieldset>
+            <legend>Datos de Contacto</legend>
+
+            <mat-form-field>
+                <input matInput placeholder="Direccion" [(ngModel)]="patient.Address" name="Address" [formControl]="validator.addess" required>
+                <mat-error *ngIf="validator.addess.invalid">{{ getErrorMessage(validator.addess) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Barrio" [(ngModel)]="patient.Neighborhood" name="Neighborhood">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Telefono" type="tel" [(ngModel)]="patient.Telephone1" name="Telephone1" [formControl]="validator.phone" required>
+                <mat-error *ngIf="validator.phone.invalid">{{ getErrorMessage(validator.phone) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Telefono Secundario" type="tel" [(ngModel)]="patient.Telephone2" name="Telephone2">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Correo Electronico" type="email" [(ngModel)]="patient.Email" name="Email">
+            </mat-form-field>
+        </fieldset>
+
+        <fieldset>
+            <legend>Datos Acudiente</legend>
+            <mat-form-field>
+                <input matInput placeholder="Nombre" [(ngModel)]="patient.AttendantName" name="AttendantName">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Relacion" [(ngModel)]="patient.AttendantRelationship" name="AttendantRelationship">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Telefono" type="tel" [(ngModel)]="patient.AttendantPhone" name="AttendantPhone">
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Correo Electronico" type="email" [(ngModel)]="patient.AttendantEmail" name="AttendantEmail">
+            </mat-form-field>
+        </fieldset>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="form-button">
+        <button mat-button mat-dialog-close>SALIR</button>
+        <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentPatient, 'button-green': currentPatient}" style="margin-bottom: 15px;" (click)="submitForm(patient)">{{ currentPatient ? 'MODIFICAR' : 'GUARDAR' }}
+      <mat-icon style="margin-left: 10px;">save</mat-icon>
+    </button>
+    </div>
+</mat-dialog-actions>

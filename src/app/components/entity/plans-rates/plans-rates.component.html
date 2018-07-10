@@ -1,0 +1,108 @@
+<div class="spinner-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+
+<h2 mat-dialog-title>Planes y Tarifas: <strong>{{ data.name }}</strong>
+    <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
+        <mat-icon>close</mat-icon>
+    </button>
+</h2>
+
+<mat-dialog-content>
+    <form novalidate autocomplete="off" #formDirective="ngForm" (ngSubmit)="clearForm()">
+        <div class="plan-group" [hidden]="!newPlanEntity">
+            <mat-form-field>
+                <input matInput placeholder="Nombre del Plan" [(ngModel)]="planEntity.Name" name="planName" [formControl]="validator.planName" required>
+                <mat-error *ngIf="validator.planName.invalid">{{ getErrorMessage(validator.planName) }}</mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button class="button-purple" style="margin-left: 20px;" [disabled]="validator.planName.invalid" (click)="createPlan(planEntity)">CREAR</button>
+            <button mat-button style="margin-left: 15px;" (click)="toogleNewPlanEntity()">VOLVER</button>
+        </div>
+
+        <div class="plan-group" [hidden]="newPlanEntity">
+            <mat-form-field>
+                <mat-select placeholder="Planes Disponibles" [(ngModel)]="currentPlanEntiy" (change)="getPlanRates(currentPlanEntiy)" name="currentPlanEntiy" [formControl]="validator.currentPlanEntiy" required>
+                    <mat-option *ngFor="let plan of plansByEntity" [value]="plan.PlanEntityId">
+                        {{ plan.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.currentPlanEntiy.invalid">{{ getErrorMessage(validator.currentPlanEntiy) }}</mat-error>
+            </mat-form-field>
+            <button mat-mini-fab style="margin-left: 20px;" (click)="toogleNewPlanEntity()" matTooltip="Nuevo Plan"><mat-icon>add</mat-icon></button>
+
+            <button mat-raised-button color="warn" *ngIf="currentPlanEntiy" [class.button-purple]="!getPlanEntityState(currentPlanEntiy)" style="margin-left: 20px;" (click)="toogleStatePlanEntity(currentPlanEntiy)">{{ getPlanEntityState(currentPlanEntiy) ? 'DESHABILITAR' : 'ACTIVAR' }}</button>
+        </div>
+
+        <fieldset *ngIf="currentPlanEntiy" style="width: auto;">
+            <legend>Asociar Servicio</legend>
+
+            <mat-form-field style="display: block; margin-bottom: 15px;">
+                <mat-select placeholder="Servicios" [(ngModel)]="planRate.ServiceId" name="ServiceId" [formControl]="validator.serviceId" [disabled]="currentPlanRate" required>
+                    <mat-option *ngFor="let service of services" [value]="service.ServiceId">
+                        {{ service.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.serviceId.invalid">{{ getErrorMessage(validator.serviceId) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput type="number" placeholder="Tarifa" [(ngModel)]="planRate.Rate" [formControl]="validator.rate" name="Rate" min="0" required>
+                <mat-error *ngIf="validator.rate.invalid">{{ getErrorMessage(validator.rate) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 30%; margin: 0; margin-right: 15px;">
+                <input matInput [matDatepicker]="picker" placeholder="Vigente hasta" [(ngModel)]="planRate.Validity" [formControl]="validator.validity" name="validity" required>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="validator.validity.invalid">{{ getErrorMessage(validator.validity) }}</mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button [ngClass]="{'button-purple': !currentPlanRate, 'button-green': currentPlanRate}" style="margin-left: 20px;" [disabled]="addPlanRateInvalid()" (click)="addPlanRate(planRate)">{{ currentPlanRate ? 'MODIFICAR' : 'CREAR' }}
+                <mat-icon style="margin-left: 10px;">save</mat-icon>
+            </button>
+
+            <button mat-button style="margin-left: 20px;" (click)="clearAddPlanrate()" *ngIf="currentPlanRate">LIMPIAR</button>
+        </fieldset>
+    </form>
+
+    <div class="mat-elevation-z2" [hidden]="currentPlanEntiy ? false : true">
+        <mat-toolbar class="table-search">
+            <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+        </mat-toolbar>
+
+        <mat-table #table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="PlanRateId">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <button mat-icon-button class="btn-edit" (click)="editServicePlanEntity(element.PlanRateId, element)" matTooltip="Editar">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" class="btn-delete" (click)="deleteServicePlanEntity(element.PlanRateId)" matTooltip="Borrar">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="serviceName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.serviceName }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Rate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Tarifa </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.Rate | currency }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Validity">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Vigencia </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element.Validity }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+        <mat-paginator pageSize="5"></mat-paginator>
+    </div>
+</mat-dialog-content>

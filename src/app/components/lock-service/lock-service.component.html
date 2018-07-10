@@ -1,0 +1,24 @@
+<mat-card class="mat-card-form">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <mat-card-title>
+        <h4>Bloquear Servicios</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form novalidate autocomplete="off">
+            <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Fecha de bloqueo" [(ngModel)]="lockDate" [formControl]="validator.lockDate" name="lockDate" required>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="validator.lockDate.invalid">{{ getErrorMessage(validator.lockDate) }}</mat-error>
+            </mat-form-field>
+
+            <div class="form-button" *ngIf="auth.hasActionResource('Update')">
+                <button mat-raised-button [disabled]="!lockDate || loading" class="button-purple" style="margin-bottom: 15px;" (click)="submitForm(lockDate)">GUARDAR
+                    <mat-icon style="margin-left: 10px;">save</mat-icon>
+                </button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

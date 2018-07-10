@@ -1,0 +1,88 @@
+<mat-card #userList [hidden]="formActive">
+    <div class="spinner-container" *ngIf="mainSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-card-title>
+        <h4>Roles por usuario</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+            </mat-toolbar>
+
+            <mat-table [dataSource]="dataSource" matSort>
+                <!-- actions -->
+                <ng-container matColumnDef="UserId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button id="btn-edit" mat-icon-button color="default" (click)="showForm(element.UserId)" *ngIf="auth.hasActionResource('Update')">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="FirstName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> P. Nombre </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.FirstName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="SecondName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> S. Nombre </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.SecondName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Surname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> P. Apellido </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Surname}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="SecondSurname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> S. Apellido </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.SecondSurname}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Email">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> E-mail </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Email}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="State">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <div class="cicle-status" [ngClass]="{'status-active': element.State, 'status-diactive': !element.State }"></div>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card #form id="form-user-role" class="mat-card-form" *ngIf="formActive">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <mat-card-title style="padding-bottom: 0;">
+        <h4>Asignar roles</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form novalidate autocomplete="off" id="form-user-role" style="padding: 0 24px;">
+            <div class="role-content" *ngFor="let role of roles;let i = index;">
+                <mat-checkbox name="i" (change)="toogleState(role)" [checked]="role.hasRole">{{ role.Name }}</mat-checkbox>
+            </div>
+
+            <div class="form-button">
+                <button mat-button class="button-purple" style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
+
+                <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm()" [disabled]="loading">ASIGNAR</button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

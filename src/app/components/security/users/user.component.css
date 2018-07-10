@@ -1,0 +1,27 @@
+.mat-column-state {
+    flex: 0 0 6%;
+    display: flex;
+    justify-content: center;
+}
+
+.mat-column-userid {
+    flex: 0 0 6%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.mat-form-field {
+    display: block;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+#form-user {
+    width: 60%;
+    margin: auto;
+}
+
+#btn-edit:hover {
+    color: #fbd933;
+}

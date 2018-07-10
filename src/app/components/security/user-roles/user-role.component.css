@@ -1,0 +1,8 @@
+#form-user-role {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#form-user-role .role-content {
+    width: 50%;
+}

@@ -1,0 +1,257 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~angular-notifier/styles.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+input:not([type]):not([readonly]):focus,
+input[type=text]:not([readonly]):focus,
+input[type=password]:not([readonly]):focus,
+input[type=email]:not([readonly]):focus,
+input[type=url]:not([readonly]):focus,
+input[type=time]:not([readonly]):focus,
+input[type=date]:not([readonly]):focus,
+input[type=datetime]:not([readonly]):focus,
+input[type=datetime-local]:not([readonly]):focus,
+input[type=tel]:not([readonly]):focus,
+input[type=number]:not([readonly]):focus,
+input[type=search]:not([readonly]):focus,
+textarea:not([readonly]).materialize-textarea:focus {
+    border-bottom: none!important;
+    box-shadow: none!important;
+}
+
+* {
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+fieldset {
+    width: 100%;
+    margin-bottom: 20px;
+    border: solid 1px rgba(0, 0, 0, 0.15);
+}
+
+[hidden] {
+    display: none!important;
+}
+
+.form-button {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-end;
+    width: 80%;
+    margin: auto;
+    margin-top: 15px;
+}
+
+.input-requiered {
+    color: rgb(175, 23, 23);
+    font-size: 18px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.input-dirty {
+    color: #d8473c;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+
+/* spinner circular */
+
+.spinner-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff87;
+    z-index: 1000;
+}
+
+.spinner-container .mat-spinner circle {
+    stroke: rgb(185, 131, 255);
+    -webkit-animation-name: mat-progress-spinner-stroke-rotate-100, color-transition!important;
+    animation-name: mat-progress-spinner-stroke-rotate-100, color-transition!important;
+}
+
+
+/* mat card */
+
+.mat-card {
+    position: relative;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.mat-card-title h4 {
+    /* color: #535597; */
+    color: #00AFD3;
+}
+
+.mat-card.mat-card-form {
+    padding: 0!important;
+}
+
+.mat-card.mat-card-form .mat-card-title {
+    padding: 24px 24px 0 24px;
+}
+
+.mat-card.mat-card-form .mat-card-content {
+    padding: 0 24px 24px 24px;
+}
+
+.mat-card.mat-card-form .mat-card-title p.title-comment {
+    font-size: 14px;
+    margin: 0;
+    margin-bottom: 30px;
+    color: #6b6b6b;
+}
+
+.mat-card-content {
+    padding: 5px;
+}
+
+
+/* mat table */
+
+.mat-toolbar.table-search {
+    /* background-color: #9cb8d0; */
+    background-color: #566E82;
+    color: #FFF;
+}
+
+.mat-table {
+    overflow: auto;
+}
+
+.mat-row .cicle-status {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: solid 1px #777;
+}
+
+.mat-cell,
+.mat-header-cell {
+    font-size: 12px;
+}
+
+.mat-row .status-active {
+    background-color: rgb(35, 182, 6);
+}
+
+.mat-row .status-diactive {
+    background-color: rgb(182, 6, 6);
+}
+
+.btn-edit:hover {
+    color: #fbd933;
+}
+
+.btn-delete:hover {
+    color: #f0736a;
+}
+
+
+/* button raised colors */
+
+.mat-raised-button.button-purple {
+    /* background-color: #32347B; */
+    background-color: #00AFD3;
+    color: #FFF;
+}
+
+.mat-raised-button.button-green {
+    background-color: rgb(14, 168, 40);
+    color: #FFF;
+}
+
+
+/* button.mat-icon-button:focus {
+    background-color: #f7f7f7;
+} */
+
+
+/* sidenav */
+
+.mat-sidenav-content {
+    min-height: 100%;
+}
+
+.mat-drawer-content.mat-sidenav-content {
+    min-height: 100vh;
+}
+
+
+/* dialogs */
+
+
+/* .myapp-position-relative-dialog .mat-dialog-container {
+    position: relative!important;
+} */
+
+.myapp-position-relative-dialog {
+    position: relative!important;
+}
+
+button[mat-dialog-close] {
+    line-height: 36px;
+    height: 36px;
+}
+
+[mat-dialog-title]+p.title-comment {
+    font-size: 14px;
+    margin: 0;
+    margin-bottom: 30px;
+    color: #6b6b6b;
+}
+
+
+/* animations */
+
+@-webkit-keyframes color-transition {
+    0% {
+        stroke: #4285F4;
+    }
+    25% {
+        stroke: #DE3E35;
+    }
+    50% {
+        stroke: #F7C223;
+    }
+    75% {
+        stroke: #1B9A59;
+    }
+    100% {
+        stroke: #4285F4;
+    }
+}
+
+@keyframes color-transition {
+    0% {
+        stroke: #4285F4;
+    }
+    25% {
+        stroke: #DE3E35;
+    }
+    50% {
+        stroke: #F7C223;
+    }
+    75% {
+        stroke: #1B9A59;
+    }
+    100% {
+        stroke: #4285F4;
+    }
+}

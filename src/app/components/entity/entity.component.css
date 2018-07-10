@@ -1,0 +1,11 @@
+.mat-form-field {
+    display: block;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+#form-entity {
+    width: 60%;
+    margin: auto;
+}

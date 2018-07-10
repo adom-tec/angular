@@ -1,0 +1,21 @@
+.mat-card-form {
+    width: 900px;
+    margin: auto;
+}
+
+.mat-form-field {
+    margin-right: 15px;
+}
+
+.user-names {
+    margin-top: 20px;
+}
+
+.user-names,
+#sex-group-opt {
+    margin-bottom: 20px;
+}
+
+#sex-group-opt {
+    width: 50%;
+}

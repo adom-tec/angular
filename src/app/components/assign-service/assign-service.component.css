@@ -1,0 +1,128 @@
+.table-info {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-info th {
+    background-color: #566E82;
+    color: #FFF;
+}
+
+.table-info td,
+.table-info th {
+    padding: 6px;
+    text-align: center;
+    /* border-bottom: solid 1px rgba(0, 0, 0, 0.15); */
+}
+
+.table-info tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+.mat-card {
+    margin-bottom: 30px;
+}
+
+.chip-default {
+    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 24px;
+    align-items: center;
+    cursor: default;
+    background-color: #e0e0e0;
+    color: rgba(0, 0, 0, .87);
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.chip-primary {
+    background-color: #03bd4a;
+    color: #FFF;
+}
+
+.chip-warn {
+    background-color: #fa4b4b;
+    color: #FFF;
+}
+
+.mat-column-state {
+    flex: 0 0 15%;
+    display: flex;
+    justify-content: center;
+}
+
+#form-assign-services .mat-row {
+    cursor: pointer;
+}
+
+#form-assign-services .mat-row:hover {
+    background-color: #f7f7f7;
+}
+
+.mat-row.row-selected {
+    background-color: #fdf068;
+}
+
+
+/* .table-info {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+} */
+
+#card-services-content {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.table-services-container {
+    width: 74%;
+}
+
+#service-info {
+    width: 25%;
+}
+
+#service-info .mat-list .mat-list-item .mat-line {
+    white-space: inherit;
+    overflow: visible;
+    text-overflow: inherit;
+    display: block;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+
+#service-info h4 {
+    text-align: center;
+    margin: 0;
+    padding: 24px 0;
+    background-color: #cecece;
+}
+
+#service-info .mat-list .mat-list-item {
+    display: block;
+    height: auto;
+    margin: 20px 0;
+}
+
+#patient-info-container {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#patient-info-container p {
+    float: left;
+    margin-right: 30px;
+}
+
+.alert-cancel-reason {
+    background-color: #cce9f9;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    text-align: left;
+}
+
+.table-container {
+    overflow-x: scroll;
+}

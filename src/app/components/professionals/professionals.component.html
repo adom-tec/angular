@@ -1,0 +1,220 @@
+<mat-card #list [hidden]="formActive">
+    <div class="spinner-container" *ngIf="mainSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-card-title>
+        <h4>Lista de Profesionales</h4>
+    </mat-card-title>
+
+    <mat-card-content *ngIf="auth.hasActionResource('Create')">
+        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="showForm()">
+      <mat-icon>person_add</mat-icon> NUEVO PROFESIONAL</button>
+    </mat-card-content>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+            </mat-toolbar>
+
+            <mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="state">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button [class.button-purple]="!element.state" mat-raised-button [color]="element.state ? 'warn' : 'default'" (click)="updateStateProfessional(element.professionalId)" *ngIf="auth.hasActionResource('Active')">
+                            {{ element.state ? 'DESACTIVAR' : 'ACTIVAR' }}
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="professionalId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.professionalId)" *ngIf="auth.hasActionResource('Update')">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Document">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Documento </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Document}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Names">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Names}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Lastnames">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Lastnames}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card #form id="form-professional" class="mat-card-form" *ngIf="formActive">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <mat-card-title>
+        <h4 style="margin-bottom: 10px;">{{ currentProfessional ? 'Editar Profesional' : 'Nuevo Profesional' }}</h4>
+        <p class="title-comment">Los campos con * son obligatorios</p>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form novalidate autocomplete="off">
+            <fieldset>
+                <legend>Datos Personales</legend>
+                <mat-form-field>
+                    <mat-select placeholder="Tipo de documento" [(ngModel)]="professional.DocumentTypeId" name="typeDocument" [formControl]="validator.documentType" required>
+                        <mat-option *ngFor="let documentType of documentTypes" [value]="documentType.Id">
+                            {{ documentType.Name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="validator.documentType.invalid">{{ getErrorMessage(validator.documentType) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Nro. Documento" [(ngModel)]="professional.Document" name="Document" (keydown)="validateKey($event, professional.DocumentTypeId)" [formControl]="validator.document" required>
+                    <mat-error *ngIf="validator.document.invalid">{{ getErrorMessage(validator.document) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field style="width: 40%;">
+                    <input id="coord-email" matInput placeholder="Correo Electronico" type="email" [(ngModel)]="professional.Email" name="Email" [formControl]="validator.email" (change)="verifyUserExist(professional.Email)" required>
+                    <mat-error *ngIf="validator.email.invalid">{{ getErrorMessage(validator.email) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Primer Nombre" [(ngModel)]="professional.FirstName" name="FirstName" [formControl]="validator.name" required>
+                    <mat-error *ngIf="validator.name.invalid">{{ getErrorMessage(validator.name) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Segundo Nombre" [(ngModel)]="professional.SecondName" name="SecondName">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Primer Apellido" [(ngModel)]="professional.Surname" name="Surname" [formControl]="validator.lastname" required>
+                    <mat-error *ngIf="validator.lastname.invalid">{{ getErrorMessage(validator.lastname) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Segundo Apellido" [(ngModel)]="professional.SecondSurname" name="SecondSurname">
+                </mat-form-field>
+
+                <fieldset style="width: 38%;">
+                    <legend style="position: relative;">Sexo</legend>
+                    <mat-radio-group [(ngModel)]="professional.GenderId" name="gender" [formControl]="validator.sex" required>
+                        <mat-radio-button *ngFor="let gender of genders" [value]="gender.Id" style="margin-right: 15px;">{{ gender.Name }}</mat-radio-button>
+                    </mat-radio-group>
+                </fieldset>
+
+                <mat-form-field>
+                    <mat-select placeholder="Especialidad" [(ngModel)]="professional.SpecialtyId" name="SpecialtyId" [formControl]="validator.specialty" required>
+                        <mat-option *ngFor="let specialty of specialties" [value]="specialty.Id">
+                            {{ specialty.Name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="validator.specialty.invalid">{{ getErrorMessage(validator.specialty) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field style="width: 30%;">
+                    <input matInput [matDatepicker]="pickerBirthday" placeholder="Fecha de nacimiento" [(ngModel)]="professional.BirthDate" name="BirthDate">
+                    <mat-datepicker-toggle matSuffix [for]="pickerBirthday"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerBirthday></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field style="width: 30%;">
+                    <input matInput [matDatepicker]="dateAdmission" placeholder="Fecha de admicion" [(ngModel)]="professional.DateAdmission" name="DateAdmission">
+                    <mat-datepicker-toggle matSuffix [for]="dateAdmission"></mat-datepicker-toggle>
+                    <mat-datepicker #dateAdmission></mat-datepicker>
+                </mat-form-field>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos de Contacto</legend>
+
+                <mat-form-field style="width: 100%;">
+                    <input matInput placeholder="Direccion" [(ngModel)]="professional.Address" name="Address" [formControl]="validator.addess" required>
+                    <mat-error *ngIf="validator.addess.invalid">{{ getErrorMessage(validator.addess) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Barrio" [(ngModel)]="professional.Neighborhood" name="Neighborhood">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Telefono" type="tel" [(ngModel)]="professional.Telephone1" name="Telephone1" [formControl]="validator.phone" required>
+                    <mat-error *ngIf="validator.phone.invalid">{{ getErrorMessage(validator.phone) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Telefono Secundario" type="tel" [(ngModel)]="professional.Telephone2" name="Telephone2">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Disponibilidad" [(ngModel)]="professional.Availability" name="Availability" [formControl]="validator.availability" required>
+                    <mat-error *ngIf="validator.availability.invalid">{{ getErrorMessage(validator.availability) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Cobertura" [(ngModel)]="professional.Coverage" name="Coverage">
+                </mat-form-field>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos de Familiar</legend>
+                <mat-form-field>
+                    <input matInput placeholder="Nombre" [(ngModel)]="professional.FamilyName" name="FamilyName">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Relacion" [(ngModel)]="professional.FamilyRelationship" name="FamilyRelationship">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Telefono" type="tel" [(ngModel)]="professional.FamilyPhone" name="FamilyPhone">
+                </mat-form-field>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos Bancarios</legend>
+
+                <mat-form-field>
+                    <input matInput placeholder="Nombre del Banco" [(ngModel)]="professional.CodeBank" name="CodeBank" [formControl]="validator.codeBank" required>
+                    <mat-error *ngIf="validator.codeBank.invalid">{{ getErrorMessage(validator.codeBank) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-select placeholder="Tipo de Cuenta" [(ngModel)]="professional.AccountTypeId" name="AccountTypeId" [formControl]="validator.accountTypeId" required>
+                        <mat-option *ngFor="let accountType of accountTypes" [value]="accountType.Id">
+                            {{ accountType.Name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="validator.accountTypeId.invalid">{{ getErrorMessage(validator.accountTypeId) }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput placeholder="Nro. de Cuenta" type="number" [(ngModel)]="professional.AccountNumber" name="AccountNumber" [formControl]="validator.accountNumber" min="0" required>
+                    <mat-error *ngIf="validator.accountNumber.invalid">{{ getErrorMessage(validator.accountNumber) }}</mat-error>
+                </mat-form-field>
+            </fieldset>
+
+            <div class="form-button">
+                <button mat-button style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
+
+                <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentProfessional, 'button-green': currentProfessional}" style="margin-bottom: 15px;" (click)="submitForm(professional)">{{ currentProfessional ? 'MODIFICAR' : 'GUARDAR' }}
+                    <mat-icon style="margin-left: 10px;">save</mat-icon>
+                </button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

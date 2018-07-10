@@ -1,0 +1,25 @@
+.plan-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.mat-dialog-content {
+    overflow: visible;
+    max-height: none;
+    margin-bottom: 30px;
+}
+
+.mat-column-PlanRateId {
+    flex: 0 0 14%;
+}
+
+.mat-column-serviceName {
+    flex: 0 0 40%;
+    padding: 15px 0;
+}
+
+.mat-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

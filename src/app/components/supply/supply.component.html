@@ -1,0 +1,88 @@
+<mat-card #list [hidden]="formActive">
+    <div class="spinner-container" *ngIf="mainSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-card-title>
+        <h4>Lista de Insumos</h4>
+    </mat-card-title>
+
+    <mat-card-content *ngIf="auth.hasActionResource('Create')">
+        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="showForm()">
+      <mat-icon>add</mat-icon> NUEVO INSUMO</button>
+    </mat-card-content>
+
+    <mat-card-content>
+        <div class="mat-elevation-z2">
+            <mat-toolbar class="table-search">
+                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+            </mat-toolbar>
+
+            <mat-table #table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="SupplyId">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.SupplyId)" *ngIf="auth.hasActionResource('Update')">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Name}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Code">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Code}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Presentation">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Presentación </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Presentation}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card #form id="form-supply" class="mat-card-form" *ngIf="formActive">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <mat-card-title>
+        <h4>{{ currentSupply ? 'Editar Insumo' : 'Nuevo Insumo' }}</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form novalidate autocomplete="off">
+            <mat-form-field>
+                <input matInput placeholder="Nombre del insumo" [(ngModel)]="supply.Name" name="name" [formControl]="validator.name" required>
+                <mat-error *ngIf="validator.name.invalid">{{ getErrorMessage(validator.name) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Presentación" [(ngModel)]="supply.Presentation" name="presentation" [formControl]="validator.presentation" required>
+                <mat-error *ngIf="validator.presentation.invalid">{{ getErrorMessage(validator.presentation) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Código del insumo" [(ngModel)]="supply.Code" name="code" [formControl]="validator.code" required>
+                <mat-error *ngIf="validator.code.invalid">{{ getErrorMessage(validator.code) }}</mat-error>
+            </mat-form-field>
+
+            <div class="form-button">
+                <button mat-button style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
+
+                <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentSupply, 'button-green': currentSupply}" style="margin-bottom: 15px;" (click)="submitForm(supply)">{{ currentSupply ? 'MODIFICAR' : 'GUARDAR' }}
+                  <mat-icon style="margin-left: 10px;">save</mat-icon>
+                </button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,11 @@
+.mat-form-field {
+    display: block;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+#form-role {
+    width: 60%;
+    margin: auto;
+}

@@ -1,0 +1,38 @@
+<mat-card #form class="mat-card-form">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+    <mat-card-title>
+        <h4>Noticias</h4>
+    </mat-card-title>
+
+    <mat-card-content [style.height]="auth.hasActionResource('Create') ? 'calc(80vh - 265px)' : 'calc(80vh - 65px)'">
+        <form novalidate autocomplete="off" id="form-notice" *ngIf="auth.hasActionResource('Create')">
+            <mat-form-field style="width: 70%;">
+                <span class="input-requiered">*</span>
+                <input matInput placeholder="Titulo" [(ngModel)]="notice.NoticeTitle" name="noticeTitle" [formControl]="validator.noticeTitle" required>
+                <mat-error *ngIf="validator.noticeTitle.invalid">{{ getErrorMessage(validator.noticeTitle) }}</mat-error>
+            </mat-form-field>
+
+            <button style="margin-left: 20px;" mat-raised-button [disabled]="formInvalid()" class="button-purple" (click)="submitForm(notice)">Enviar
+                <mat-icon style="margin-left: 10px;">send</mat-icon>
+            </button>
+
+            <mat-form-field style="width: 100%;">
+                <span class="input-requiered">*</span>
+                <textarea rows="2" matInput placeholder="Texto" [(ngModel)]="notice.NoticeText" name="noticeText" [formControl]="validator.noticeText" required></textarea>
+                <mat-error *ngIf="validator.noticeText.invalid">{{ getErrorMessage(validator.noticeText) }}</mat-error>
+            </mat-form-field>
+        </form>
+
+        <ul class="notices-list">
+            <li *ngFor="let notice of notices" class="notice-item">
+                <h4 class="notice-title">{{ notice.NoticeTitle }}</h4>
+                <p class="notice-text">{{ notice.NoticeText }}</p>
+                <div class="notice-info">
+                    <p>Creado el: <strong>{{ notice.CreationDate | date:'dd MMMM, yyyy hh:mm a' }}</strong></p>
+                    <p>Usuario: <strong>{{ (notice.user.FirstName + ' ' + (notice.user.SecondName || '') + ' ' + notice.user.Surname + ' ' + (notice.user.SecondSurname || '')).trim().toLowerCase() }}</strong></p>
+                </div>
+            </li>
+        </ul>
+    </mat-card-content>
+</mat-card>
