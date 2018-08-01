@@ -19,6 +19,10 @@ export class UserComponent implements OnInit {
     public formUser: boolean = false;
     public displayedColumns: string[] = [];
     public dataSource = new MatTableDataSource([])
+    public permissions: any = {
+        create: false,
+        update: false
+    };
 
     public currentUser: number;
     public filter: string;
@@ -51,6 +55,8 @@ export class UserComponent implements OnInit {
     ){}
 
     ngOnInit() {
+        this.permissions.create = this.auth.hasActionResource('Create');
+        this.permissions.update = this.auth.hasActionResource('Update');
         this.getUsers();
     }
 
@@ -81,7 +87,7 @@ export class UserComponent implements OnInit {
                 this.displayedColumns = data.length ? Object.keys(data[0]).filter(col => !['IsAdmin', 'SecondName', 'SecondSurname'].includes(col)) : [];
                 this.mainSpinner = false;
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 this.mainSpinner = false;
             });
     }
@@ -162,7 +168,7 @@ export class UserComponent implements OnInit {
                 this.notifier.notify('success', this.currentUser ? 'El usuario se modifico con exito' : 'El usuario se creo con exito');
                 this.hideFormUser();
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 this.loading = false;
             });
     }

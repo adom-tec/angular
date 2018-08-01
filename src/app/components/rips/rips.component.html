@@ -1,0 +1,191 @@
+<mat-card>
+  <div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>RIPS</h4>
+  </mat-card-title>
+
+  <mat-card-content>
+    <form novalidate class="form-consult-rips" #formFilters="ngForm">
+      <mat-form-field style="width: 25%;">
+        <input matInput [matDatepicker]="initDate" placeholder="Fecha desde" [(ngModel)]="filters.InitDate" name="initDate" [formControl]="validator.initDate"
+          required>
+        <mat-datepicker-toggle matSuffix [for]="initDate"></mat-datepicker-toggle>
+        <mat-datepicker #initDate></mat-datepicker>
+        <mat-error *ngIf="validator.initDate.invalid">{{ getErrorMessage(validator.initDate) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field style="width: 25%;">
+        <input matInput [matDatepicker]="finalDate" placeholder="Fecha hasta" [(ngModel)]="filters.FinalDate" name="finalDate" [formControl]="validator.finalDate"
+          required>
+        <mat-datepicker-toggle matSuffix [for]="finalDate"></mat-datepicker-toggle>
+        <mat-datepicker #finalDate></mat-datepicker>
+        <mat-error *ngIf="validator.finalDate.invalid">{{ getErrorMessage(validator.finalDate) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field style="width: 40%;">
+        <mat-select placeholder="Entidades" [(ngModel)]="filters.Entity" name="entity" [formControl]="validator.entity" required
+          (openedChange)="resetSelectList(entities, entityFilteredData)" (change)="getPlans(filters.Entity)">
+
+          <ngx-mat-select-search [(ngModel)]="entityFilter" name="entityFilter" (keyup)="selectFilterData(entities, entityFilteredData, entityFilter)"
+            placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+
+          <mat-option *ngFor="let entity of entityFilteredData | async" [value]="entity.EntityId">
+            {{ entity.Name }}
+          </mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="validator.entity.invalid">{{ getErrorMessage(validator.entity) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field style="width: 40%;">
+        <mat-select placeholder="Planes" [(ngModel)]="filters.PlanEntity" name="PlanEntity" [formControl]="validator.planEntity"
+          required (openedChange)="resetSelectList(plansEntity, planEntityFilteredData)" [disabled]="!filters.Entity">
+
+          <ngx-mat-select-search [(ngModel)]="planEntityFilter" name="planEntityFilter" (keyup)="selectFilterData(plansEntity, planEntityFilteredData, planEntityFilter)"
+            placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+
+          <mat-option *ngFor="let plan of planEntityFilteredData | async" [value]="plan.PlanEntityId">
+            {{ plan.Name }}
+          </mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="validator.planEntity.invalid">{{ getErrorMessage(validator.planEntity) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field style="width: 20%;">
+        <mat-select placeholder="Servicio" [(ngModel)]="filters.ServiceType" name="serviceType" [formControl]="validator.serviceType"
+          required>
+          <mat-option *ngFor="let type of serviceTypes" [value]="type.Id">
+            {{ type.Description }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="validator.serviceType.invalid">{{ getErrorMessage(validator.serviceType) }}</mat-error>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-content style="overflow: hidden;">
+    <button mat-raised-button class="button-purple" style="float: right;" (click)="getRips(filters)" [disabled]="formInvalid()">
+      <mat-icon>search</mat-icon> BUSCAR
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card [hidden]="!dataSource.data.length ? true : false">
+  <div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>Resultados de la busqueda</h4>
+  </mat-card-title>
+
+  <mat-card-content>
+    <small class="form-info">Ingrese los datos de la factura: </small>
+    <form novalidate class="form-consult-rips" #formInvoice="ngForm">
+      <mat-form-field style="width: 25%;">
+        <input matInput [matDatepicker]="invoiceDate" placeholder="Fecha de Factura" [(ngModel)]="filters.InvoiceDate" name="invoiceDate"
+          [formControl]="invoiceValidator.invoiceDate" required>
+        <mat-datepicker-toggle matSuffix [for]="invoiceDate"></mat-datepicker-toggle>
+        <mat-datepicker #invoiceDate></mat-datepicker>
+        <mat-error *ngIf="invoiceValidator.invoiceDate.invalid">{{ getErrorMessage(invoiceValidator.invoiceDate) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Numero de Factura" [(ngModel)]="filters.InvoiceNumber" name="invoiceNumber" [formControl]="invoiceValidator.invoiceNumber"
+          required>
+        <mat-error *ngIf="invoiceValidator.invoiceNumber.invalid">{{ getErrorMessage(invoiceValidator.invoiceNumber) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Copago" type="number" [(ngModel)]="filters.CopaymentAmount" name="copaymentAmount" [formControl]="invoiceValidator.copaymentAmount"
+          min="0" required>
+        <mat-error *ngIf="invoiceValidator.copaymentAmount.invalid">{{ getErrorMessage(invoiceValidator.copaymentAmount) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Valor neto" type="number" [(ngModel)]="filters.NetWorth" name="netWorth" [formControl]="invoiceValidator.netWorth"
+          min="0" required>
+        <mat-error *ngIf="invoiceValidator.netWorth.invalid">{{ getErrorMessage(invoiceValidator.netWorth) }}</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="downloadReport()" [disabled]="generateActive()">
+        <mat-icon>save</mat-icon> GENERAR
+      </button>
+    </form>
+  </mat-card-content>
+
+  <mat-card-content>
+    <mat-toolbar class="table-search">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+    </mat-toolbar>
+
+    <div class="mat-elevation-z2" id="table-container">
+      <mat-table [dataSource]="dataSource" matSort>
+        <!-- actions -->
+        <ng-container matColumnDef="isSelected">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="toogleStateAll()" [(ngModel)]="allSelected" name="allSelected"></mat-checkbox>
+          </mat-header-cell>
+
+          <mat-cell *matCellDef="let element">
+            <mat-checkbox (change)="toogleState(element)" [checked]="element.isSelected"></mat-checkbox>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="document">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> N° DOCUMENTO DEL PACIENTE </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.document }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="patient">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE COMPLETO DEL PACIENTE </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.patient.toUpperCase() }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="service">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> SERVICIO </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.service.toUpperCase() }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="authorization">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> N° DE AUTORIZACIÓN </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.authorization }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="entity">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ENTIDAD </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.entity.toUpperCase() }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="plan">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> PLAN </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.plan.toUpperCase() }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="initDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> FECHA DE INICIO </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.initDate | date:'dd/MM/yyyy' }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="finalDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> FECHA DE FIN </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.finalDate | date:'dd/MM/yyyy' }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="invoice">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> N° DE FACTURA </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.invoice }} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{ 'has-invoice': row.invoice && row.isSelected }"></mat-row>
+      </mat-table>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

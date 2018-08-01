@@ -1,0 +1,55 @@
+<mat-card>
+    <div class="spinner-container" *ngIf="mainSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-card-title>
+        <h4>Reporte de copagos</h4>
+    </mat-card-title>
+
+    <mat-card-content>
+        <form novalidate id="form-consult-copayments">
+            <mat-form-field style="width: 50%;">
+                <mat-select placeholder="Profesional" [(ngModel)]="filters.ProfessionalId" name="professionalId" [formControl]="validator.professionalId" required (openedChange)="resetSelectList()">
+
+                    <ngx-mat-select-search [(ngModel)]="selectFilter" name="selectFilter" (keyup)="selectFilterData(selectFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+
+                    <mat-option *ngFor="let pro of selectFilteredData | async" [value]="pro.Id">
+                        {{ pro.Name }}
+                    </mat-option>
+                </mat-select>
+
+                <mat-error *ngIf="validator.professionalId.invalid">{{ getErrorMessage(validator.professionalId) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 30%;">
+                <mat-select placeholder="Tipo de Reporte" [(ngModel)]="filters.ReportType" name="reportType" [formControl]="validator.reportType" required>
+                    <mat-option *ngFor="let report of reportTypes" [value]="report.Id">
+                        {{ report.Name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="validator.reportType.invalid">{{ getErrorMessage(validator.reportType) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 25%;">
+                <input matInput [matDatepicker]="initDate" placeholder="Fecha desde" [(ngModel)]="filters.InitDate" name="initDate" [formControl]="validator.initDate" required>
+                <mat-datepicker-toggle matSuffix [for]="initDate"></mat-datepicker-toggle>
+                <mat-datepicker #initDate></mat-datepicker>
+                <mat-error *ngIf="validator.initDate.invalid">{{ getErrorMessage(validator.initDate) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field style="width: 25%;">
+                <input matInput [matDatepicker]="finalDate" placeholder="Fecha hasta" [(ngModel)]="filters.FinalDate" name="finalDate" [formControl]="validator.finalDate" required>
+                <mat-datepicker-toggle matSuffix [for]="finalDate"></mat-datepicker-toggle>
+                <mat-datepicker #finalDate></mat-datepicker>
+                <mat-error *ngIf="validator.finalDate.invalid">{{ getErrorMessage(validator.finalDate) }}</mat-error>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+
+    <mat-card-content style="overflow: hidden;">
+        <button mat-raised-button class="button-purple" style="float: right;" (click)="downloadReport()" [disabled]="formInvalid()">
+      GENERAR REPORTE
+    </button>
+    </mat-card-content>
+</mat-card>

@@ -5,8 +5,8 @@
         <h4>Noticias</h4>
     </mat-card-title>
 
-    <mat-card-content [style.height]="auth.hasActionResource('Create') ? 'calc(80vh - 265px)' : 'calc(80vh - 65px)'">
-        <form novalidate autocomplete="off" id="form-notice" *ngIf="auth.hasActionResource('Create')">
+    <mat-card-content [style.height]="permissions.create ? 'calc(80vh - 265px)' : 'calc(80vh - 65px)'">
+        <form novalidate autocomplete="off" id="form-notice" *ngIf="permissions.create">
             <mat-form-field style="width: 70%;">
                 <span class="input-requiered">*</span>
                 <input matInput placeholder="Titulo" [(ngModel)]="notice.NoticeTitle" name="noticeTitle" [formControl]="validator.noticeTitle" required>
@@ -26,11 +26,13 @@
 
         <ul class="notices-list">
             <li *ngFor="let notice of notices" class="notice-item">
-                <h4 class="notice-title">{{ notice.NoticeTitle }}</h4>
+                <h2 class="notice-title">{{ notice.NoticeTitle }}</h2>
                 <p class="notice-text">{{ notice.NoticeText }}</p>
                 <div class="notice-info">
-                    <p>Creado el: <strong>{{ notice.CreationDate | date:'dd MMMM, yyyy hh:mm a' }}</strong></p>
-                    <p>Usuario: <strong>{{ (notice.user.FirstName + ' ' + (notice.user.SecondName || '') + ' ' + notice.user.Surname + ' ' + (notice.user.SecondSurname || '')).trim().toLowerCase() }}</strong></p>
+                    <p>
+                      Creado el: <strong>{{ notice.CreationDate | date:'dd MMMM, yyyy hh:mm a' }}</strong>
+                      Usuario: <strong>{{ (notice.user.FirstName + ' ' + (notice.user.SecondName || '') + ' ' + notice.user.Surname + ' ' + (notice.user.SecondSurname || '')).trim().toLowerCase() }}</strong>
+                    </p>
                 </div>
             </li>
         </ul>

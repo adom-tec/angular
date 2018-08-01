@@ -34,7 +34,7 @@ export class CopaymentDialogComponent implements OnInit {
   public displayedColumns: string[] = [];
   public dataSource = new MatTableDataSource([]);
   public filter: string;
-  
+
   public currentProfessional: Professional;
   public currentCopaymentParams: CopaymentParams;
   public currentCopayments: Copayment[];
@@ -96,8 +96,8 @@ export class CopaymentDialogComponent implements OnInit {
   }
 
   submitForm(): void {
-    if ((this.getSumValues('TotalCopaymentReceived') - this.professionalTakenAmount) < 0) {
-      this.notifier.notify('error', 'El monto conservado por el profesional no puede ser mayor al total recibido de copagos');
+    if ((this.getSumValues('TotalCopaymentDelivered') - this.professionalTakenAmount) < 0) {
+      this.notifier.notify('error', 'El monto conservado por el profesional no puede ser mayor al total a entregar');
       return;
     }
 
@@ -122,8 +122,8 @@ export class CopaymentDialogComponent implements OnInit {
 
     this.loading = true;
 
-    this.http.put(`${environment.apiUrl}/api/copayments/${this.currentProfessional.ProfessionalId}`, body, { 
-      params: params ,
+    this.http.put(`${environment.apiUrl}/api/copayments/${this.currentProfessional.ProfessionalId}`, JSON.stringify(body), {
+      params: params,
       responseType: ResponseContentType.Blob//requerido para que la response sea un blob
     })
       .subscribe(res => {
@@ -147,7 +147,7 @@ export class CopaymentDialogComponent implements OnInit {
         this.onNoClick(true);
       }, err => {
         this.loading = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 }

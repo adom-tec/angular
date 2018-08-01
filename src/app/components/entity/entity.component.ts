@@ -22,6 +22,12 @@ export class EntityComponent implements OnInit {
 	public dataSource = new MatTableDataSource([]);
 	public filter: string;
 	public formActive: boolean = false;
+	public permissions: any = {
+		create: false,
+		update: false,
+		planRate: false
+	};
+
 	public currentEntity: number;
 	public entity: Entity = {
 		Nit: '',
@@ -50,6 +56,10 @@ export class EntityComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.permissions.create = this.auth.hasActionResource('Create');
+		this.permissions.update = this.auth.hasActionResource('Update');
+		this.permissions.planRate = this.auth.hasActionResource('PlanRate');
+
 		this.mainSpinner = true;
 		this.entitytService.getEntities()
 			.subscribe(data => {
@@ -58,7 +68,7 @@ export class EntityComponent implements OnInit {
 				this.mainSpinner = false;
 			}, err => {
 				this.mainSpinner = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -89,9 +99,9 @@ export class EntityComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(result => {
-			console.log('The dialog was closed');
-		});
+		// dialogRef.afterClosed().subscribe(result => {
+		// 	console.log('The dialog was closed');
+		// });
 	}
 
 	/**
@@ -104,9 +114,8 @@ export class EntityComponent implements OnInit {
 
 		if (id) {
 			let row = this.dataSource.data.find(entity => entity.EntityId === id);
-
+			
 			this.currentEntity = id;
-			console.log(row)
 
 			Object.keys(this.entity).forEach(key => {
 				this.entity[key] = row[key] ? parseInt(row[key]) ? parseInt(row[key]) : row[key] : null;
@@ -138,7 +147,7 @@ export class EntityComponent implements OnInit {
 				this.mainSpinner = false;
 			}, err => {
 				this.mainSpinner = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -166,7 +175,7 @@ export class EntityComponent implements OnInit {
 				this.notifier.notify('success',this.currentEntity ? 'Se aplicaron los cambios con exito' : 'Se creo la entidad con exito');
 				this.hideForm();
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 

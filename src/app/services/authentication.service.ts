@@ -13,7 +13,7 @@ export class AuthenticationService {
     ) {}
 
     login(username: string, password: string): Observable<any> {
-        var headers = new Headers();
+        let headers = new Headers();
 
         headers.append('Content-Type', 'application/json');
 
@@ -34,24 +34,14 @@ export class AuthenticationService {
 
     logout(): void {
         window.localStorage.removeItem('current_user');
+        window.localStorage.removeItem('me');
         this.router.navigate(["/login"]);
-    }
-
-
-    isLogged(err: any): void {
-        let message = err.json().message;
-
-        if(message === "The refresh token is invalid.") {
-            this.logout();
-        } else {
-            let msg = err.status === 418 ? message : "Ups! ha ocurrido un error, por favor intentelo denuevo";
-        }
     }
 
     hasActionResource(action: string, route?: string): boolean {
         let modules = JSON.parse(window.localStorage.getItem('current_user')).permissions;
         let actions;
-        
+
         if (/\&|\?/g.test(this.router.url)) {
             route = '/' + this.router.url.match(/[A-Za-z]+(?=\?)/g)[0];
         }
@@ -68,7 +58,36 @@ export class AuthenticationService {
         return actions.includes(action);
     }
 
-    isAuthenticated(): boolean {
-        return window.localStorage.getItem("current_user") != null;
+    recoveryPassword(email: string): Observable<any> {
+      var headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+
+      let options = new RequestOptions({ headers: headers });
+
+      return this.http.post(`${environment.apiUrl}/api/resetpassword`, JSON.stringify({ email: email }), options)
+          .map(res => res.json());
+    }
+
+    verifyLinkValidity(uuid: string): Observable<any> {
+      let headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+
+      let options = new RequestOptions({ headers: headers });
+
+      return this.http.post(`${environment.apiUrl}/api/resetpassword/verify`, JSON.stringify({ uuid: uuid }), options)
+          .map(res => res.json());
+    }
+
+    updatePassword(uuid: string, password: string): Observable<any> {
+      let headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+
+      let options = new RequestOptions({ headers: headers });
+
+      return this.http.post(`${environment.apiUrl}/api/changepassword`, JSON.stringify({ uuid: uuid, password: password }), options)
+          .map(res => res.json());
     }
 }

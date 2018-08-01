@@ -19,6 +19,10 @@ export class CopaymentFrecuencyComponent implements OnInit {
   public displayedColumns: string[] = [];
   public dataSource = new MatTableDataSource([]);
   public filter: string;
+  public permissions: any = {
+    create: false,
+    update: false
+  };
 
   public currentCopaymentFrec: number;
   public copaymentfrecName: string;
@@ -38,6 +42,9 @@ export class CopaymentFrecuencyComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.permissions.create = this.auth.hasActionResource('Create');
+    this.permissions.update = this.auth.hasActionResource('Update');
+
     this.getCopaymentFrecuencies();
   }
 
@@ -65,7 +72,7 @@ export class CopaymentFrecuencyComponent implements OnInit {
         this.displayedColumns = this.dataSource.data.length ? Object.keys(this.dataSource.data[0]) : [];
         this.mainSpinner = false;
       }, err => {
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
         this.mainSpinner = false;
       });
   }
@@ -121,7 +128,7 @@ export class CopaymentFrecuencyComponent implements OnInit {
         this.notifier.notify('success', this.currentCopaymentFrec ? 'Se aplicaron los cambios con exito' : 'Se creo la frecuencia de copago con exito');
         this.hideForm();
       }, err => {
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
         this.loading = false;
       });
   }

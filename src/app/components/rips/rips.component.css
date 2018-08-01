@@ -1,0 +1,42 @@
+#table-container .mat-header-row, .mat-row {
+  width: 210%;
+}
+
+#table-container .mat-cell, .mat-header-cell {
+  padding: 5px 15px;
+}
+
+.mat-column-isSelected {
+  flex: 0 0 2%;
+  margin: 10px;
+  overflow: visible;
+}
+
+.mat-column-invoice, .mat-column-initDate , .mat-column-finalDate  {
+  flex: 0 0 5%;
+}
+
+.form-consult-rips {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.form-consult-rips .mat-form-field {
+  margin-right: 10px;
+}
+
+.mat-card {
+  margin-bottom: 20px;
+}
+
+.form-info {
+  font-size: 16px;
+  margin-bottom: 20px;
+  display: block;
+  font-style: italic;
+  color: #a2a2a2;
+}
+
+.has-invoice {
+  background-color: #ffac13;
+}

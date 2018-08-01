@@ -1,79 +1,80 @@
 ﻿<mat-card #list [hidden]="formActive">
-    <div class="spinner-container" *ngIf="mainSpinner">
-        <mat-spinner></mat-spinner>
+  <div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>Lista de Roles</h4>
+  </mat-card-title>
+
+  <mat-card-content *ngIf="permissions.create">
+    <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="showForm()">
+      <mat-icon>person_pin</mat-icon> NUEVO ROL</button>
+  </mat-card-content>
+
+  <mat-card-content>
+    <mat-toolbar class="table-search">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+    </mat-toolbar>
+
+    <div class="mat-elevation-z2">
+      <mat-table #rolesTable [dataSource]="dataSource" matSort>
+        <!-- actions -->
+        <ng-container matColumnDef="RoleId">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button id="btn-edit" mat-icon-button color="default" (click)="showForm(element.RoleId)" *ngIf="permissions.update">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.Name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="State">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <div class="cicle-status" [ngClass]="{'status-active': element.State, 'status-diactive': !element.State }"></div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
-
-    <mat-card-title>
-        <h4>Lista de Roles</h4>
-    </mat-card-title>
-
-    <mat-card-content *ngIf="auth.hasActionResource('Create')">
-        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="showForm()">
-            <mat-icon>person_pin</mat-icon> NUEVO ROL</button>
-    </mat-card-content>
-
-    <mat-card-content>
-        <div class="mat-elevation-z2">
-            <mat-toolbar class="table-search">
-                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
-            </mat-toolbar>
-
-            <mat-table #rolesTable [dataSource]="dataSource" matSort>
-                <!-- actions -->
-                <ng-container matColumnDef="RoleId">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <button id="btn-edit" mat-icon-button color="default" (click)="showForm(element.RoleId)" *ngIf="auth.hasActionResource('Update')">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="Name">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.Name}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="State">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <div class="cicle-status" [ngClass]="{'status-active': element.State, 'status-diactive': !element.State }"></div>
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
-            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
-            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-        </div>
-    </mat-card-content>
+  </mat-card-content>
 </mat-card>
 
 <mat-card #form id="form-role" class="mat-card-form" *ngIf="formActive">
-    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 
-    <mat-card-title>
-        <h4>{{ currentRole ? 'Editar Rol' : 'Nuevo Rol' }}</h4>
-    </mat-card-title>
+  <mat-card-title>
+    <h4>{{ currentRole ? 'Editar Rol' : 'Nuevo Rol' }}</h4>
+  </mat-card-title>
 
-    <mat-card-content>
-        <form novalidate autocomplete="off">
-            <mat-form-field>
-                <span class="input-requiered">*</span>
-                <input matInput placeholder="Nombre" [(ngModel)]="role.Name" name="name" [formControl]="name" required>
-                <mat-error *ngIf="name.invalid">{{ getErrorMessage(name) }}</mat-error>
-            </mat-form-field>
+  <mat-card-content>
+    <form novalidate autocomplete="off">
+      <mat-form-field>
+        <span class="input-requiered">*</span>
+        <input matInput placeholder="Nombre" [(ngModel)]="role.Name" name="name" [formControl]="name" required>
+        <mat-error *ngIf="name.invalid">{{ getErrorMessage(name) }}</mat-error>
+      </mat-form-field>
 
-            <mat-checkbox [(ngModel)]="role.State" *ngIf="currentRole" name="state" style="margin-left: 10%;">Estatus</mat-checkbox>
+      <mat-checkbox [(ngModel)]="role.State" *ngIf="currentRole" name="state" style="margin-left: 10%;">Estatus</mat-checkbox>
 
-            <div class="form-button">
-                <button mat-button class="button-purple" style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
+      <div class="form-button">
+        <button mat-button class="button-purple" style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
 
-                <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentRole, 'button-green': currentRole}" style="margin-bottom: 15px;" (click)="submitForm(role)">{{ currentRole ? 'MODIFICAR' : 'GUARDAR' }}
-                    <mat-icon style="margin-left: 10px;">save</mat-icon>
-                </button>
-            </div>
-        </form>
-    </mat-card-content>
+        <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentRole, 'button-green': currentRole}"
+          style="margin-bottom: 15px;" (click)="submitForm(role)">{{ currentRole ? 'MODIFICAR' : 'GUARDAR' }}
+          <mat-icon style="margin-left: 10px;">save</mat-icon>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
 </mat-card>

@@ -8,24 +8,24 @@
     </mat-card-title>
 
     <mat-card-content style="padding: 20px;">
-        <form novalidate autocomplete="off" [formGroup]="form" style="width: 80%; margin: auto;">
+        <form novalidate autocomplete="off" [formGroup]="form" style="width: 80%; margin: auto;" #formDirective="ngForm" (ngSubmit)="clearForm()">
             <mat-form-field style="width: 100%; margin-bottom: 10px;">
                 <input matInput placeholder="Correo Electrónico" formControlName="email" required>
                 <mat-error *ngIf="form.controls.email.invalid">{{ getErrorMessage(form.controls.email) }}</mat-error>
             </mat-form-field>
 
-            <mat-form-field style="width: 100%;">
+            <mat-form-field style="width: 100%;" [hidden]="recoveryPassword">
                 <input matInput type="password" placeholder="Contraseña" formControlName="password" required autocomplete="new-password">
                 <mat-error *ngIf="form.controls.password.invalid">{{ getErrorMessage(form.controls.password) }}</mat-error>
             </mat-form-field>
 
-            <button mat-button color="primary" [disabled]="form.invalid" style="margin: 20px 0; width: 100%;" (click)="submitForm()">INGRESAR</button>
+            <button mat-button color="primary" [disabled]="recoveryPassword ? form.controls.email.invalid : form.invalid" style="margin: 20px 0; width: 100%;" (click)="submitForm()">{{ recoveryPassword ? 'ENVIAR SOLICITUD' : 'INGRESAR' }}</button>
 
             <div style="overflow: hidden;">
-                <a mat-button routerLink="/recoverpassword" style="float: right; font-size: 12px;">Recuperar contraseña</a>
+                <button type="submit" mat-button style="float: right; font-size: 12px;" (click)="toggleState()">{{ !recoveryPassword ? 'Recuperar contraseña' : 'Volver' }}</button>
             </div>
         </form>
 
-        <p style="font-size: 11px; margin-top: 30px; text-align: center;"><strong>Todos los derechos reservados por Servicios ADOM SAS</strong></p>
+        <p class="copyright"><strong>Todos los derechos reservados por Servicios ADOM SAS</strong></p>
     </mat-card-content>
 </mat-card>

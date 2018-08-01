@@ -8,17 +8,19 @@ import "rxjs/add/observable/fromPromise";
 import "rxjs/add/operator/mergeMap";
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 
 @Injectable()
 export class HttpService extends Http {
     private origRequest: Request;
     private origOptions: RequestOptionsArgs;
     private currentUser: any;
-    
+
     constructor (
         backend: XHRBackend,
         options: RequestOptions,
-        private router: Router
+        private router: Router,
+        private notifier: NotifierService
     ) {
         super(backend, options);
     }
@@ -33,24 +35,23 @@ export class HttpService extends Http {
         }
 
         options.headers.append('Content-Type', 'application/json');
-        
+
         return options;
     }
 
     request(url: string|Request, options?: RequestOptionsArgs): Observable<Response> {
         this.currentUser = JSON.parse(window.localStorage.getItem('current_user'));
-        
+
         if (typeof url === 'string') {
             if (!options) {
                 options = { headers: new Headers() };
             }
-        
+
             options.headers.set('Authorization', `Bearer ${this.currentUser.access_token}`);
-        
         } else {
             url.headers.set('Authorization', `Bearer ${this.currentUser.access_token}`);
         }
-        
+
         this.origRequest = url as Request;
         this.origOptions = options as RequestOptionsArgs;
 
@@ -61,26 +62,26 @@ export class HttpService extends Http {
         if (noIntercept) {
             return super.get(url, options);
         }
-    
+
         return this.intercept(super.get(url, options));
     }
-    
+
     post(url: string, body: any, options?: RequestOptionsArgs, noIntercept?: boolean): Observable<Response> {
         if (noIntercept) {
             return super.post(url, body, options);
         }
-    
+
         return this.intercept(super.post(url, body, this.getRequestOptionArgs(options)));
     }
-    
+
     put(url: string, body: any, options?: RequestOptionsArgs, noIntercept?: boolean): Observable<Response> {
         if (noIntercept) {
             return super.put(url, body, options);
         }
-    
+
         return this.intercept(super.put(url, body, this.getRequestOptionArgs(options)));
     }
-    
+
     delete(url: string, options?: RequestOptionsArgs, noIntercept?: boolean): Observable<Response> {
         if (noIntercept) {
             return super.delete(url, options);
@@ -94,6 +95,7 @@ export class HttpService extends Http {
             if (err.status == 401) {
                 if (err.json().message === "The refresh token is invalid.") {
                     this.router.navigate(['/login']);
+                    this.notifier.notify('error','Su sesion ha expirado, por favor ingrese nuevamente');
                     return Observable.throw(new Error('No se pudo logear'));
                 }
 
@@ -115,7 +117,7 @@ export class HttpService extends Http {
                                 return Observable.throw(new Error('No se pudo logear'));
                             }
                         }
-    
+
                     });
 
             } else {
@@ -132,7 +134,7 @@ export class HttpService extends Http {
             "refresh_token": this.currentUser.refresh_token,
             "scope": ""
         });
-        
+
         return this.post(`${environment.apiUrl}/oauth/token`, json, this.getRequestOptionArgs());
     }
 }

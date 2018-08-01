@@ -10,6 +10,10 @@ import { Resource } from './models/resource';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+    public isMobile: Boolean = false;
+    public openMenu: Boolean = false;
+    public logoMiddle: number = 0;
+
     public showMenu: Boolean = false;
     public menuModules: any = [];
     public menuResources: any = [];
@@ -112,6 +116,13 @@ export class AppComponent {
     constructor(
         private router: Router
     ) {
+        let ww = window.innerWidth;
+
+        if (ww <= 900) {
+          this.isMobile = true;
+          this.logoMiddle = (ww/2) - 27.025;
+        }
+
         router.events.subscribe((nav: any) => {
             let currentUser = JSON.parse(window.localStorage.getItem('current_user'));
             let me = JSON.parse(window.localStorage.getItem('me'));
@@ -166,6 +177,6 @@ export class AppComponent {
 
     public closeSidenav(): void {
         this.menuResources = [];
+        this.openMenu = false;
     }
-
 }

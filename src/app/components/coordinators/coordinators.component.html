@@ -1,134 +1,140 @@
 <mat-card #list [hidden]="formActive">
-    <div class="spinner-container" *ngIf="mainSpinner">
-        <mat-spinner></mat-spinner>
-    </div>
+  <div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
 
-    <mat-card-title>
-        <h4>Lista de Coordinadores</h4>
-    </mat-card-title>
+  <mat-card-title>
+    <h4>Lista de Coordinadores</h4>
+  </mat-card-title>
 
-    <mat-card-content *ngIf="auth.hasActionResource('Create')">
-        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="showForm()">
+  <mat-card-content *ngIf="permissions.create">
+    <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="showForm()">
       <mat-icon>add</mat-icon> NUEVO COORDINADOR</button>
-    </mat-card-content>
+  </mat-card-content>
 
-    <mat-card-content>
-        <div class="mat-elevation-z2">
-            <mat-toolbar class="table-search">
-                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
-            </mat-toolbar>
+  <mat-card-content>
+    <mat-toolbar class="table-search">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+    </mat-toolbar>
 
-            <mat-table #table [dataSource]="dataSource" matSort>
-                <ng-container matColumnDef="CoordinatorId">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.CoordinatorId)" *ngIf="auth.hasActionResource('Update')">
-							<mat-icon>edit</mat-icon>
-						</button>
-                    </mat-cell>
-                </ng-container>
+    <div class="mat-elevation-z2">
+      <mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="CoordinatorId">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.CoordinatorId)" *ngIf="permissions.update">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
 
-                <ng-container matColumnDef="Document">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Documento </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.Document}} </mat-cell>
-                </ng-container>
+        <ng-container matColumnDef="Document">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Documento </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.Document}} </mat-cell>
+        </ng-container>
 
-                <ng-container matColumnDef="Names">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.Names}} </mat-cell>
-                </ng-container>
+        <ng-container matColumnDef="Names">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.Names}} </mat-cell>
+        </ng-container>
 
-                <ng-container matColumnDef="Lastnames">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.Lastnames}} </mat-cell>
-                </ng-container>
+        <ng-container matColumnDef="Lastnames">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.Lastnames}} </mat-cell>
+        </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
-            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
-            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-        </div>
-    </mat-card-content>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+  </mat-card-content>
 </mat-card>
 
 <mat-card #form id="form-entity" class="mat-card-form" *ngIf="formActive">
-    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 
-    <mat-card-title>
-        <h4>{{ currentCoord ? 'Editar Coordinador' : 'Nuevo Coordinador' }}</h4>
-        <p class="title-comment">Los campos con * son obligatorios</p>
-    </mat-card-title>
+  <mat-card-title>
+    <h4>{{ currentCoord ? 'Editar Coordinador' : 'Nuevo Coordinador' }}</h4>
+    <p class="title-comment">Los campos con * son obligatorios</p>
+  </mat-card-title>
 
-    <mat-card-content>
-        <form novalidate autocomplete="off">
-            <mat-form-field>
-                <mat-select placeholder="Tipo de documento" [(ngModel)]="coord.DocumentTypeId" name="typeDocument" [formControl]="validator.documentType" required>
-                    <mat-option *ngFor="let documentType of documentTypes" [value]="documentType.Id">
-                        {{ documentType.Name }}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="validator.documentType.invalid">{{ getErrorMessage(validator.documentType) }}</mat-error>
-            </mat-form-field>
+  <mat-card-content>
+    <form novalidate autocomplete="off">
+      <mat-form-field>
+        <mat-select placeholder="Tipo de documento" [(ngModel)]="coord.DocumentTypeId" name="typeDocument" [formControl]="validator.documentType"
+          required>
+          <mat-option *ngFor="let documentType of documentTypes" [value]="documentType.Id">
+            {{ documentType.Name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="validator.documentType.invalid">{{ getErrorMessage(validator.documentType) }}</mat-error>
+      </mat-form-field>
 
-            <mat-form-field>
-                <input matInput placeholder="Nro. Documento" [(ngModel)]="coord.Document" name="Document" (keydown)="validateKey($event, coord.DocumentTypeId)" [formControl]="validator.document" required>
-                <mat-error *ngIf="validator.document.invalid">{{ getErrorMessage(validator.document) }}</mat-error>
-            </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Nro. Documento" [(ngModel)]="coord.Document" name="Document" (keydown)="validateKey($event, coord.DocumentTypeId)"
+          [formControl]="validator.document" required>
+        <mat-error *ngIf="validator.document.invalid">{{ getErrorMessage(validator.document) }}</mat-error>
+      </mat-form-field>
 
-            <mat-form-field style="width: 40%;">
-                <input id="coord-email" matInput placeholder="Correo Electronico" type="email" [(ngModel)]="coord.Email" name="Email" [formControl]="validator.email" (change)="verifyUserExist(coord.Email)" required>
-                <mat-error *ngIf="validator.email.invalid">{{ getErrorMessage(validator.email) }}</mat-error>
-            </mat-form-field>
+      <mat-form-field style="width: 40%;">
+        <input id="coord-email" matInput placeholder="Correo Electronico" type="email" [(ngModel)]="coord.Email" name="Email" [formControl]="validator.email"
+          (change)="verifyUserExist(coord.Email)" required>
+        <mat-error *ngIf="validator.email.invalid">{{ getErrorMessage(validator.email) }}</mat-error>
+      </mat-form-field>
 
-            <div class="user-names">
-                <mat-form-field>
-                    <input matInput placeholder="Primer Nombre" [(ngModel)]="coord.FirstName" name="FirstName" [formControl]="validator.name" required>
-                    <mat-error *ngIf="validator.name.invalid">{{ getErrorMessage(validator.name) }}</mat-error>
-                </mat-form-field>
+      <div class="user-names">
+        <mat-form-field>
+          <input matInput placeholder="Primer Nombre" [(ngModel)]="coord.FirstName" name="FirstName" [formControl]="validator.name"
+            required>
+          <mat-error *ngIf="validator.name.invalid">{{ getErrorMessage(validator.name) }}</mat-error>
+        </mat-form-field>
 
-                <mat-form-field>
-                    <input matInput placeholder="Segundo Nombre" [(ngModel)]="coord.SecondName" name="SecondName">
-                </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Segundo Nombre" [(ngModel)]="coord.SecondName" name="SecondName">
+        </mat-form-field>
 
-                <mat-form-field>
-                    <input matInput placeholder="Primer Apellido" [(ngModel)]="coord.Surname" name="Surname" [formControl]="validator.lastname" required>
-                    <mat-error *ngIf="validator.lastname.invalid">{{ getErrorMessage(validator.lastname) }}</mat-error>
-                </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Primer Apellido" [(ngModel)]="coord.Surname" name="Surname" [formControl]="validator.lastname"
+            required>
+          <mat-error *ngIf="validator.lastname.invalid">{{ getErrorMessage(validator.lastname) }}</mat-error>
+        </mat-form-field>
 
-                <mat-form-field>
-                    <input matInput placeholder="Segundo Apellido" [(ngModel)]="coord.SecondSurname" name="SecondSurname">
-                </mat-form-field>
-            </div>
+        <mat-form-field>
+          <input matInput placeholder="Segundo Apellido" [(ngModel)]="coord.SecondSurname" name="SecondSurname">
+        </mat-form-field>
+      </div>
 
-            <fieldset id="sex-group-opt">
-                <legend style="position: relative;">Sexo</legend>
-                <mat-radio-group [(ngModel)]="coord.GenderId" name="gender" [formControl]="validator.sex" required>
-                    <mat-radio-button *ngFor="let gender of genders" [value]="gender.Id" style="margin-right: 15px;">{{ gender.Name }}</mat-radio-button>
-                </mat-radio-group>
-            </fieldset>
+      <fieldset id="sex-group-opt">
+        <legend style="position: relative;">Sexo</legend>
+        <mat-radio-group [(ngModel)]="coord.GenderId" name="gender" [formControl]="validator.sex" required>
+          <mat-radio-button *ngFor="let gender of genders" [value]="gender.Id" style="margin-right: 15px;">{{ gender.Name }}</mat-radio-button>
+        </mat-radio-group>
+      </fieldset>
 
-            <mat-form-field style="width: 30%;">
-                <input matInput [matDatepicker]="picker" placeholder="Fecha de nacimiento" [(ngModel)]="coord.BirthDate" name="BirthDate">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+      <mat-form-field style="width: 30%;">
+        <input matInput [matDatepicker]="picker" placeholder="Fecha de nacimiento" [(ngModel)]="coord.BirthDate" name="BirthDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
 
-            <mat-form-field>
-                <input matInput placeholder="Telefono" type="tel" [(ngModel)]="coord.Telephone1" name="Telephone1">
-            </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Telefono" type="tel" [(ngModel)]="coord.Telephone1" name="Telephone1">
+      </mat-form-field>
 
-            <mat-form-field>
-                <input matInput placeholder="Telefono Secundario" type="tel" [(ngModel)]="coord.Telephone2" name="Telephone2">
-            </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Telefono Secundario" type="tel" [(ngModel)]="coord.Telephone2" name="Telephone2">
+      </mat-form-field>
 
-            <div class="form-button">
-                <button mat-button style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
+      <div class="form-button">
+        <button mat-button style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
 
-                <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentCoord, 'button-green': currentCoord}" style="margin-bottom: 15px;" (click)="submitForm(coord)">{{ currentCoord ? 'MODIFICAR' : 'GUARDAR' }}
+        <button mat-raised-button [disabled]="formInvalid()" [ngClass]="{'button-purple': !currentCoord, 'button-green': currentCoord}"
+          style="margin-bottom: 15px;" (click)="submitForm(coord)">{{ currentCoord ? 'MODIFICAR' : 'GUARDAR' }}
           <mat-icon style="margin-left: 10px;">save</mat-icon>
         </button>
-            </div>
-        </form>
-    </mat-card-content>
+      </div>
+    </form>
+  </mat-card-content>
 </mat-card>

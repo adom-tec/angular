@@ -25,10 +25,19 @@ export class AssignServiceDetailService {
     }
 
     update(serviceDetails: AssignServiceDetail[], assignServiceId: number): Observable<Response> {
+        serviceDetails = serviceDetails.map(visit => {
+            visit = Object.assign({}, visit);
+            delete visit.selectFilteredData;
+            return visit;
+        });
+
         return this.http.put(`${environment.apiUrl}/api/services/${assignServiceId}/details`, JSON.stringify({ details: serviceDetails }));
     }
 
     updateDetail(serviceDetail: AssignServiceDetail, assignServiceId: number, assignServiceDetailId: number): Observable<Response> {
+        serviceDetail = Object.assign({}, serviceDetail);
+        delete serviceDetail.selectFilteredData;
+
         return this.http.put(`${environment.apiUrl}/api/services/${assignServiceId}/details/${assignServiceDetailId}`, JSON.stringify(serviceDetail));
     }
 }    

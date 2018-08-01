@@ -16,11 +16,17 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-select placeholder="Entidad" [(ngModel)]="patientService.EntityId" name="entity" [formControl]="validator.entity" (change)="getPlansEntity(patientService.EntityId)" required>
-                <mat-option *ngFor="let entity of entities" [value]="entity.EntityId">
-                    {{ entity.Name }}
-                </mat-option>
+            <mat-select placeholder="Entidad" [(ngModel)]="patientService.EntityId" name="entity" [formControl]="validator.entity" required
+            (openedChange)="resetSelectList(entityFilteredData, entities)" (change)="getPlansEntity(patientService.EntityId)">
+
+              <ngx-mat-select-search [(ngModel)]="entityFilter" name="entityFilter" (keyup)="selectFilterData(entityFilteredData, entities, entityFilter)"
+                placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+
+              <mat-option *ngFor="let entity of entityFilteredData | async" [value]="entity.EntityId">
+                {{ entity.Name }}
+              </mat-option>
             </mat-select>
+
             <mat-error *ngIf="validator.entity.invalid">{{ getErrorMessage(validator.entity) }}</mat-error>
         </mat-form-field>
 
@@ -60,11 +66,15 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-select placeholder="Servicio" [(ngModel)]="patientService.ServiceId" name="serviceId" [formControl]="validator.serviceId" [disabled]="!(patientService.PlanEntityId && planRates.length)" required>
-                <mat-option *ngFor="let planRate of planRates" [value]="planRate.ServiceId">
-                    {{ planRate.service.Name }}
-                </mat-option>
+            <mat-select placeholder="Servicio" [(ngModel)]="patientService.ServiceId" name="serviceId" [formControl]="validator.serviceId" (openedChange)="resetSelectList(serviceFilteredData, planRates)" [disabled]="!(patientService.PlanEntityId && planRates.length)" required>
+
+              <ngx-mat-select-search [(ngModel)]="serviceFilter" name="serviceFilter" (keyup)="selectFilterData(serviceFilteredData, planRates, serviceFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+
+              <mat-option *ngFor="let planRate of serviceFilteredData | async" [value]="planRate.Id">
+                  {{ planRate.Name }}
+              </mat-option>
             </mat-select>
+
             <mat-error *ngIf="validator.serviceId.invalid">{{ getErrorMessage(validator.serviceId) }}</mat-error>
         </mat-form-field>
 
@@ -98,11 +108,15 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-select placeholder="Profesional" [(ngModel)]="patientService.ProfessionalId" name="professionalId" [formControl]="validator.professionalId" required>
-                <mat-option *ngFor="let pro of professionals" [value]="pro.Id">
-                    {{ pro.Name }}
-                </mat-option>
+            <mat-select placeholder="Profesional" [(ngModel)]="patientService.ProfessionalId" name="professionalId" [formControl]="validator.professionalId" (openedChange)="resetSelectList(professionalFilteredData, professionals)" required>
+
+              <ngx-mat-select-search [(ngModel)]="professionalFilter" name="professionalFilter" (keyup)="selectFilterData(professionalFilteredData, professionals, professionalFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+
+              <mat-option *ngFor="let pro of professionalFilteredData | async" [value]="pro.Id">
+                  {{ pro.Name }}
+              </mat-option>
             </mat-select>
+
             <mat-error *ngIf="validator.professionalId.invalid">{{ getErrorMessage(validator.professionalId) }}</mat-error>
         </mat-form-field>
 

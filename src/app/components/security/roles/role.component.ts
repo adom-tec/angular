@@ -21,6 +21,10 @@ export class RoleComponent implements OnInit {
     public displayedColumns: string[] = [];
     public dataSource: MatTableDataSource<Role> = new MatTableDataSource([])
     public filter: string;
+    public permissions: any = {
+        create: false,
+        update: false
+    };
     
     public currentRole: number;
     public role: Role = {
@@ -42,6 +46,8 @@ export class RoleComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.permissions.create = this.auth.hasActionResource('Create');
+        this.permissions.update = this.auth.hasActionResource('Update');
         this.getRoles();
     }
 
@@ -75,7 +81,7 @@ export class RoleComponent implements OnInit {
                 this.displayedColumns = data.length ? Object.keys(data[0]) : [];
                 this.mainSpinner = false;
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 this.mainSpinner = false;
             });;
     }
@@ -135,7 +141,7 @@ export class RoleComponent implements OnInit {
                 this.notifier.notify('success', this.currentRole ? 'Se aplicaron los cambios con exito' : 'Se creo el role con exito');
                 this.hideForm();
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
     }
 }

@@ -26,6 +26,10 @@ export class CoordinatorsComponent implements OnInit {
 	public dataSource = new MatTableDataSource([]);
 	public filter: string;
 	public formActive: boolean = false;
+	public permissions: any = {
+		create: false,
+		update: false
+	};
 
 	public coordinators: Coordinator[];
 	public currentCoord: number;
@@ -68,6 +72,8 @@ export class CoordinatorsComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.permissions.create = this.auth.hasActionResource('Create');
+		this.permissions.update = this.auth.hasActionResource('Update');
 		this.mainSpinner = true;
 
 		Observable.forkJoin(
@@ -81,7 +87,7 @@ export class CoordinatorsComponent implements OnInit {
 			this.genders = res[2].json();
 		}, err => {
 			this.mainSpinner = false;
-			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 		});
 	}
 
@@ -115,8 +121,8 @@ export class CoordinatorsComponent implements OnInit {
 			return {
 				CoordinatorId: coord.CoordinatorId,
 				Document: coord.Document,
-				Names: `${coord.user.FirstName} ${coord.user.SecondName || ''}`.trim().toLowerCase(),
-				Lastnames: `${coord.user.Surname} ${coord.user.SecondSurname || ''}`.trim().toLowerCase(),
+				Names: `${coord.user.FirstName} ${coord.user.SecondName || ''}`.trim(),
+				Lastnames: `${coord.user.Surname} ${coord.user.SecondSurname || ''}`.trim(),
 			};
 		});
 
@@ -210,7 +216,7 @@ export class CoordinatorsComponent implements OnInit {
 				this.mainSpinner = false;
 				this.mapCoordinatorToTableFormat(data);
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -239,7 +245,7 @@ export class CoordinatorsComponent implements OnInit {
 				this.hideForm();
 			}, err => {
 				this.loading = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 

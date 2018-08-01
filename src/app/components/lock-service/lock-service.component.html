@@ -14,7 +14,7 @@
                 <mat-error *ngIf="validator.lockDate.invalid">{{ getErrorMessage(validator.lockDate) }}</mat-error>
             </mat-form-field>
 
-            <div class="form-button" *ngIf="auth.hasActionResource('Update')">
+            <div class="form-button" *ngIf="permissions.update">
                 <button mat-raised-button [disabled]="!lockDate || loading" class="button-purple" style="margin-bottom: 15px;" (click)="submitForm(lockDate)">GUARDAR
                     <mat-icon style="margin-left: 10px;">save</mat-icon>
                 </button>

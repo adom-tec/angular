@@ -12,7 +12,7 @@ export class PatientService {
     constructor(
         private http: HttpService,
         private authenticationService: AuthenticationService
-    ) {}  
+    ) {}
 
     getPatients(): Observable<Patient[]> {
         return this.http.get(`${environment.apiUrl}/api/patients`)
@@ -26,7 +26,7 @@ export class PatientService {
 
     createOrUpdate(patient: Patient, id?: string | number): Observable<Response> {
         let url = `${environment.apiUrl}/api/patients`;
-        
+
         url = id ? url + '/' + id : url;
 
         return this.http[id ? 'put' : 'post'](url, JSON.stringify(patient));
@@ -36,12 +36,12 @@ export class PatientService {
         return data.map(patient => {
             return {
                 patientId: patient.PatientId,
-                typeDoc: patient.document_type.Name.toLowerCase(),
-                numDoc: patient.Document.toLowerCase(),
-                names: `${patient.FirstName} ${patient.SecondName || ''}`.trim().toLowerCase(),
-                lastnames: `${patient.Surname} ${patient.SecondSurname || ''}`.trim().toLowerCase(),
+                typeDoc: patient.document_type.Name,
+                numDoc: patient.Document,
+                names: `${patient.FirstName} ${patient.SecondName || ''}`.trim(),
+                lastnames: `${patient.Surname} ${patient.SecondSurname || ''}`.trim(),
                 telephone: patient.Telephone1,
-                typePatient: patient.patient_type.Name.toLowerCase()
+                typePatient: patient.patient_type.Name
             };
         });
     }

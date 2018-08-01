@@ -41,12 +41,13 @@
 }
 
 .notices-list .notice-item .notice-text {
+    font-size: 16px;
     padding: 20px;
 }
 
 .notices-list .notice-item .notice-info {
     font-style: italic;
-    font-size: 12px;
+    font-size: 14px;
     margin: 0;
     margin-bottom: 8px;
 }

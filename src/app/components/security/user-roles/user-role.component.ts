@@ -23,6 +23,9 @@ export class UserRoleComponent implements OnInit {
     public displayedColumns: string[] = [];
     public dataSource: MatTableDataSource<User> = new MatTableDataSource([])
     public filter: string;
+    public permissions: any = {
+        update: false
+    };
     
     public currentUser: number;
     public roles: Role[] = [];
@@ -39,6 +42,7 @@ export class UserRoleComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.permissions.update = this.auth.hasActionResource('Update');
         this.loadData();
     }
 
@@ -72,7 +76,7 @@ export class UserRoleComponent implements OnInit {
             });
             this.mainSpinner = false;
         }, err => {
-            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             this.mainSpinner = false;
         });
     }
@@ -104,7 +108,7 @@ export class UserRoleComponent implements OnInit {
 
             }, err => {
                 this.mainSpinner = false;
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
     }
 
@@ -138,7 +142,7 @@ export class UserRoleComponent implements OnInit {
                 this.notifier.notify('success', 'Se aplicaron los cambios con exito');
                 this.hideForm();
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 this.loading = false;
             });
     }

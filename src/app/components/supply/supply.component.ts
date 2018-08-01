@@ -21,6 +21,11 @@ export class SupplyComponent implements OnInit {
   public dataSource = new MatTableDataSource([]);
   public filter: string;
   public formActive: boolean = false;
+  public permissions: any = {
+    create: false,
+    update: false
+  };
+  
   public currentSupply: number;
   public supply: Supply = {
     Presentation: '',
@@ -47,14 +52,17 @@ export class SupplyComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.permissions.create = this.auth.hasActionResource('Create');
+    this.permissions.update = this.auth.hasActionResource('Update');
     this.mainSpinner = true;
+
     this.supplyService.getSupplies()
       .subscribe(data => {
         this.dataSource.data = data;
         this.displayedColumns = this.dataSource.data.length ? Object.keys(this.dataSource.data[0]) : [];
         this.mainSpinner = false;
       }, err => {
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
         this.mainSpinner = false;
       });
   }
@@ -119,7 +127,7 @@ export class SupplyComponent implements OnInit {
         this.dataSource.data = data;
       }, err => {
         this.mainSpinner = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -147,7 +155,7 @@ export class SupplyComponent implements OnInit {
         this.notifier.notify('success', this.currentSupply ? 'Se aplicaron los cambios con exito' : 'Se creo el insumo con exito');
         this.hideForm();
       }, err => {
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 

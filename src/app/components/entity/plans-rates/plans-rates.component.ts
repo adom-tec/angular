@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { NotifierService } from 'angular-notifier';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
 	selector: 'app-plans-rates',
@@ -38,7 +39,11 @@ export class PlansRatesDialog implements OnInit {
 		EntityId: null,
 		Name: '',
 		State: 1
-	};
+  };
+
+  //select filters
+  public selectFilter: string = null;
+  public selectFilteredData: ReplaySubject<Service[]> = new ReplaySubject<Service[]>(1);
 
 	//Validators
 	public validator = {
@@ -76,11 +81,12 @@ export class PlansRatesDialog implements OnInit {
 				plan.State = (+plan.State);
 				return plan;
 			});
-			this.services = res[1];
+      this.services = res[1];
+      this.selectFilteredData.next(this.services.slice());
 			this.loading = false;
 		}, err => {
 			this.loading = false;
-			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 		});
 	}
 
@@ -123,7 +129,7 @@ export class PlansRatesDialog implements OnInit {
 				this.loading = false;
 				this.notifier.notify('success', 'Se creo el plan con exito');
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -146,13 +152,13 @@ export class PlansRatesDialog implements OnInit {
 				this.loading = false;
 				this.notifier.notify('success', 'Se cambio el estado del plan con exito');
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
 	getPlanRates(planEntityId: number, clear: boolean = true): void {
 		this.loading = true;
-		
+
 		if (clear) {
 			this.dataSource.data = []
 		}
@@ -173,7 +179,7 @@ export class PlansRatesDialog implements OnInit {
 				this.clearAddPlanrate();
 				this.loading = false;
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -201,7 +207,7 @@ export class PlansRatesDialog implements OnInit {
 				this.notifier.notify('success', this.currentPlanRate ? 'Se aplicaron los cambios con exito' : 'Se creo la tarifa de servicio con exito');
 				this.getPlanRates(this.currentPlanEntiy, false);
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -213,7 +219,7 @@ export class PlansRatesDialog implements OnInit {
 				this.notifier.notify('success', 'Se elimino la tirifa de servicio con exito');
 				this.getPlanRates(this.currentPlanEntiy, false);
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -241,5 +247,46 @@ export class PlansRatesDialog implements OnInit {
 		}
 
 		this.myNgForm.resetForm();
-	}
+  }
+
+  /**
+   * select filter functions
+   */
+  public selectFilterData(value: string): void {
+    if (!this.services) {
+      return;
+    }
+    // get the search keyword
+    if (!value) {
+      this.selectFilteredData.next(this.services.slice());
+      return;
+    } else {
+      value = value.toLowerCase();
+    }
+    // filter the services
+    this.selectFilteredData.next(
+      this.services.filter(service => service.Name.toLowerCase().indexOf(value) > -1)
+    );
+  }
+
+  public resetSelectList(): void {
+    this.selectFilteredData.next(this.services.slice());
+    this.changeTopPosition();
+  }
+
+  private changeTopPosition(): void {
+    setTimeout(() => {
+      let nodes = document.getElementsByClassName('cdk-overlay-pane');
+      let cardTop = document.querySelector('.mat-card').getBoundingClientRect().top;
+
+      for (let i=0; i < nodes.length; i++) {
+        if (nodes[i].clientHeight) {
+          let panelTop = nodes[i].getBoundingClientRect().top;
+          if (panelTop < cardTop) {
+            (nodes[i] as HTMLElement).style.top = '200px';
+          }
+        }
+      }
+    }, 100);
+  }
 }

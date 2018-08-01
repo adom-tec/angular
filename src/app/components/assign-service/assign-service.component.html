@@ -1,438 +1,497 @@
 <mat-card #list [hidden]="formActive">
-    <div class="spinner-container" *ngIf="mainSpinner">
-        <mat-spinner></mat-spinner>
+  <div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>Servicios por Paciente</h4>
+  </mat-card-title>
+
+  <mat-card-content>
+    <mat-toolbar class="table-search">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterMain, 'main')" [(ngModel)]="filterMain">
+    </mat-toolbar>
+
+    <div class="mat-elevation-z2">
+      <mat-table #patientTable="matSort" [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="patientId">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.patientId)" matTooltip="Servicios">
+              <mat-icon>category</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="typeDoc">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Doc. </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.typeDoc}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="numDoc">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Numero de Doc. </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.numDoc}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="names">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.names}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="lastnames">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.lastnames}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="telephone">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.telephone}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="typePatient">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Paciente </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.typePatient}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <mat-paginator #patientPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
-
-    <mat-card-title>
-        <h4>Servicios por Paciente</h4>
-    </mat-card-title>
-
-    <mat-card-content>
-        <div class="mat-elevation-z2">
-            <mat-toolbar class="table-search">
-                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterMain, 'main')" [(ngModel)]="filterMain">
-            </mat-toolbar>
-
-            <mat-table #patientTable="matSort" [dataSource]="dataSource" matSort>
-                <ng-container matColumnDef="patientId">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.patientId)" matTooltip="Servicios">
-                            <mat-icon>category</mat-icon>
-                        </button>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="typeDoc">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Doc. </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.typeDoc}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="numDoc">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Numero de Doc. </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.numDoc}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="names">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.names}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="lastnames">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.lastnames}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="telephone">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.telephone}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="typePatient">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Paciente </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.typePatient}} </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
-            <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
-            <mat-paginator #patientPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-        </div>
-    </mat-card-content>
+  </mat-card-content>
 </mat-card>
 
 <mat-card id="form-patient" class="mat-card-form" *ngIf="formActive">
-    <mat-card-title>
-        <h4>Datos del paciente</h4>
-    </mat-card-title>
+  <mat-card-title>
+    <h4>Datos del paciente</h4>
+  </mat-card-title>
 
-    <mat-card-content>
-        <div id="patient-info-container">
-            <fieldset>
-                <legend>Datos personales</legend>
+  <mat-card-content>
+    <div id="patient-info-container">
+      <fieldset>
+        <legend>Datos personales</legend>
 
-                <p><strong>Tipo de Documento:</strong> {{ currentPatient.document_type.Name }}</p>
-                <p><strong>Numero de Documento:</strong> {{ currentPatient.Document }}</p>
-                <p><strong>Nombre completo:</strong> {{ currentPatient.FirstName + ' ' + (currentPatient.SecondName || '') + ' ' + currentPatient.Surname + ' ' + (currentPatient.SecondSurname || '')}}</p>
-                <p><strong>Sexo:</strong> {{ currentPatient.gender.Name }}</p>
-                <p><strong>Ocupacion:</strong> {{ currentPatient.Occupation }}</p>
-                <p><strong>Perfil:</strong> {{ currentPatient.Profile }}</p>
-                <p><strong>Tipo de Paciente:</strong> {{ currentPatient.patient_type.Name }}</p>
-            </fieldset>
+        <p>
+          <strong>Tipo de Documento:</strong> {{ currentPatient.document_type.Name }}</p>
+        <p>
+          <strong>Numero de Documento:</strong> {{ currentPatient.Document }}</p>
+        <p>
+          <strong>Nombre completo:</strong> {{ currentPatient.FirstName + ' ' + (currentPatient.SecondName || '') + ' ' + currentPatient.Surname
+          + ' ' + (currentPatient.SecondSurname || '')}}</p>
+        <p>
+          <strong>Sexo:</strong> {{ currentPatient.gender.Name }}</p>
+        <p>
+          <strong>Ocupacion:</strong> {{ currentPatient.Occupation }}</p>
+        <p>
+          <strong>Perfil:</strong> {{ currentPatient.Profile }}</p>
+        <p>
+          <strong>Tipo de Paciente:</strong> {{ currentPatient.patient_type.Name }}</p>
+      </fieldset>
 
-            <fieldset>
-                <legend>Datos de Nacimiento</legend>
+      <fieldset>
+        <legend>Datos de Nacimiento</legend>
 
-                <p><strong>Fecha de Nacimiento:</strong> {{ currentPatient.BirthDate | date:'dd/MM/yyyy' }}</p>
-                <p><strong>Edad:</strong> {{ currentPatient.Age }}</p>
-                <p><strong>Unidad:</strong> {{ currentPatient.unit_time.Name }}</p>
-            </fieldset>
+        <p>
+          <strong>Fecha de Nacimiento:</strong> {{ currentPatient.BirthDate.format() === 'Invalid date' ? 'No Registrado' : currentPatient.BirthDate.format('DD/MM/YYYY')
+          }}</p>
+        <p>
+          <strong>Edad:</strong> {{ currentPatient.Age }}</p>
+        <p>
+          <strong>Unidad:</strong> {{ currentPatient.unit_time.Name }}</p>
+      </fieldset>
 
-            <fieldset>
-                <legend>Datos de Contacto</legend>
+      <fieldset>
+        <legend>Datos de Contacto</legend>
 
-                <p><strong>Direccion:</strong> {{ currentPatient.Address }}</p>
-                <p><strong>Barrio:</strong> {{ currentPatient.Neighborhood }}</p>
-                <p><strong>Telefono:</strong> {{ currentPatient.Telephone1 }}</p>
-                <p><strong>Telefono secundario:</strong> {{ currentPatient.Telephone2 }}</p>
-                <p><strong>Correo Electronico:</strong> {{ currentPatient.Email }}</p>
-            </fieldset>
-        </div>
+        <p>
+          <strong>Direccion:</strong> {{ currentPatient.Address }}</p>
+        <p>
+          <strong>Barrio:</strong> {{ currentPatient.Neighborhood }}</p>
+        <p>
+          <strong>Telefono:</strong> {{ currentPatient.Telephone1 }}</p>
+        <p>
+          <strong>Telefono secundario:</strong> {{ currentPatient.Telephone2 }}</p>
+        <p>
+          <strong>Correo Electronico:</strong> {{ currentPatient.Email }}</p>
+      </fieldset>
+    </div>
 
-        <div class="form-button" style="width: 100%;">
-            <button mat-button style="margin: 20px 0;" (click)="hideForm()">VOLVER
-                <mat-icon style="margin-left: 10px;">arrow_back</mat-icon>
-            </button>
-            <button mat-button style="margin: 20px 0;" (click)="openDialogPatient()" *ngIf="auth.hasActionResource('Update', '/patient')">EDITAR
-                <mat-icon style="margin-left: 10px;">edit</mat-icon>
-            </button>
-        </div>
-    </mat-card-content>
+    <div class="form-button" style="width: 100%;">
+      <button mat-button style="margin: 20px 0;" (click)="hideForm()">VOLVER
+        <mat-icon style="margin-left: 10px;">arrow_back</mat-icon>
+      </button>
+      <button mat-button style="margin: 20px 0;" (click)="openDialogPatient()" *ngIf="permissions.patientUpdate">EDITAR
+        <mat-icon style="margin-left: 10px;">edit</mat-icon>
+      </button>
+    </div>
+  </mat-card-content>
 </mat-card>
 
 <mat-card id="form-assign-services" class="mat-card-form" [hidden]="!formActive">
-    <div class="spinner-container" *ngIf="servicesSpinner">
-        <mat-spinner></mat-spinner>
+  <div class="spinner-container" *ngIf="servicesSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>Servicios del paciente</h4>
+  </mat-card-title>
+
+  <mat-card-content style="padding-bottom: 0;" *ngIf="permissions.create">
+    <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="openDialogServices()">
+      <mat-icon>add</mat-icon> AÑADIR SERVICIO</button>
+  </mat-card-content>
+
+  <mat-card-content id="card-services-content">
+    <mat-toolbar class="table-search">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterAssignServices, 'service')" [(ngModel)]="filterAssignServices">
+    </mat-toolbar>
+
+    <div class="mat-elevation-z2 table-services-container">
+      <mat-table #asgServiceTable="matSort" [dataSource]="assignServiceSource" matSort>
+        <ng-container matColumnDef="assignServiceId">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button class="btn-edit" mat-icon-button color="default" (click)="openDialogObservations(element.assignServiceId, $event)"
+              matTooltip="Observaciones">
+              <mat-icon>assignment</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="service">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.service}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Sesiones Programadas </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="countMadeVisits">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Sesiones Completadas </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.countMadeVisits}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="copaymentFrecuency">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Frecuencia </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.copaymentFrecuency}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="initialDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> F. Inicio </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.initialDate}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <span class="chip-default" [ngClass]="{'chip-primary': element.state === 'COMPLETADA', 'chip-warn': element.state === 'CANCELADA'}">{{ element.state }}</span>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="assignServiceDisplayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: assignServiceDisplayedColumns;" (click)="showDetailAssignService(row)" [class.row-selected]="rowIsActive(row)"></mat-row>
+      </mat-table>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!assignServiceSource.filteredData.length">No se encontaron registros.</p>
+      <mat-paginator #asgServicePager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
 
-    <mat-card-title>
-        <h4>Servicios del paciente</h4>
-    </mat-card-title>
-
-    <mat-card-content style="padding-bottom: 0;" *ngIf="auth.hasActionResource('Create')">
-        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="openDialogServices()">
-            <mat-icon>add</mat-icon> AÑADIR SERVICIO</button>
-    </mat-card-content>
-
-    <mat-card-content id="card-services-content">
-        <div class="mat-elevation-z2 table-services-container">
-            <mat-toolbar class="table-search">
-                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterAssignServices, 'service')" [(ngModel)]="filterAssignServices">
-            </mat-toolbar>
-
-            <mat-table #asgServiceTable="matSort" [dataSource]="assignServiceSource" matSort>
-                <ng-container matColumnDef="assignServiceId">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <button class="btn-edit" mat-icon-button color="default" (click)="openDialogObservations(element.assignServiceId, $event)" matTooltip="Observaciones">
-                            <mat-icon>assignment</mat-icon>
-                        </button>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="service">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.service}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="quantity">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Sesiones Programadas </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="countMadeVisits">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Sesiones Completadas </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.countMadeVisits}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="copaymentFrecuency">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Frecuencia </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.copaymentFrecuency}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="initialDate">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> F. Inicio </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.initialDate}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="state">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <span class="chip-default" [ngClass]="{'chip-primary': element.state === 'COMPLETADA', 'chip-warn': element.state === 'CANCELADA'}">{{ element.state }}</span>
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="assignServiceDisplayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: assignServiceDisplayedColumns;" (click)="showDetailAssignService(row)" [class.row-selected]="rowIsActive(row)"></mat-row>
-            </mat-table>
-            <p style="margin: 0; padding: 20px 30px;" *ngIf="!assignServiceSource.filteredData.length">No se encontaron registros.</p>
-            <mat-paginator #asgServicePager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-        </div>
-
-        <div id="service-info" class="mat-elevation-z2">
-            <h4>Detalle del Servicio</h4>
-            <p *ngIf="!currentAssignService" style="text-align: center;">Seleccione un servicio</p>
-            <mat-list *ngIf="currentAssignService">
-                <mat-list-item>
-                    <p mat-line><strong>Entidad:</strong> {{ currentAssignService.entity.Name }}</p>
-                </mat-list-item>
-                <mat-list-item>
-                    <p mat-line><strong>Nro. de Contrato:</strong> {{ currentAssignService.ContractNumber }}</p>
-                </mat-list-item>
-                <mat-list-item>
-                    <p mat-line><strong>Nro. de Autorización:</strong> {{ currentAssignService.AuthorizationNumber }}</p>
-                </mat-list-item>
-                <mat-list-item>
-                    <p mat-line><strong>Valor de Copago:</strong> {{ currentAssignService.CoPaymentAmount | currency }}</p>
-                </mat-list-item>
-                <mat-list-item>
-                    <p mat-line><strong>Frecuencia de Copago:</strong> {{ currentAssignService.co_payment_frecuency.Name }}</p>
-                </mat-list-item>
-                <mat-list-item>
-                    <p mat-line><strong>Servicio:</strong> {{ currentAssignService.service.Name }}</p>
-                </mat-list-item>
-                <mat-list-item>
-                    <p mat-line><strong>Frecuencia del Servicio:</strong> {{ currentAssignService.service_frecuency.Name }}</p>
-                </mat-list-item>
-                <mat-list-item>
-                    <p mat-line><strong>Des. CIE10:</strong> {{ currentAssignService.DescriptionCie10 }}</p>
-                </mat-list-item>
-            </mat-list>
-        </div>
-    </mat-card-content>
+    <div id="service-info" class="mat-elevation-z2">
+      <h4>Detalle del Servicio</h4>
+      <p *ngIf="!currentAssignService" style="text-align: center;">Seleccione un servicio</p>
+      <mat-list *ngIf="currentAssignService">
+        <mat-list-item>
+          <p mat-line>
+            <strong>Entidad:</strong> {{ currentAssignService.entity.Name }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Nro. de Contrato:</strong> {{ currentAssignService.ContractNumber }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Nro. de Autorización:</strong> {{ currentAssignService.AuthorizationNumber }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Valor de Copago:</strong> {{ currentAssignService.CoPaymentAmount | currency }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Frecuencia de Copago:</strong> {{ currentAssignService.co_payment_frecuency.Name }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Servicio:</strong> {{ currentAssignService.service.Name }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Frecuencia del Servicio:</strong> {{ currentAssignService.service_frecuency.Name }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Des. CIE10:</strong> {{ currentAssignService.DescriptionCie10 }}</p>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-card-content>
 </mat-card>
 
 <mat-card id="form-visits-detail" class="mat-card-form" *ngIf="currentAssignService">
-    <div class="spinner-container" *ngIf="visitsSpinner">
-        <mat-spinner></mat-spinner>
+  <div class="spinner-container" *ngIf="visitsSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+  <mat-card-title>
+    <h4>Detalle de Visitas</h4>
+  </mat-card-title>
+
+  <mat-card-content>
+    <div class="buttons-group" style="margin-bottom: 40px;" *ngIf="permissions.update">
+      <button mat-raised-button class="button-purple" (click)="saveVisits(assignSeriviceDetail)" [disabled]="notVisitsSelected">GUARDAR CAMBIOS
+        <mat-icon style="margin-left: 10px;">save</mat-icon>
+      </button>
+      <button style="margin-left: 20px;" mat-raised-button class="button-green" (click)="openDialogEditAssinedService()">EDITAR SERVICIO
+        <mat-icon style="margin-left: 10px;">edit</mat-icon>
+      </button>
+      <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignSeriviceDetail)"
+        [disabled]="notVisitsSelected">CANCELAR VISITAS
+        <mat-icon style="margin-left: 10px;">cancel</mat-icon>
+      </button>
+      <button style="margin-left: 20px;" mat-raised-button (click)="openDialogQualitytest()" *ngIf="showQualityTest">CALIFICAR SERVICIO
+        <mat-icon style="margin-left: 10px;">done_outline</mat-icon>
+      </button>
     </div>
-    <mat-card-title>
-        <h4>Detalle de Visitas</h4>
-    </mat-card-title>
 
-    <mat-card-content>
-        <div class="buttons-group" style="margin-bottom: 40px;" *ngIf="auth.hasActionResource('Update')">
-            <button mat-raised-button class="button-purple" (click)="saveVisits(assignSeriviceDetail)" [disabled]="visitHasRowSelected()">GUARDAR CAMBIOS
-                <mat-icon style="margin-left: 10px;">save</mat-icon>
-            </button>
-            <button style="margin-left: 20px;" mat-raised-button class="button-green" (click)="openDialogEditAssinedService()">EDITAR SERVICIO
-                <mat-icon style="margin-left: 10px;">edit</mat-icon>
-            </button>
-            <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignSeriviceDetail)" [disabled]="visitHasRowSelected()">CANCELAR VISITAS
-                <mat-icon style="margin-left: 10px;">cancel</mat-icon>
-            </button>
-            <button style="margin-left: 20px;" mat-raised-button (click)="openDialogQualitytest()" *ngIf="showQualityTest">CALIFICAR SERVICIO
-                <mat-icon style="margin-left: 10px;">done_outline</mat-icon>
-            </button>
-        </div>
+    <div class="table-container mat-elevation-z2" *ngIf="showTableDetails">
+      <table class="table-info">
+        <thead>
+          <tr>
+            <th *ngIf="permissions.update"></th>
+            <th>Visita</th>
+            <th>Fecha</th>
+            <th>Profecional</th>
+            <th>Estado</th>
+            <th>Comentarios</th>
+            <th>Verificado</th>
+            <!-- solo visibles si tiene la permisologia -->
+            <th *ngIf="permissions.update">Tipo de Tarifa</th>
+            <th *ngIf="permissions.update">Tarifa</th>
+            <th *ngIf="permissions.update">Medio de Pago</th>
+            <th *ngIf="permissions.update">Valor Recibido</th>
+            <th *ngIf="permissions.update">Pin</th>
+            <th *ngIf="permissions.update">Otro Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let visit of assignSeriviceDetail">
+            <td *ngIf="permissions.update">
+              <mat-checkbox (change)="toogleVisitRowState(visit, 'isSelected')" [checked]="visit.isSelected"></mat-checkbox>
+            </td>
+            <td>{{ visit.Consecutive }}</td>
+            <td>
+              <div *ngIf="permissions.update && visit.isSelected; then dateVisit else onlyShowDateVisit">here is ignored</div>
+              <ng-template #dateVisit>
+                <mat-form-field>
+                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit" (dateChange)="validateVisitDate(visit)">
+                  <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                  <mat-datepicker #date></mat-datepicker>
+                </mat-form-field>
+              </ng-template>
+              <ng-template #onlyShowDateVisit>
+                {{ visit.DateVisit.format() !== 'Invalid date' ? visit.DateVisit.format('DD/MM/YYYY') : '' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="permissions.update && visit.isSelected; then professional else onlyShowProfessional">here is ignored</div>
+              <ng-template #professional>
+                <mat-form-field>
+                  <mat-select placeholder="Profesional" [attr.name]="'professional' + visit.AssignServiceDetailId" [(ngModel)]="visit.ProfessionalId"
+                    (openedChange)="resetSelectList(visit.selectFilteredData)">
 
-        <div class="table-container mat-elevation-z2" *ngIf="assignSeriviceDetail.length ? true : false">
-            <table class="table-info">
-                <thead>
-                    <tr>
-                        <th *ngIf="auth.hasActionResource('Update')"></th>
-                        <th>Visita</th>
-                        <th>Fecha</th>
-                        <th>Profecional</th>
-                        <th>Estado</th>
-                        <th>Comentarios</th>
-                        <th>Verificado</th>
-                        <!-- solo visibles si tiene la permisologia -->
-                        <th *ngIf="auth.hasActionResource('Update')">Tipo de Tarifa</th>
-                        <th *ngIf="auth.hasActionResource('Update')">Tarifa</th>
-                        <th *ngIf="auth.hasActionResource('Update')">Medio de Pago</th>
-                        <th *ngIf="auth.hasActionResource('Update')">Valor Recibido</th>
-                        <th *ngIf="auth.hasActionResource('Update')">Pin</th>
-                        <th *ngIf="auth.hasActionResource('Update')">Otro Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let visit of assignSeriviceDetail;">
-                        <td *ngIf="auth.hasActionResource('Update')">
-                            <mat-checkbox (change)="toogleVisitRowState(visit, 'isSelected')" [checked]="visit.isSelected"></mat-checkbox>
-                        </td>
-                        <td>{{ visit.Consecutive }}</td>
-                        <td>
-                            <div *ngIf="auth.hasActionResource('Update'); then dateVisit else onlyShowDateVisit">here is ignored</div>
-                            <ng-template #dateVisit>
-                                <mat-form-field>
-                                    <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit">
-                                    <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
-                                    <mat-datepicker #date></mat-datepicker>
-                                </mat-form-field>
-                            </ng-template>
-                            <ng-template #onlyShowDateVisit>
-                                {{ visit.DateVisit.format() !== 'Invalid date' ? visit.DateVisit.format('DD/MM/YYYY') : '' }}
-                            </ng-template>
-                        </td>
-                        <td>
-                            <div *ngIf="auth.hasActionResource('Update'); then professional else onlyShowProfessional">here is ignored</div>
-                            <ng-template #professional>
-                                <mat-form-field>
-                                    <!-- <mat-select placeholder="Profesional" [attr.name]="'professional' + visit.AssignServiceDetailId" [(ngModel)]="visit.ProfessionalId">
-                                        <mat-option *ngFor="let pro of professionals" [value]="pro.ProfessionalId">
-                                            {{ (pro.user.FirstName + ' ' + (pro.user.SecondName || '') + ' ' + pro.user.Surname + ' ' + (pro.user.SecondSurname || '')).trim().toLowerCase() }}
-                                        </mat-option>
-                                    </mat-select> -->
+                    <ngx-mat-select-search [(ngModel)]="visit.selectFilter" [name]="'selectFilter' + visit.AssignServiceDetailId" (keyup)="selectFilterData(visit.selectFilteredData, visit.selectFilter)"
+                      placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
 
-                                    <mat-select placeholder="Profesional" [attr.name]="'professional' + visit.AssignServiceDetailId" [(ngModel)]="visit.ProfessionalId" (openedChange)="resetSelectList(visit.selectFilteredData)">
+                    <mat-option *ngFor="let pro of visit.selectFilteredData | async" [value]="pro.Id">
+                      {{ pro.Name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
 
-                                        <ngx-mat-select-search [(ngModel)]="visit.selectFilter" [name]="'selectFilter' + visit.AssignServiceDetailId" (keyup)="selectFilterData(visit.selectFilteredData, visit.selectFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
-
-                                        <mat-option *ngFor="let pro of visit.selectFilteredData | async" [value]="pro.ProfessionalId">
-                                            {{ (pro.user.FirstName + ' ' + (pro.user.SecondName || '') + ' ' + pro.user.Surname + ' ' + (pro.user.SecondSurname || '')).trim().toUpperCase() }}
-                                        </mat-option>
-                                    </mat-select>
-
-                                </mat-form-field>
-                            </ng-template>
-                            <ng-template #onlyShowProfessional>
-                                {{ (visit.professional.user.FirstName + ' ' + (visit.professional.user.SecondName || '') + ' ' + visit.professional.user.Surname + ' ' + (visit.professional.user.SecondSurname || '')).trim().toLowerCase() }}
-                            </ng-template>
-                        </td>
-                        <td>
-                            <div *ngIf="auth.hasActionResource('Update'); then state else onlyShowState">here is ignored</div>
-                            <ng-template #state>
-                                <mat-form-field>
-                                    <mat-select placeholder="Estado" [attr.name]="'state' + visit.AssignServiceDetailId" [(ngModel)]="visit.StateId">
-                                        <mat-option *ngFor="let state of filterStates(visit.AssignServiceDetailId)" [value]="state.Id">
-                                            {{ state.Name }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </ng-template>
-                            <ng-template #onlyShowState>
-                                <p style="margin: 5px 0;">{{ visit.state.Name }}</p>
-                            </ng-template>
-                            <div class="alert-cancel-reason" *ngIf="visit.StateId === 3">
-                                <strong>Motivo: </strong>{{ visit.detail_cancel_reason ? visit.detail_cancel_reason.cancel_reason.name : 'No tiene' }}
-                            </div>
-                        </td>
-                        <td>
-                            <div *ngIf="auth.hasActionResource('Update'); then comment else onlyShowComment">here is ignored</div>
-                            <ng-template #comment>
-                                <mat-form-field>
-                                    <input matInput placeholder="Comentario" [attr.name]="'comment' + visit.AssignServiceDetailId" [(ngModel)]="visit.Observation">
-                                </mat-form-field>
-                            </ng-template>
-                            <ng-template #onlyShowComment>
-                                {{ visit.Observation ? visit.Observation : '' }}
-                            </ng-template>
-                        </td>
-                        <td>
-                            <div *ngIf="auth.hasActionResource('Update'); then verified else onlyShowVerified">here is ignored</div>
-                            <ng-template #verified>
-                                <mat-checkbox [(ngModel)]="visit.Verified" (change)="toogleVisitRowState(visit, 'Verified')" [name]="'verified-' + visit.AssignServiceDetailId"></mat-checkbox>
-                            </ng-template>
-                            <ng-template #onlyShowVerified>
-                                {{ visit.Verified ? 'SI' : 'NO' }}
-                            </ng-template>
-                        </td>
-                        <!-- columnas solo visibles si tiene la permisologia -->
-                        <td *ngIf="auth.hasActionResource('Update')">
-                            <mat-form-field>
-                                <mat-select placeholder="Tarifa" [attr.name]="'professionalRate-' + visit.AssignServiceDetailId" [(ngModel)]="visit.professional_rate_id">
-                                    <mat-option *ngFor="let professionalRate of professionalRates" [value]="professionalRate.id">
-                                        {{ professionalRate.Name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </td>
-                        <td *ngIf="auth.hasActionResource('Update')">
-                            {{ getRateValue(visit.professional_rate_id) | currency }}
-                        </td>
-                        <td *ngIf="auth.hasActionResource('Update')">
-                            <mat-form-field>
-                                <mat-select placeholder="Metodo de pago" [attr.name]="'paymentType-' + visit.AssignServiceDetailId" [(ngModel)]="visit.PaymentType" (change)="clearValues(visit)">
-                                    <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType.Id">
-                                        {{ paymentType.Name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </td>
-                        <td *ngIf="auth.hasActionResource('Update')">
-                            <mat-form-field *ngIf="visit.PaymentType !== 2">
-                                <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.ReceivedAmount">
-                            </mat-form-field>
-                        </td>
-                        <td *ngIf="auth.hasActionResource('Update')">
-                            <mat-form-field *ngIf="visit.PaymentType === 2">
-                                <input matInput (keydown)="validateKey($event)" placeholder="Numero de pin" [attr.name]="'pin' + visit.AssignServiceDetailId" [(ngModel)]="visit.Pin">
-                            </mat-form-field>
-                        </td>
-                        <td *ngIf="auth.hasActionResource('Update')">
-                            <mat-form-field>
-                                <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'otherAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.OtherAmount">
-                            </mat-form-field>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </mat-card-content>
+              <ng-template #onlyShowProfessional>
+                {{ visit.ProfessionalId === -1 ? 'POR ASIGNAR' : (visit.professional.user.FirstName + ' ' + (visit.professional.user.SecondName
+                || '') + ' ' + visit.professional.user.Surname + ' ' + (visit.professional.user.SecondSurname || '')).trim()
+                }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="permissions.update && visit.isSelected; then state else onlyShowState">here is ignored</div>
+              <ng-template #state>
+                <mat-form-field>
+                  <mat-select placeholder="Estado" [attr.name]="'state' + visit.AssignServiceDetailId" [(ngModel)]="visit.StateId">
+                    <mat-option *ngFor="let state of filterStates(visit.AssignServiceDetailId)" [value]="state.Id">
+                      {{ state.Name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <ng-template #onlyShowState>
+                <p style="margin: 5px 0;">{{ visit.state.Name }}</p>
+              </ng-template>
+              <div class="alert-cancel-reason" *ngIf="visit.StateId === 3">
+                <strong>Motivo: </strong>{{ visit.detail_cancel_reason ? visit.detail_cancel_reason.cancel_reason.name : 'No Registrado'
+                }}
+              </div>
+            </td>
+            <td>
+              <div *ngIf="permissions.update && visit.isSelected; then comment else onlyShowComment">here is ignored</div>
+              <ng-template #comment>
+                <mat-form-field>
+                  <input matInput placeholder="Comentario" [attr.name]="'comment' + visit.AssignServiceDetailId" [(ngModel)]="visit.Observation">
+                </mat-form-field>
+              </ng-template>
+              <ng-template #onlyShowComment>
+                {{ visit.Observation ? visit.Observation : '' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="permissions.update; then verified else onlyShowVerified">here is ignored</div>
+              <ng-template #verified>
+                <mat-checkbox [(ngModel)]="visit.Verified" (change)="toogleVisitRowState(visit, 'Verified')" [name]="'verified-' + visit.AssignServiceDetailId"></mat-checkbox>
+              </ng-template>
+              <ng-template #onlyShowVerified>
+                {{ visit.Verified ? 'SI' : 'NO' }}
+              </ng-template>
+            </td>
+            <!-- columnas solo visibles si tiene la permisologia -->
+            <td *ngIf="permissions.update">
+              <div *ngIf="visit.isSelected; then rateContent else rateVisit">here is ignored</div>
+              <ng-template #rateContent>
+                <mat-form-field>
+                  <mat-select placeholder="Tarifa" [attr.name]="'professionalRate-' + visit.AssignServiceDetailId" [(ngModel)]="visit.professional_rate_id">
+                    <mat-option *ngFor="let professionalRate of professionalRates" [value]="professionalRate.id">
+                      {{ professionalRate.Name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <ng-template #rateVisit>
+                {{ visit.professional_rate_id ? getRateName(+visit.professional_rate_id) : 'No se selecciono' }}
+              </ng-template>
+            </td>
+            <td *ngIf="permissions.update">
+              {{ getRateValue(visit.professional_rate_id) | currency }}
+            </td>
+            <td *ngIf="permissions.update">
+              <div *ngIf="visit.isSelected; then paymentContent else paymentVisit">here is ignored</div>
+              <ng-template #paymentContent>
+                <mat-form-field>
+                  <mat-select placeholder="Metodo de pago" [attr.name]="'paymentType-' + visit.AssignServiceDetailId" [(ngModel)]="visit.PaymentType"
+                    (change)="clearValues(visit)">
+                    <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType.Id">
+                      {{ paymentType.Name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+              <ng-template #paymentVisit>
+                {{ getPaymentTypeName(+visit.PaymentType) }}
+              </ng-template>
+            </td>
+            <td *ngIf="permissions.update">
+              <div *ngIf="visit.isSelected; then amountContent else amountVisit">here is ignored</div>
+              <ng-template #amountContent>
+                <mat-form-field *ngIf="visit.PaymentType !== 2">
+                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.ReceivedAmount">
+                </mat-form-field>
+              </ng-template>
+              <ng-template #amountVisit>
+                {{ visit.ReceivedAmount | currency }}
+              </ng-template>
+            </td>
+            <td *ngIf="permissions.update">
+              <div *ngIf="visit.isSelected; then pinContent else pinVisit">here is ignored</div>
+              <ng-template #pinContent>
+                <mat-form-field *ngIf="visit.PaymentType === 2">
+                  <input matInput (keydown)="validateKey($event)" placeholder="Numero de pin" [attr.name]="'pin' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.Pin">
+                </mat-form-field>
+              </ng-template>
+              <ng-template #pinVisit>
+                {{ visit.Pin }}
+              </ng-template>
+            </td>
+            <td *ngIf="permissions.update">
+              <div *ngIf="visit.isSelected; then otherAmountContent else otherAmountVisit">here is ignored</div>
+              <ng-template #otherAmountContent>
+                <mat-form-field>
+                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'otherAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.OtherAmount">
+                </mat-form-field>
+              </ng-template>
+              <ng-template #otherAmountVisit>
+                {{ visit.OtherAmount | currency }}
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-card-content>
 </mat-card>
 
 <mat-card id="form-supplies" class="mat-card-form" [hidden]="!currentAssignService">
-    <div class="spinner-container" *ngIf="suppliesSpinner">
-        <mat-spinner></mat-spinner>
+  <div class="spinner-container" *ngIf="suppliesSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>Insumos del Servicio</h4>
+  </mat-card-title>
+
+  <mat-card-content style="padding-bottom: 0;" *ngIf="permissions.update">
+    <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="openDialogSupplies()">
+      <mat-icon>add</mat-icon> AÑADIR INSUMO</button>
+  </mat-card-content>
+
+  <mat-card-content>
+    <mat-toolbar class="table-search">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterSupplies, 'supply')" [(ngModel)]="filterSupplies">
+    </mat-toolbar>
+
+    <div class="mat-elevation-z2">
+      <mat-table #suppliesTable="matSort" [dataSource]="suppliesSource" matSort>
+        <ng-container matColumnDef="assignServiceSupplyId">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button class="btn-delete" mat-icon-button color="warn" (click)="deleteSupply(element.assignServiceSupplyId)" matTooltip="Borrar"
+              *ngIf="permissions.update">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="supplyName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Insumo </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.supplyName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="billetTo">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Facturado a </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.billetTo}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="suppliesDisplayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: suppliesDisplayedColumns;"></mat-row>
+      </mat-table>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!suppliesSource.filteredData.length">No se encontaron registros.</p>
+      <mat-paginator #suppliesPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
-
-    <mat-card-title>
-        <h4>Insumos del Servicio</h4>
-    </mat-card-title>
-
-    <mat-card-content style="padding-bottom: 0;" *ngIf="auth.hasActionResource('Update')">
-        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="openDialogSupplies()">
-            <mat-icon>add</mat-icon> AÑADIR INSUMO</button>
-    </mat-card-content>
-
-    <mat-card-content>
-        <div class="mat-elevation-z2">
-            <mat-toolbar class="table-search">
-                <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterSupplies, 'supply')" [(ngModel)]="filterSupplies">
-            </mat-toolbar>
-
-            <mat-table #suppliesTable="matSort" [dataSource]="suppliesSource" matSort>
-                <ng-container matColumnDef="assignServiceSupplyId">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <button class="btn-delete" mat-icon-button color="warn" (click)="deleteSupply(element.assignServiceSupplyId)" matTooltip="Borrar" *ngIf="auth.hasActionResource('Update')">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="supplyName">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Insumo </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.supplyName}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="quantity">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.quantity}} </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="billetTo">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Facturado a </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.billetTo}} </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="suppliesDisplayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: suppliesDisplayedColumns;"></mat-row>
-            </mat-table>
-            <p style="margin: 0; padding: 20px 30px;" *ngIf="!suppliesSource.filteredData.length">No se encontaron registros.</p>
-            <mat-paginator #suppliesPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-        </div>
-    </mat-card-content>
+  </mat-card-content>
 </mat-card>

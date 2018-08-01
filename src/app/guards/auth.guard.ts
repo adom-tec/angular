@@ -1,10 +1,14 @@
 ﻿import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    
-    constructor(private router: Router) { }
+
+    constructor(
+      private router: Router,
+      private notifier: NotifierService
+    ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         let currentUser = JSON.parse(window.localStorage.getItem('current_user'));
@@ -20,6 +24,10 @@ export class AuthGuard implements CanActivate {
                     return true;
                 }
             }
+
+            this.notifier.notify('error','No puede acceder a esta ruta, por favor ingrese nuevamente');
+        } else {
+          this.notifier.notify('error','Su sesion ha expirado, por favor ingrese nuevamente');
         }
 
         this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});

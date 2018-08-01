@@ -9,7 +9,7 @@
 </h2>
 
 <mat-dialog-content>
-    <form novalidate autocomplete="off" id="form-observations" #formDirective="ngForm" (ngSubmit)="clearForm()" *ngIf="auth.hasActionResource('Update', '/assignservice')">
+    <form novalidate autocomplete="off" id="form-observations" #formDirective="ngForm" (ngSubmit)="clearForm()" *ngIf="permissions.update">
         <mat-form-field style="width: 80%;">
             <textarea matInput placeholder="Observacion" rows="2" [(ngModel)]="obvs.Description" name="description" [formControl]="validator.description" required></textarea>
             <mat-error *ngIf="validator.description.invalid">{{ getErrorMessage(validator.description) }}</mat-error>

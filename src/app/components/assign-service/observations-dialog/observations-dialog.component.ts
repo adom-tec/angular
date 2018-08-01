@@ -2,7 +2,6 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormControl, Validators, FormBuilder, FormGroup, FormGroupDirective } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HttpService } from '../../../services/http-interceptor.service';
-import { Observable } from 'rxjs/Observable';
 import { ObservationService, AuthenticationService } from '../../../services';
 import { Observation } from '../../../models/observation';
 import { NotifierService } from 'angular-notifier';
@@ -14,6 +13,10 @@ import { NotifierService } from 'angular-notifier';
 })
 export class ObservationsDialogComponent implements OnInit {
   public mainSpinner: boolean = false;
+  public permissions: any = {
+    update: false
+  };
+
   public currentService: number;
   public observations: Observation[];
   public obvs: Observation = {
@@ -39,14 +42,16 @@ export class ObservationsDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.permissions.update = this.auth.hasActionResource('Update', '/assignservice');
     this.mainSpinner = true;
+
     this.obvsService.getObservations(this.currentService)
       .subscribe(data => {
         this.observations = data;
         this.mainSpinner = false;
       }, err => {
         this.mainSpinner = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -76,7 +81,7 @@ export class ObservationsDialogComponent implements OnInit {
         this.clearForm();
       }, err => {
         this.mainSpinner = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -90,7 +95,7 @@ export class ObservationsDialogComponent implements OnInit {
         this.notifier.notify('success', 'Se elimino la observacion con exito');
       }, err => {
         this.mainSpinner = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 

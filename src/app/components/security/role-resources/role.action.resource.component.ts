@@ -24,6 +24,10 @@ export class RoleActionResourceComponent implements OnInit {
     public formActive: boolean = false;
     public loading: boolean = false;
     public filter: string;
+    public permissions: any = {
+        update: false
+    };
+    
     public currentModule: number;
     public roles: Role[] = [];
     public modules: Module[] = [];
@@ -47,6 +51,7 @@ export class RoleActionResourceComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.permissions.update = this.auth.hasActionResource('Update');
         this.loading = true;
 
         Observable.forkJoin(
@@ -59,7 +64,7 @@ export class RoleActionResourceComponent implements OnInit {
             this.modules = res[1];
         }, err => {
             this.loading = false;
-            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
         });
     }
 
@@ -94,7 +99,7 @@ export class RoleActionResourceComponent implements OnInit {
                     this.actionResourcesByRole = data;
                 }, err => {
                     this.loading = false;
-                    if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                    if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 });
     }
 
@@ -135,7 +140,7 @@ export class RoleActionResourceComponent implements OnInit {
                     this.applyFilter('');
                 }, err => {
                     this.loading = false;
-                    if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                    if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 });
         }
     }
@@ -170,7 +175,7 @@ export class RoleActionResourceComponent implements OnInit {
                 this.resetForm();
             }, err => {
                 this.loading = false;
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
     }
 

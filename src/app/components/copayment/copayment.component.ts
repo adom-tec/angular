@@ -26,8 +26,13 @@ export class CopaymentComponent implements OnInit {
   public dataSource = new MatTableDataSource([]);
   public filter: string;
   public formActive: boolean = false;
+  public permissions: any = {
+    create: false,
+    update: false
+  };
 
   public professionals: Professional[];
+  public professionalsMap: SelectOption[];
   public copaymentStates: SelectOption[] = [
     {
       Id: 0,
@@ -74,7 +79,7 @@ export class CopaymentComponent implements OnInit {
 
   //select filters
   public selectFilter: string = null;
-  public selectFilteredData: ReplaySubject<Professional[]> = new ReplaySubject<Professional[]>(1);
+  public selectFilteredData: ReplaySubject<SelectOption[]> = new ReplaySubject<SelectOption[]>(1);
   private _onDestroy = new Subject<void>();
 
   constructor(
@@ -86,16 +91,27 @@ export class CopaymentComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.permissions.create = this.auth.hasActionResource('Create');
+    this.permissions.update = this.auth.hasActionResource('Update');
+
     this.mainSpinner = true;
+
     this.professionalService.getProfessionals()
       .subscribe(data => {
         this.professionals = data;
-        this.selectFilteredData.next(this.professionals.slice());
+        this.professionalsMap = data
+          .map(pro => {
+            return {
+              Id: pro.ProfessionalId,
+              Name: `${pro.user.FirstName} ${pro.user.SecondName || ''} ${pro.user.Surname} ${pro.user.SecondSurname || ''}`,
+            }
+          });
+        this.selectFilteredData.next(this.professionalsMap.slice());
         this.mainSpinner = false;
       }, err => {
         this.mainSpinner = false;
         if (err.status === 401) { return; }
-        this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -144,7 +160,7 @@ export class CopaymentComponent implements OnInit {
       }, err => {
         this.mainSpinner = false;
         if (err.status === 401) { return; }
-        this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -192,36 +208,40 @@ export class CopaymentComponent implements OnInit {
     return invalid || this.mainSpinner;
   }
 
-  private selectFilterData(value: string): void {
-    if (!this.professionals) {
+  public selectFilterData(value: string): void {
+    if (!this.professionalsMap) {
       return;
     }
     // get the search keyword
     if (!value) {
-      this.selectFilteredData.next(this.professionals.slice());
+      this.selectFilteredData.next(this.professionalsMap.slice());
       return;
-    } else {
-      value = value.toLowerCase();
-    }
-    // filter the professionals
-    this.selectFilteredData.next(
-      this.professionals.filter(pro => ['FirstName', 'SecondName', 'Surname', 'SecondSurname'].some(key => pro.user[key] ? pro.user[key].toLowerCase().indexOf(value) > -1 : false))
-    );
+		} else {
+			value = value.toLowerCase().replace(/\s+/g, ' ');
+		}
+		// filter the professionals
+		this.selectFilteredData.next(
+			this.professionalsMap.filter(pro => pro.Name.toLowerCase().replace(/\s+/g, ' ').indexOf(value) > -1)
+		);
   }
 
-  private resetSelectList(): void {
-    this.selectFilteredData.next(this.professionals.slice());
+  public resetSelectList(): void {
+    this.selectFilteredData.next(this.professionalsMap.slice());
     this.changeTopPosition();
   }
 
   private changeTopPosition(): void {
     setTimeout(() => {
-      let panelTop = document.querySelector('.cdk-overlay-pane').getBoundingClientRect().top;
+      let nodes = document.getElementsByClassName('cdk-overlay-pane');
       let cardTop = document.querySelector('.mat-card').getBoundingClientRect().top;
 
-      if (panelTop < cardTop) {
-        let el = document.getElementsByClassName('cdk-overlay-pane')[0];
-        (el as HTMLElement).style.top = '200px';
+      for (let i=0; i < nodes.length; i++) {
+        if (nodes[i].clientHeight) {
+          let panelTop = nodes[i].getBoundingClientRect().top;
+          if (panelTop < cardTop) {
+            (nodes[i] as HTMLElement).style.top = '200px';
+          }
+        }
       }
     }, 100);
   }

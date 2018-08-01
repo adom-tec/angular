@@ -1,168 +1,179 @@
 <div class="spinner-container" *ngIf="loading">
-    <mat-spinner></mat-spinner>
+  <mat-spinner></mat-spinner>
 </div>
 
 <h2 mat-dialog-title>Cuentas de cobro
-    <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
+  <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
     <mat-icon>close</mat-icon>
   </button>
 </h2>
 
 <mat-dialog-content style="display: flex;">
-    <fieldset>
-        <legend>Datos del Profesional</legend>
+  <fieldset>
+    <legend>Datos del Profesional</legend>
 
-        <span><strong>Fecha de cuenta de cobro: </strong>{{ today | date:'dd/MM/yyyy' }}</span>
-        <span><strong>Perido de cuenta de cobro:</strong> {{ currentCopaymentParams.initDate.format('DD/MM/YYYY') }} hasta {{ currentCopaymentParams.finalDate.format('DD/MM/YYYY') }}</span>
-        <span><strong>Nombre profesional:</strong> {{ (currentProfessional.user.FirstName + ' ' + (currentProfessional.user.SecondName || '') + ' ' + currentProfessional.user.Surname + ' ' + (currentProfessional.user.SecondSurname || '')).trim().toLowerCase() }}</span>
-        <span><strong>Direccion:</strong> {{ currentProfessional.Address }}</span>
-        <span><strong>Correo Electronico:</strong> {{ currentProfessional.Email }}</span>
-        <span><strong>Telefono:</strong> {{ currentProfessional.Telephone1 }}</span>
-    </fieldset>
+    <span>
+      <strong>Fecha de cuenta de cobro: </strong>{{ today | date:'dd/MM/yyyy' }}</span>
+    <span>
+      <strong>Perido de cuenta de cobro:</strong> {{ currentCopaymentParams.initDate.format('DD/MM/YYYY') }} hasta {{ currentCopaymentParams.finalDate.format('DD/MM/YYYY')
+      }}</span>
+    <span>
+      <strong>Nombre profesional:</strong> {{ (currentProfessional.user.FirstName + ' ' + (currentProfessional.user.SecondName ||
+      '') + ' ' + currentProfessional.user.Surname + ' ' + (currentProfessional.user.SecondSurname || '')).trim() }}</span>
+    <span>
+      <strong>Direccion:</strong> {{ currentProfessional.Address }}</span>
+    <span>
+      <strong>Correo Electronico:</strong> {{ currentProfessional.Email }}</span>
+    <span>
+      <strong>Telefono:</strong> {{ currentProfessional.Telephone1 }}</span>
+  </fieldset>
 </mat-dialog-content>
 
 <mat-dialog-content style="margin: 15px 0; padding: 5px;">
-    <div class="mat-elevation-z2" id="table-container">
-        <mat-toolbar class="table-search">
-            <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
-        </mat-toolbar>
+  <mat-toolbar class="table-search">
+    <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
+  </mat-toolbar>
 
-        <mat-table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="PatientDocument">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> N° DOCUMENTO DEL PACIENTE </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.PatientDocument }} </mat-cell>
-            </ng-container>
+  <div class="mat-elevation-z2" id="table-container">
+    <mat-table [dataSource]="dataSource" matSort>
 
-            <ng-container matColumnDef="PatientName">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE COMPLETO DEL PACIENTE </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.PatientName.toUpperCase() }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="PatientDocument">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> N° DOCUMENTO DEL PACIENTE </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.PatientDocument }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="EntityName">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> ENTIDAD </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.EntityName.toUpperCase() }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="PatientName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE COMPLETO DEL PACIENTE </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.PatientName.toUpperCase() }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="AuthorizationNumber">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> AUTORIZACIÓN </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.AuthorizationNumber }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="EntityName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ENTIDAD </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.EntityName.toUpperCase() }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="ServiceName">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> TIPO DE TERAPIA </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.ServiceName.toUpperCase() }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="AuthorizationNumber">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> AUTORIZACIÓN </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.AuthorizationNumber }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="PaymentProfessional">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR A PAGAR AL PROFESIONAL POR TERAPIA </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.PaymentProfessional | currency }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="ServiceName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> TIPO DE TERAPIA </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.ServiceName.toUpperCase() }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="Quantity">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> CANTIDAD DE TERAPIAS REALIZADAS</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.Quantity }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="PaymentProfessional">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR A PAGAR AL PROFESIONAL POR TERAPIA </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.PaymentProfessional | currency }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="CoPaymentAmount">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> COPAGO </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.CoPaymentAmount | currency }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="Quantity">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> CANTIDAD DE TERAPIAS REALIZADAS</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.Quantity }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="CoPaymentFrecuency">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> FRECUENCIA COPAGO </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.CoPaymentFrecuency.toUpperCase() }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="CoPaymentAmount">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> COPAGO </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.CoPaymentAmount | currency }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="TotalCopaymentReceived">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR TOTAL RECAUDO COPAGOS </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.TotalCopaymentReceived | currency }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="CoPaymentFrecuency">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> FRECUENCIA COPAGO </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.CoPaymentFrecuency.toUpperCase() }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="TotalCopaymentDelivered">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR A ENTREGAR </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.TotalCopaymentDelivered | currency }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="TotalCopaymentReceived">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR TOTAL RECAUDADO COPAGOS </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.TotalCopaymentReceived | currency }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="Pin">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> VALE/PIN </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.Pin ? element.Pin : "NO APLICA" }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="TotalCopaymentDelivered">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> VALOR A ENTREGAR </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.TotalCopaymentDelivered | currency }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="PatientDocumentType">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> TIPO DE DOCUMENTO DEL PACIENTE </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.PatientDocumentType.toUpperCase() }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="Pin">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> VALE/PIN </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.Pin ? element.Pin : "NO APLICA" }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="KITMNB">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> KIT MNB </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.KITMNB }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="PatientDocumentType">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> TIPO DE DOCUMENTO DEL PACIENTE </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.PatientDocumentType.toUpperCase() }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="QuantityKITMNB">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> CUANTOS KIT UTILIZO </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.QuantityKITMNB }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="KITMNB">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> KIT MNB </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.KITMNB }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="SubTotal">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> SUBTOTAL </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.SubTotal | currency }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="QuantityKITMNB">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> CUANTOS KIT UTILIZO </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.QuantityKITMNB }} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="OtherValuesReceived">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> TOTAL OTROS VALORES RECIBIDOS </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{ element.OtherValuesReceived | currency }} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="SubTotal">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> SUBTOTAL </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.SubTotal | currency }} </mat-cell>
+      </ng-container>
 
+      <ng-container matColumnDef="OtherValuesReceived">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> TOTAL OTROS VALORES RECIBIDOS </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.OtherValuesReceived | currency }} </mat-cell>
+      </ng-container>
 
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
-        <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
-        <mat-paginator [pageSize]="5"></mat-paginator>
-    </div>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+    <mat-paginator [pageSize]="5"></mat-paginator>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-content>
-    <mat-form-field style="width: 40%;">
-        <input matInput type="number" placeholder="Monto conservado por el Profesional" [(ngModel)]="professionalTakenAmount" [formControl]='validator.professionalTakenAmount' name="professionalTakenAmount" min="0">
-        <mat-error *ngIf="validator.professionalTakenAmount.invalid">{{ getErrorMessage(validator.professionalTakenAmount) }}</mat-error>
-    </mat-form-field>
+  <mat-form-field style="width: 40%;">
+    <input matInput type="number" placeholder="Monto conservado por el Profesional" [(ngModel)]="professionalTakenAmount" [formControl]='validator.professionalTakenAmount'
+      name="professionalTakenAmount" min="0">
+    <mat-error *ngIf="validator.professionalTakenAmount.invalid">{{ getErrorMessage(validator.professionalTakenAmount) }}</mat-error>
+  </mat-form-field>
 
-    <mat-form-field style="width: 50%; margin-left: 15px;">
-        <input matInput placeholder="Observaciones" [(ngModel)]="observations" name="observations">
-    </mat-form-field>
+  <mat-form-field style="width: 50%; margin-left: 15px;">
+    <input matInput placeholder="Observaciones" [(ngModel)]="observations" name="observations">
+  </mat-form-field>
 
 
-    <table class="table-info mat-elevation-z2">
-        <caption>
-            <h3>Total General</h3>
-        </caption>
-        <thead>
-            <tr>
-                <th>TOTAL COPAGOS RECIBIDOS</th>
-                <th>SUBTOTAL A PAGAR AL PROFESIONAL</th>
-                <th>MONTO CONSERVADO POR EL PROFESIONAL</th>
-                <th>TOTAL COPAGOS A ENTREGAR</th>
-                <th>TOTAL A PAGAR AL PROFESIONAL</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ getSumValues('TotalCopaymentReceived') | currency }}</td>
-                <td>{{ getSumValues('SubTotal') | currency }}</td>
-                <td>{{ professionalTakenAmount | currency }}</td>
-                <td>{{ getSumValues('TotalCopaymentReceived') - professionalTakenAmount | currency }}</td>
-                <td>{{ getSumValues('SubTotal') - professionalTakenAmount | currency }}</td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table-info mat-elevation-z2">
+    <caption>
+      <h3>Total General</h3>
+    </caption>
+    <thead>
+      <tr>
+        <th>TOTAL COPAGOS RECIBIDOS</th>
+        <th>TOTAL OTROS VALORES RECIBIDOS</th>
+        <th>SUBTOTAL A PAGAR AL PROFESIONAL</th>
+        <th>MONTO CONSERVADO POR EL PROFESIONAL</th>
+        <th>TOTAL A ENTREGAR</th>
+        <th>TOTAL A PAGAR AL PROFESIONAL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ getSumValues('TotalCopaymentReceived') | currency }}</td>
+        <td>{{ getSumValues('OtherValuesReceived') | currency }}</td>
+        <td>{{ getSumValues('SubTotal') | currency }}</td>
+        <td>{{ professionalTakenAmount | currency }}</td>
+        <td>{{ getSumValues('TotalCopaymentDelivered') - professionalTakenAmount | currency }}</td>
+        <td>{{ getSumValues('SubTotal') - professionalTakenAmount | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <div class="form-button">
-        <button mat-button mat-dialog-close>SALIR</button>
-        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm()">GUARDAR
+  <div class="form-button">
+    <button mat-button mat-dialog-close>SALIR</button>
+    <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm()">GUARDAR
       <mat-icon style="margin-left: 10px;">save</mat-icon>
     </button>
-    </div>
+  </div>
 </mat-dialog-actions>

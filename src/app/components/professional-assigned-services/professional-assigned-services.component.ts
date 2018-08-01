@@ -29,6 +29,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
   public filterHistory: string;
   public formActive: boolean = false;
 
+  public showProfessionalRateValue: boolean = false;
   public scheduledServices: AssignService[] = [];
   public completedServices: AssignService[] = [];
   public currentAssignService: AssignService;
@@ -38,7 +39,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
   public paymentTypes: SelectOption[] = [
     {
       Id: 1,
-      Name: "Efectivo"
+      Name: "EFECTIVO"
     },
     {
       Id: 2,
@@ -123,7 +124,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
       this.professionalRates = res[2];
     }, err => {
       this.mainSpinner = false;
-      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
     });
   }
 
@@ -138,6 +139,27 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
       e.preventDefault();
 
       return false;
+    }
+  }
+
+  /**
+   * validateVisitDate
+   */
+  validateVisitDate(visit: AssignServiceDetail): void {
+    let visitDate = moment(visit.DateVisit);
+    let today = moment(moment().format('YYYY-MM-DD'));
+    let diff = today.diff(visitDate, 'days');
+
+    if (diff < 0) {
+      this.notifier.notify('error', 'La fecha de visita no puede ser una fecha del futuro, por favor vuelva a ingresarla');
+      setTimeout(()=> {
+        visit.DateVisit = null;
+      }, 200);
+    } else if (diff > 2){
+      this.notifier.notify('error', 'La fecha de visita no puede ser menor a 2 días, por favor vuelva a ingresarla');
+      setTimeout(()=> {
+        visit.DateVisit = null;
+      }, 200);
     }
   }
 
@@ -156,6 +178,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
     }
 
     this.mainSpinner = true;
+    this.showProfessionalRateValue = (+this.currentAssignService.StateId) !== 1;
 
     Observable.forkJoin(
       this.patientService.getPatientById(this.currentAssignService.PatientId),
@@ -172,7 +195,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
       });
     }, err => {
       this.mainSpinner = false;
-      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
     });
   }
 
@@ -190,12 +213,16 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
   public clearValues(visit: AssignServiceDetail): void {
     visit.ReceivedAmount = null;
     visit.Pin = null;
+
+    if (visit.PaymentType === 1) {
+      visit.ReceivedAmount = +this.currentAssignService.CoPaymentAmount;
+    }
   }
 
   getPaymentTypeName(id: number): string {
     let paymentType = this.paymentTypes.find(type => type.Id === id);
 
-    return paymentType ? paymentType.Name : 'No Registrado'; 
+    return paymentType ? paymentType.Name : 'No Registrado';
   }
 
   getRateName(professionalRateId: number): string {
@@ -240,8 +267,13 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
       return;
     }
 
+    if (row.PaymentType === 1 && typeof row.ReceivedAmount !== 'number') {
+      this.notifier.notify('error', 'Por favor ingrese el monto recibido');
+      return;
+    }
+
     if (row.PaymentType === 1 && row.ReceivedAmount < 0) {
-      this.notifier.notify('error', 'Por favor ingrese el monto recibido, el monto no puede ser menor a 0');
+      this.notifier.notify('error', 'Por favor verifique el monto ingresado, el monto no puede ser menor a 0');
       return;
     }
 
@@ -256,7 +288,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
 
     this.visitsDetail.updateDetail(row, row.AssignServiceId, row.AssignServiceDetailId)
       .subscribe(() => {
-        this.notifier.notify('success','Se aplicarion los cambios con exito');
+        this.notifier.notify('success','Se aplicaron los cambios con exito');
 
         this.visitsDetail.getMyAssignedServiceDetail(this.currentAssignService.AssignServiceId)
           .subscribe(data => {
@@ -268,11 +300,11 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
             });
           }, err => {
             this.mainSpinner = false;
-            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
           });
       }, err => {
         this.mainSpinner = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 

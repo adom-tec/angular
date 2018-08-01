@@ -125,10 +125,35 @@ fieldset {
 
 /* mat table */
 
+.mat-toolbar.table-search .mat-input-element {
+  border: none;
+  width: calc(100% - 45px);
+}
+
 .mat-toolbar.table-search {
-    /* background-color: #9cb8d0; */
-    background-color: #566E82;
-    color: #FFF;
+  width: 60%;
+  height: 50px;
+  border-radius: 30px;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.mat-toolbar.table-search:after {
+  content: 'search';
+  display: block;
+  font-family: 'Material Icons';
+  background-color: #00AFD3;
+  height: 50px;
+  width: 60px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-bottom-right-radius: 30px;
+  border-top-right-radius: 30px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 30px;
 }
 
 .mat-table {

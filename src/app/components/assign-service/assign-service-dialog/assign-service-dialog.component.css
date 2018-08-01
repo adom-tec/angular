@@ -20,3 +20,7 @@
     flex-flow: row wrap;
     justify-content: space-around;
 }
+
+#form-assign-services .mat-select-disabled .mat-select-trigger {
+  cursor: no-drop!important;
+}

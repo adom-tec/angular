@@ -5,13 +5,14 @@ export class Professional {
     ProfessionalId?: number;
     UserId?: number;
     DocumentTypeId: number;
-    Document: string; 
+    Document: string;
     FirstName: string;
     SecondName: string;
     Surname: string;
     SecondSurname: string;
     BirthDate: string|object;
     DateAdmission: string|object;
+    ContractTypeId: number;
     GenderId: number;
     SpecialtyId: number;
     Address: string;

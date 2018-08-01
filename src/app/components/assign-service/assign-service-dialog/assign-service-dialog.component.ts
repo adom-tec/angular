@@ -18,6 +18,7 @@ import { environment } from './../../../../environments/environment';
 import { PlansEntityService, AssignServiceService } from '../../../services';
 import { NotifierService } from 'angular-notifier';
 import { Moment } from 'moment';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'app-assign-service-dialog',
@@ -30,7 +31,7 @@ export class AssignServiceDialogComponent implements OnInit {
 
   public currentPatient: number;
   public entities: Entity[];
-  public planRates: PlanRate[] = [];
+  public planRates: SelectOption[] = [];
   public planEntities: PlanEntity[] = [];
   public professionals: SelectOption[];
   public coPaymentFrecuencies: CoPaymentFrecuency[];
@@ -77,6 +78,14 @@ export class AssignServiceDialogComponent implements OnInit {
     external: new FormControl('', [Validators.required, Validators.min(1)]),
   };
 
+  //select filters
+  public entityFilter: string = null;
+  public entityFilteredData: ReplaySubject<Entity[]> = new ReplaySubject<Entity[]>(1);
+  public serviceFilter: string = null;
+  public serviceFilteredData: ReplaySubject<SelectOption[]> = new ReplaySubject<SelectOption[]>(1);
+  public professionalFilter: string = null;
+  public professionalFilteredData: ReplaySubject<SelectOption[]> = new ReplaySubject<SelectOption[]>(1);
+
   constructor(
     public dialogRef: MatDialogRef<AssignServiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -89,12 +98,9 @@ export class AssignServiceDialogComponent implements OnInit {
   ) {
     this.currentPatient = this.data.patientId;
     this.patientService.PatientId = this.currentPatient;
-    this.professionals = this.data.professionals.map(pro => {
-      return {
-        Id: pro.ProfessionalId,
-        Name: `${pro.user.FirstName} ${pro.user.SecondName || ''} ${pro.user.Surname} ${pro.user.SecondSurname || ''}`.trim().toLowerCase(),
-      }
-    });
+    this.professionals = this.data.professionals
+      .filter(pro => (+pro.Id) !== -1);
+    this.professionalFilteredData.next(this.professionals.slice());
   }
 
   ngOnInit() {
@@ -106,12 +112,13 @@ export class AssignServiceDialogComponent implements OnInit {
       this.http.get(`${environment.apiUrl}/api/servicefrecuencies`).map(res => res.json())
     ).subscribe(res => {
       this.entities = res[0];
+      this.entityFilteredData.next(this.entities.slice());
       this.coPaymentFrecuencies = res[1];
       this.serviceFrecuencies = res[2];
       this.loading = false;
     }, err => {
       this.loading = false;
-      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
     });
   }
 
@@ -126,6 +133,9 @@ export class AssignServiceDialogComponent implements OnInit {
 
   getPlansEntity(id: number): void {
     this.planEntities = [];
+    this.patientService.PlanEntityId = null;
+    this.planRates = [];
+    this.patientService.ServiceId = null;
     this.loadingBar = true;
 
     this.plansEntityService.getPlansByEntity(id)
@@ -134,21 +144,28 @@ export class AssignServiceDialogComponent implements OnInit {
         this.loadingBar = false;
       }, err => {
         this.loadingBar = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       })
   }
 
   getPlanRates(id: number): void {
     this.planRates = [];
+    this.patientService.ServiceId = null;
     this.loadingBar = true;
 
     this.planRateService.getPlanRates(id)
-      .subscribe(data => {
-        this.planRates = data;
+      .subscribe((data: PlanRate[]) => {
+        this.planRates = data.map(plan => {
+          return {
+            Id: plan.ServiceId,
+            Name: plan.service.Name
+          };
+        });
+        this.serviceFilteredData.next(this.planRates.slice());
         this.loadingBar = false;
       }, err => {
         this.loadingBar = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       })
   }
 
@@ -161,7 +178,7 @@ export class AssignServiceDialogComponent implements OnInit {
         this.patientService.FinalDate = moment(data.date);
       }, err => {
         this.loadingBar = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -180,10 +197,10 @@ export class AssignServiceDialogComponent implements OnInit {
 
   submitForm(patientService: AssignService): void {
     patientService = Object.assign({}, patientService);
-    patientService.Validity = moment(patientService.Validity).format('YYYY-MM-DD'); 
-    patientService.InitialDate = moment(patientService.InitialDate).format('YYYY-MM-DD'); 
-    patientService.FinalDate = moment(patientService.FinalDate).format('YYYY-MM-DD'); 
-    
+    patientService.Validity = moment(patientService.Validity).format('YYYY-MM-DD');
+    patientService.InitialDate = moment(patientService.InitialDate).format('YYYY-MM-DD');
+    patientService.FinalDate = moment(patientService.FinalDate).format('YYYY-MM-DD');
+
     this.loading = true;
 
     this.assignService.createOrUpdate(this.currentPatient, patientService)
@@ -192,7 +209,47 @@ export class AssignServiceDialogComponent implements OnInit {
         this.onNoClick();
       }, err => {
         this.loading = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
+  }
+
+  //select filters
+  public selectFilterData(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[], value: string): void {
+    if (!dataSource) {
+      return;
+    }
+    // get the search keyword
+    if (!value) {
+      selectFilterSubject.next(dataSource.slice());
+
+      return;
+    } else {
+      value = value.toLowerCase().replace(/\s+/g, ' ');;
+    }
+    // filter
+    selectFilterSubject.next(
+      dataSource.filter(val => val.Name ? val.Name.toLowerCase().replace(/\s+/g, ' ').indexOf(value) > -1 : false)
+    );
+  }
+
+  public resetSelectList(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[]): void {
+    selectFilterSubject.next(dataSource.slice());
+    this.changeTopPosition();
+  }
+
+  private changeTopPosition(): void {
+    setTimeout(() => {
+      let nodes = document.getElementsByClassName('cdk-overlay-pane');
+      let cardTop = document.querySelector('.mat-card').getBoundingClientRect().top;
+
+      for (let i=0; i < nodes.length; i++) {
+        if (nodes[i].clientHeight) {
+          let panelTop = nodes[i].getBoundingClientRect().top;
+          if (panelTop < cardTop) {
+            (nodes[i] as HTMLElement).style.top = '200px';
+          }
+        }
+      }
+    }, 100);
   }
 }

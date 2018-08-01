@@ -47,9 +47,17 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	public filterAssignServices: string;
 	public filterSupplies: string;
 	public formActive: boolean = false;
+	public notVisitsSelected: boolean = true;
+	public showTableDetails: boolean = false;
+	public permissions: any = {
+		create: false,
+		update: false,
+    patientUpdate: false,
+    invalidateVisit: false
+	};
 
 	public patients: Patient[];
-	public professionals: Professional[];
+	public professionals: SelectOption[];
 	public patientAssignServices: AssignService[];
 	public assignServiceSupplies: AssignServiceSupply[];
 	public currentPatient: Patient;
@@ -62,7 +70,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	public paymentTypes: SelectOption[] = [
 		{
 			Id: 1,
-			Name: "Efectivo"
+			Name: "EFECTIVO"
 		},
 		{
 			Id: 2,
@@ -99,12 +107,16 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	) { }
 
 	ngOnInit() {
-		this.getData();
+		this.permissions.create = this.auth.hasActionResource('Create');
+		this.permissions.update = this.auth.hasActionResource('Update');
+		this.permissions.patientUpdate = this.auth.hasActionResource('Update', '/patient');
+    this.permissions.invalidateVisit = this.auth.hasActionResource('InvalidateVisit');
 
 		this.route
 			.queryParams
 			.subscribe((params: AssignServiceParams) => {
-				this.routeParams = params; 
+				this.routeParams = params;
+				this.getData();
 			});
 	}
 
@@ -138,7 +150,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 			case 'supply':
 				this.suppliesSource.filter = filterValue;
 				break;
-		
+
 			default:
 				this.dataSource.filter = filterValue;
 				break;
@@ -154,30 +166,41 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	getData(): void {
 		this.mainSpinner =  true;
 		Observable.forkJoin(
-			this.patientService.getPatients(),
+			!this.routeParams.patientId ? this.patientService.getPatients() :
+			this.http.get(`${environment.apiUrl}/api/patients/${+this.routeParams.patientId}`).map(res => res.json()),
 			this.professionalService.getProfessionals(),
 			this.http.get(`${environment.apiUrl}/api/states`).map(res => res.json()),
 			this.http.get(`${environment.apiUrl}/api/professionalrates`).map(res => res.json())
 		).subscribe(res => {
-			this.mapPatientToTableFormat(res[0]);
-			
 			//crea la opcion 'por asignar' en professionals
-			let withoutProfessional = new Professional();
-			withoutProfessional.ProfessionalId = -1;
-			withoutProfessional.user = new User();
-			withoutProfessional.user.FirstName = 'Por';
-			withoutProfessional.user.Surname = 'Asignar';
-			this.professionals = [withoutProfessional].concat(res[1]);
+			let withoutProfessional = new SelectOption();
+			withoutProfessional.Id = -1;
+			withoutProfessional.Name = 'POR ASIGNAR';
 
+			if (!this.routeParams.patientId) {
+				this.mapPatientToTableFormat(res[0]);
+			}
+
+      this.professionals = res[1]
+        .map(pro => {
+          return {
+            Id: pro.ProfessionalId,
+            Name: `${pro.user.FirstName} ${pro.user.SecondName || ''} ${pro.user.Surname} ${pro.user.SecondSurname || ''}`,
+          }
+        });
+      this.professionals = [withoutProfessional].concat(this.professionals);
 			this.states = res[2];
 			this.professionalRates = res[3];
 			this.mainSpinner = false;
 
 			if (this.routeParams.patientId) {
+				let patient = <Patient>res[0];
+				patient.BirthDate = moment(patient.BirthDate);
+				this.patients = [patient];
 				this.showForm(+this.routeParams.patientId);
 			}
 		}, err => {
-			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 		});
 	}
 
@@ -210,9 +233,10 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	hideForm() {
 		if (/\&|\?/g.test(this.router.url)) {
 			this.router.navigate(['/assignservice']);
-			return;
+		} else {
+			this.getData();
 		}
-		this.getData();
+
 		this.formActive = false;
 		this.patientAssignServices = [];
 		this.assignServiceSupplies = [];
@@ -241,7 +265,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 					this.showDetailAssignService({ assignServiceId: +this.routeParams.assignServiceId });
 				}
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.servicesSpinner = false;
 			});
 	}
@@ -291,7 +315,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(() => { });
+		// dialogRef.afterClosed().subscribe(() => { });
 	}
 
 	openDialogSupplies(): void {
@@ -339,7 +363,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(() => { });
+		// dialogRef.afterClosed().subscribe(() => { });
 	}
 
 	openDialogCancelVisits(assignSeriviceDetail: AssignServiceDetail[]): void {
@@ -357,7 +381,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 		dialogRef.afterClosed().subscribe((visits: AssignServiceDetail[]) => {
 			if (visits) {
 				visits = visits.map(visit => {
-					visit.StateId = 3;		
+					visit.StateId = 3;
 					return visit;
 				});
 				this.saveVisits(visits);
@@ -390,16 +414,16 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 					visit.professional_rate_id = (+visit.professional_rate_id);
 					visit.PaymentType = (+visit.PaymentType);
 					visit.selectFilter = null;
-					visit.selectFilteredData = new ReplaySubject<Professional[]>(1);
+					visit.selectFilteredData = new ReplaySubject<SelectOption[]>(1);
 					visit.selectFilteredData.next(this.professionals.slice());
 					return visit;
 				});
 
 				this.assignSeriviceDetailCopy = this.assignSeriviceDetail.map(visit => visit = Object.assign({}, visit));
-
+				this.showTableDetails = this.assignSeriviceDetailCopy.length ? true : false;
 				this.showQualityTest = this.allVisitsCompleted();
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.visitsSpinner = false;
 			});
 	}
@@ -407,40 +431,45 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	toogleVisitRowState(row: AssignServiceDetail, key: string): void {
 		if (key !== 'Verified') {
 			row[key] = !row[key];
+			this.notVisitsSelected = this.visitsAreNotSelected();
 		} else if (key === 'Verified') {
 			if (row.Verified) {
 				if (moment(row.DateVisit).format() === 'Invalid date') {
 					this.notifier.notify('error', 'Debe seleccionar la fecha de visita para poder marcar como verificado');
-					
+
 					setTimeout(() => {
 						row[key] = !row[key];
-					}, 500);
+					}, 200);
 				} else {
-					this.saveVisitRow(row);
+					this.saveVisitRow({...row});
 				}
 			} else {
-				this.notifier.notify('error', 'La visita ya se fue verificada, no puede cambiar su estado');
+        if (this.permissions.invalidateVisit) {
+          this.saveVisitRow({...row});
+          return;
+        }
+
+				this.notifier.notify('error', 'La visita ya fue verificada, no puede cambiar su estado');
 				setTimeout(() => {
 					row[key] = !row[key];
-				}, 500);
+				}, 200);
 			}
 		}
 	}
 
-	visitHasRowSelected(): boolean {
+	visitsAreNotSelected(): boolean {
 		return this.assignSeriviceDetail ? this.assignSeriviceDetail.every(visit => !visit.isSelected) : false;
 	}
 
 	allVisitsCompleted(): boolean {
-		let visits = this.assignSeriviceDetail
-			.map(visit => visit = Object.assign({}, visit));
+		let visits = this.assignSeriviceDetailCopy;
 
 		return visits.length ? visits.every(visit => visit.StateId !== 1) && visits.some(visit => !visit.QualityCallUser) : false;
 	}
 
 	filterStates(assignServiceDetailId: number): SelectOption[] {
 		let row = this.assignSeriviceDetailCopy.find(visit => visit.AssignServiceDetailId === assignServiceDetailId);
-		
+
 		return this.states.filter(state => row.StateId === 3 ? state : state.Id !== 3);
 	}
 
@@ -458,7 +487,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 		for (let visit of assignSeriviceDetail) {
 			if (moment(visit.DateVisit).format() === 'Invalid date' && (+visit.StateId) === 2) {
 				this.notifier.notify('error', `En la visita #${visit.Consecutive} es necesario ingresar la fecha de visita`);
-				
+
 				invalid = true;
 			}
 		}
@@ -470,13 +499,13 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 		this.visitsDetail.update(assignSeriviceDetail, this.currentAssignService.AssignServiceId)
 			.subscribe(res => {
 				this.visitsSpinner = false;
-				this.notifier.notify('success', 'Se aplicarion los cambios con exito');
+				this.notifier.notify('success', 'Se aplicaron los cambios con exito');
 				this.getPatientServices(this.currentPatient.PatientId);
 				this.showDetailAssignService({ assignServiceId: this.currentAssignService.AssignServiceId });
-				
+
 			}, err => {
 				this.visitsSpinner = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -488,10 +517,13 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 		this.visitsDetail.updateDetail(assignSeriviceDetail, this.currentAssignService.AssignServiceId, assignSeriviceDetail.AssignServiceDetailId)
 			.subscribe(res => {
 				this.visitsSpinner = false;
-				this.notifier.notify('success', 'Se aplicarion los cambios con exito');
+				this.notifier.notify('success', 'Se aplicaron los cambios con exito');
 			}, err => {
 				this.visitsSpinner = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        assignSeriviceDetail.Verified = this.assignSeriviceDetailCopy
+          .find(visit => visit.AssignServiceDetailId === assignSeriviceDetail.AssignServiceDetailId).Verified;
+
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -508,7 +540,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 				this.suppliesSource.data = this.assignServiceSupplyService.mapToTableFormat(data);
 				this.suppliesDisplayedColumns = this.suppliesSource.data.length ? Object.keys(this.suppliesSource.data[0]) : [];
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.suppliesSpinner = false;
 			});
 	}
@@ -522,7 +554,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 				this.suppliesSource.data = this.assignServiceSupplyService.mapToTableFormat(this.assignServiceSupplies);
 				this.suppliesSpinner = false;
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.suppliesSpinner = false;
 			});
 	}
@@ -543,7 +575,28 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 
 			return false;
 		}
-	}
+  }
+
+    /**
+   * validateVisitDate
+   */
+  validateVisitDate(visit: AssignServiceDetail): void {
+    let visitDate = moment(visit.DateVisit);
+    let today = moment(moment().format('YYYY-MM-DD'));
+    let diff = today.diff(visitDate, 'days');
+
+    if (diff < 0) {
+      this.notifier.notify('error', 'La fecha de visita no puede ser una fecha del futuro, por favor vuelva a ingresarla');
+      setTimeout(()=> {
+        visit.DateVisit = null;
+      }, 200);
+    } else if (diff > 2){
+      this.notifier.notify('error', 'La fecha de visita no puede ser menor a 2 días, por favor vuelva a ingresarla');
+      setTimeout(()=> {
+        visit.DateVisit = null;
+      }, 200);
+    }
+  }
 
 	public clearValues(visit: AssignServiceDetail): void {
 		visit.ReceivedAmount = null;
@@ -585,7 +638,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	}
 
 	//select professinals filtro
-	private selectFilterData(selectFilterSubject: ReplaySubject<Professional[]>, value: string): void {
+	public selectFilterData(selectFilterSubject: ReplaySubject<SelectOption[]>, value: string): void {
 		if (!this.professionals) {
 			return;
 		}
@@ -595,15 +648,15 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 
 			return;
 		} else {
-			value = value.toLowerCase();
+			value = value.toLowerCase().replace(/\s+/g, ' ');
 		}
 		// filter the professionals
 		selectFilterSubject.next(
-			this.professionals.filter(pro => ['FirstName', 'SecondName', 'Surname', 'SecondSurname'].some(key => pro.user[key] ? pro.user[key].toLowerCase().indexOf(value) > -1 : false))
+			this.professionals.filter(pro => pro.Name.toLowerCase().replace(/\s+/g, ' ').indexOf(value) > -1)
 		);
 	}
 
-	private resetSelectList(selectFilterSubject: ReplaySubject<Professional[]>): void {
+	public resetSelectList(selectFilterSubject: ReplaySubject<SelectOption[]>): void {
 		selectFilterSubject.next(this.professionals.slice());
 	}
 }

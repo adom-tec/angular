@@ -23,6 +23,11 @@ export class ServiceComponent implements OnInit {
   public dataSource = new MatTableDataSource([]);
   public filter: string;
   public formActive: boolean = false;
+  public permissions: any = {
+    create: false,
+    update: false
+  };
+  
   public currentService: number;
   public serviceTypes: SelectOption;
   public clasifications: SelectOption;
@@ -63,6 +68,8 @@ export class ServiceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.permissions.create = this.auth.hasActionResource('Create');
+    this.permissions.update = this.auth.hasActionResource('Update');
     this.mainSpinner = true;
     
     Observable.forkJoin(
@@ -77,7 +84,7 @@ export class ServiceComponent implements OnInit {
       this.serviceTypes = res[2].json();
       this.mainSpinner = false;
     }, err => {
-      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       this.mainSpinner = false;
     });
   }
@@ -144,7 +151,7 @@ export class ServiceComponent implements OnInit {
         this.dataSource.data = this.servicesService.mapToTableFormat(data);
       }, err => {
         this.mainSpinner = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -169,10 +176,10 @@ export class ServiceComponent implements OnInit {
 
     this.servicesService.createOrUpdate(service, this.currentService)
       .subscribe(res => {
-        this.notifier.notify('success',this.currentService ? 'Se aplicarion los cambios con exito' : 'Se creo el servicio con exito');
+        this.notifier.notify('success',this.currentService ? 'Se aplicaron los cambios con exito' : 'Se creo el servicio con exito');
         this.hideForm();
       }, err => {
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 

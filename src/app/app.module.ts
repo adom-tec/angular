@@ -39,13 +39,17 @@ import { ProfessionalAssignedServicesComponent } from './components/professional
 import { EditAssignedServiceDialogComponent } from './components/assign-service/edit-assigned-service-dialog/edit-assigned-service-dialog.component';
 import { QuialityTestDialogComponent } from './components/assign-service/quiality-test-dialog/quiality-test-dialog.component';
 import { CancelVisitsDialogComponent } from './components/assign-service/cancel-visits-dialog/cancel-visits-dialog.component';
+import { CopaymentComponent } from './components/copayment/copayment.component';
+import { CopaymentDialogComponent } from './components/copayment/copayment-dialog/copayment-dialog.component';
+import { CopaymentReportComponent } from './components/reports/copayment-report/copayment-report.component';
 import { GraphicReportComponent } from './components/graphic-report/graphic-report.component';
+import { SpecialReportComponent } from './components/reports/special-report/special-report.component';
+import { PaymentReportComponent } from './components/reports/payment-report/payment-report.component';
+import { RipsComponent } from './components/rips/rips.component';
 
 //services
 import { AuthGuard } from './guards/auth.guard';
 import { AuthenticationService, HttpService, RoleService, UserService, PatientService, EntityService, PlansEntityService, PlanRatesService, CoordinatorService, ProfessionalService, AssignServiceService, ObservationService, AssignServiceSupplyService, SupplyService, ServicesService, ProfessionalAssignedServicesService, AssignServiceDetailService } from './services/index';
-import { CopaymentComponent } from './components/copayment/copayment.component';
-import { CopaymentDialogComponent } from './components/copayment/copayment-dialog/copayment-dialog.component';
 
 registerLocaleData(lcoaleESCO)
 
@@ -92,6 +96,10 @@ registerLocaleData(lcoaleESCO)
     ProfessionalAssignedServicesComponent,
     CopaymentComponent,
     GraphicReportComponent,
+    SpecialReportComponent,
+    PaymentReportComponent,
+    CopaymentReportComponent,
+    RipsComponent,
     //dialogs
     PlansRatesDialog,
     AssignServiceDialogComponent,

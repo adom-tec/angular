@@ -25,6 +25,11 @@ export class PatientComponent implements OnInit {
     public dataSource = new MatTableDataSource([]);
     public filter: string;
     public formActive: boolean = false;
+    public permissions: any = {
+        create: false,
+        update: false
+    };
+
     public patients: Patient[];
     public documentTypes: DocumentTypes[];
     public genders: SelectOption[];
@@ -81,6 +86,8 @@ export class PatientComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.permissions.create = this.auth.hasActionResource('Create');
+        this.permissions.update = this.auth.hasActionResource('Update');
         this.mainSpinner = true;
 
         Observable.forkJoin(
@@ -98,7 +105,7 @@ export class PatientComponent implements OnInit {
             this.mainSpinner = false;
         }, err => {
             this.mainSpinner = false;
-            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+            if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
         });
     }
 
@@ -155,7 +162,7 @@ export class PatientComponent implements OnInit {
         this.formActive = true;
         this.filter = '';
         this.applyFilter('');
-        this.patient.GenderId = this.genders[0].Id;
+        // this.patient.GenderId = this.genders[0].Id;
 
         if (id) {
             let row = this.patients.find(patient => patient.PatientId === id);
@@ -179,11 +186,14 @@ export class PatientComponent implements OnInit {
         this.formActive = false;
         this.currentPatient = null;
 
+        this.mainSpinner = true;
         this.patientService.getPatients()
             .subscribe(data => {
                 this.mapPatientToTableFormat(data);
+                this.mainSpinner = false;
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                this.mainSpinner = false;
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
     }
 
@@ -211,7 +221,7 @@ export class PatientComponent implements OnInit {
                 this.notifier.notify('success', this.currentPatient ? 'Se aplicaron los cambios con exito' : 'Se creo el paciente con exito');
                 this.hideForm();
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
     }
 }

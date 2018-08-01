@@ -47,7 +47,7 @@ export class AssignServiceService {
         return data.map((asgService: AssignService) => {
             return {
                 assignServiceId: asgService.AssignServiceId,
-                service: asgService.service.Name.toLowerCase(),
+                service: asgService.service.Name,
                 quantity: asgService.Quantity,
                 countMadeVisits: asgService.countMadeVisits,
                 copaymentFrecuency: asgService.co_payment_frecuency.Name,

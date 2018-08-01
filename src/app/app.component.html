@@ -1,28 +1,67 @@
 <mat-sidenav-container>
-    <mat-sidenav id="sidenav" #sidenav mode="side" [opened]="menuResources.length ? true : false" class="mat-elevation-z2">
-        <button mat-icon-button color="default" style="align-self: flex-end;" (click)="closeSidenav()">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
+    <mat-sidenav id="sidenav" #sidenav mode="side" [opened]="isMobile ? openMenu : menuResources.length ? true : false" class="mat-elevation-z2">
+        <div mat-list-item class="user-list-item">
+          <h5 class="user-list-item-name" *ngIf="user">{{ user.fullname }}</h5>
+          <button mat-icon-button color="default" style="align-self: flex-end;" (click)="closeSidenav()">
+              <mat-icon>arrow_back</mat-icon>
+          </button>
+        </div>
+
         <mat-divider></mat-divider>
-        <mat-nav-list>
-            <a mat-list-item [routerLink]="resource.route" [routerLinkActive]="'active'" *ngFor="let resource of menuResources" (click)="closeSidenav()">
-                <mat-icon>{{ resource.icon }}</mat-icon> {{ resource.resourceName }}
-            </a>
+
+        <mat-nav-list id="main-nav-list">
+            <div *ngIf="!isMobile; then normal else mobile">here is ignored</div>
+            <ng-template #normal>
+                <a mat-list-item [routerLink]="resource.route" [routerLinkActive]="'active'" *ngFor="let resource of menuResources" (click)="closeSidenav()">
+                    <mat-icon>{{ resource.icon }}</mat-icon> {{ resource.resourceName }}
+                </a>
+            </ng-template>
+
+            <ng-template #mobile>
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let module of menuModules;" (opened)="showResources(module.resources)">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          {{ module.moduleName }}
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+
+                      <mat-nav-list>
+                        <a mat-list-item [routerLink]="resource.route" [routerLinkActive]="'active'" *ngFor="let resource of menuResources" (click)="closeSidenav()">
+                            <mat-icon>{{ resource.icon }}</mat-icon> {{ resource.resourceName }}
+                        </a>
+                      </mat-nav-list>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+                <a mat-list-item routerLink="/changepassword" [routerLinkActive]="'active'" (click)="closeSidenav()">
+                    <mat-icon>vpn_key</mat-icon> Cambiar contraseña
+                </a>
+
+                <a mat-list-item routerLink="/logout" [routerLinkActive]="'active'" (click)="closeSidenav()">
+                    <mat-icon>exit_to_app</mat-icon> Cerrar Sesion
+                </a>
+            </ng-template>
         </mat-nav-list>
     </mat-sidenav>
 
     <mat-sidenav-content>
         <mat-toolbar id="header" *ngIf="showMenu">
-            <a href="/home" class="left brand-logo" style="margin-right: 60px;">
+            <button mat-icon-button *ngIf="isMobile" (click)="openMenu = true">
+              <mat-icon>menu</mat-icon>
+            </button>
+
+            <a href="/home" class="brand-logo" [ngStyle]="{'left': isMobile ? logoMiddle + 'px' : 0 }">
                 <img src="./assets/images/adom_blue.png" style="height: 45px; margin-top: 8px;" />
             </a>
 
-            <nav class="header-nav">
+            <nav class="header-nav" *ngIf="!isMobile">
                 <a class="header-nav-link" (click)="showResources(module.resources)" *ngFor="let module of menuModules;">{{ module.moduleName }}</a>
             </nav>
 
-            <a class="header-nav-link user-logged" (click)="showResources('me')">
-                <mat-icon>person</mat-icon> {{ user.fullname }}</a>
+            <a class="header-nav-link user-logged" (click)="showResources('me')" *ngIf="!isMobile">
+              <mat-icon>person</mat-icon> <span class="user-logged-name">{{ user.fullname }}</span>
+            </a>
         </mat-toolbar>
 
         <div id="outlet-container">
@@ -32,4 +71,4 @@
 </mat-sidenav-container>
 
 <notifier-container></notifier-container>
-<footer>texto de prueba del footer</footer>
+<footer> ADOM Blue - Todos los derechos Reservados </footer>

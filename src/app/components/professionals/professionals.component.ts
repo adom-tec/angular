@@ -25,6 +25,11 @@ export class ProfessionalComponent implements OnInit {
 	public dataSource = new MatTableDataSource([]);
 	public filter: string;
 	public formActive: boolean = false;
+	public permissions: any = {
+		create: false,
+		update: false,
+		active: false
+	};
 
 	public professionals: Professional[];
 	public currentProfessional: number;
@@ -32,6 +37,7 @@ export class ProfessionalComponent implements OnInit {
 	public genders: SelectOption[];
 	public accountTypes: SelectOption[];
 	public specialties: SelectOption[];
+	public contractTypes: SelectOption[];
 	public professional: Professional = {
 		DocumentTypeId: null,
 		Document: '',
@@ -41,6 +47,7 @@ export class ProfessionalComponent implements OnInit {
 		SecondSurname: '',
 		BirthDate: null,
 		DateAdmission: null,
+		ContractTypeId: null,
 		GenderId: null,
 		SpecialtyId: null,
 		Address: '',
@@ -73,7 +80,8 @@ export class ProfessionalComponent implements OnInit {
 		availability: new FormControl('', [Validators.required]),
 		codeBank: new FormControl('', [Validators.required]),
 		accountTypeId: new FormControl('', [Validators.required]),
-		accountNumber: new FormControl('', [Validators.required, Validators.min(1)])
+		accountNumber: new FormControl('', [Validators.required]),
+		contractType: new FormControl('', [Validators.required]),
 	};
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -88,6 +96,9 @@ export class ProfessionalComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.permissions.create = this.auth.hasActionResource('Create');
+		this.permissions.update = this.auth.hasActionResource('Update');
+		this.permissions.active = this.auth.hasActionResource('Active');
 		this.mainSpinner = true;
 
 		Observable.forkJoin(
@@ -95,17 +106,19 @@ export class ProfessionalComponent implements OnInit {
 			this.http.get(`${environment.apiUrl}/api/documenttypes`),
 			this.http.get(`${environment.apiUrl}/api/genders`),
 			this.http.get(`${environment.apiUrl}/api/accountTypes`),
-			this.http.get(`${environment.apiUrl}/api/specialties`)
+			this.http.get(`${environment.apiUrl}/api/specialties`),
+			this.http.get(`${environment.apiUrl}/api/contracttypes`),
 		).subscribe(res => {
 			this.mapProfessionalToTableFormat(res[0]);
 			this.documentTypes = res[1].json();
 			this.genders = res[2].json();
 			this.accountTypes = res[3].json();
 			this.specialties = res[4].json();
+			this.contractTypes = res[5].json();
 			this.mainSpinner = false;
 		}, err => {
 			this.mainSpinner = false;
-			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 		});
 	}
 
@@ -141,8 +154,8 @@ export class ProfessionalComponent implements OnInit {
 				state: pro.user.State === '0' ? false : true,
 				professionalId: pro.ProfessionalId,
 				Document: pro.Document,
-				Names: `${pro.user.FirstName} ${pro.user.SecondName || ''}`.trim().toLowerCase(),
-				Lastnames: `${pro.user.Surname} ${pro.user.SecondSurname || ''}`.trim().toLowerCase(),
+				Names: `${pro.user.FirstName} ${pro.user.SecondName || ''}`.trim(),
+				Lastnames: `${pro.user.Surname} ${pro.user.SecondSurname || ''}`.trim(),
 			};
 		});
 
@@ -194,7 +207,7 @@ export class ProfessionalComponent implements OnInit {
 		this.formActive = true;
 		this.filter = '';
 		this.applyFilter('');
-		this.professional.GenderId = this.genders[0].Id;
+		// this.professional.GenderId = this.genders[0].Id;
 
 		if (id) {
 			let row = this.professionals.find(professional => professional.ProfessionalId === id);
@@ -236,7 +249,7 @@ export class ProfessionalComponent implements OnInit {
 				this.mapProfessionalToTableFormat(data);
 			}, err => {
 				this.mainSpinner = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -266,7 +279,7 @@ export class ProfessionalComponent implements OnInit {
 				this.hideForm();
 			}, err => {
 				this.loading = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -275,7 +288,7 @@ export class ProfessionalComponent implements OnInit {
 	 */
 	public updateStateProfessional(id: number) {
 		let user = this.professionals.find(professional => professional.ProfessionalId === id).user;
-		
+
 		user.State = user.State === '0' ? true : false;
 
 		this.mainSpinner = true;
@@ -286,7 +299,7 @@ export class ProfessionalComponent implements OnInit {
 				this.notifier.notify('success', 'Se actualizo el estado del profesional con exito');
 			}, err => {
 				this.loading = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuniquese con el administrador se sistema.' : err.json().message ? err.json().message : 'No se pudo obtener la informacion, por favor intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 

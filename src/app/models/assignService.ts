@@ -33,7 +33,7 @@ export class AssignService {
     AssignedBy?: number;
     RecordDate?: string;
     countMadeVisits?: number;
-    CopaymentStatus?: number|boolean; 
+    CopaymentStatus?: number|boolean;
     DelieveredCopaymentDate?: number;
     DeliveredCopayments?: number;
     Discounts?: string;
@@ -50,4 +50,5 @@ export class AssignService {
     state?: SelectOption;
     entity?: Entity;
     plan_service?: PlanRate;
+    realFinalDate?: string;
 }

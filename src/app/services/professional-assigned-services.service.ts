@@ -30,9 +30,9 @@ export class ProfessionalAssignedServicesService {
         return data.map((asgService: AssignService) => {
             return {
                 assignServiceId: asgService.AssignServiceId,
-                patientName: asgService.patient.NameCompleted.toLowerCase(),
+                patientName: asgService.patient.NameCompleted,
                 document: asgService.patient.Document,
-                serviceName: asgService.service.Name.toLowerCase(),
+                serviceName: asgService.service.Name,
                 initDate: moment(asgService.InitialDate).format('DD/MM/YYYY'),
                 completed: `${asgService.countMadeVisits}/${asgService.Quantity}`,
             };
@@ -43,10 +43,10 @@ export class ProfessionalAssignedServicesService {
         return data.map((asgService: AssignService) => {
             return {
                 assignServiceId: asgService.AssignServiceId,
-                patientName: asgService.patient.NameCompleted.toLowerCase(),
+                patientName: asgService.patient.NameCompleted,
                 document: asgService.patient.Document,
-                serviceName: asgService.service.Name.toLowerCase(),
-                finalDate: moment(asgService.FinalDate).format('DD/MM/YYYY'),
+                serviceName: asgService.service.Name,
+                finalDate: moment(asgService.realFinalDate).format('DD/MM/YYYY'),
                 copaymentReceived: asgService.copaymentReceived
             };
         });

@@ -5,8 +5,8 @@ import { Professional } from "./professional";
 export class AssignServiceDetail {
     AssignServiceDetailId: number;
     AssignServiceId: number;
-    ProfessionalId: number|string; 
-    DateVisit: string|object; 
+    ProfessionalId: number|string;
+    DateVisit: string|object;
     Consecutive: number;
     StateId: number;
     PaymentType: number;
@@ -30,7 +30,7 @@ export class AssignServiceDetail {
     cancelReasonId?: number;
     //professional filter
     selectFilter?: string;
-    selectFilteredData?: ReplaySubject<Professional[]>;
+    selectFilteredData?: ReplaySubject<SelectOption[]>;
     //relation
     state?: SelectOption;
 }

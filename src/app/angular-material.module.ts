@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCheckboxModule, MatTableModule, MatInputModule, MatToolbarModule, MatCardModule, MatIconModule, MatPaginatorModule, MatSortModule, MatSelectModule, MatSidenavModule, MatListModule, MatDividerModule, MatProgressBarModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatTooltipModule, MatDialogModule, MatChipsModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatTableModule, MatInputModule, MatToolbarModule, MatCardModule, MatIconModule, MatPaginatorModule, MatSortModule, MatSelectModule, MatSidenavModule, MatListModule, MatDividerModule, MatProgressBarModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatTooltipModule, MatDialogModule, MatChipsModule, MatProgressSpinnerModule, MatExpansionModule } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   imports: [
     ReactiveFormsModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatCheckboxModule,
     MatTableModule,
     MatInputModule,
@@ -26,11 +26,12 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatTooltipModule,
     MatDialogModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatExpansionModule
   ],
   exports: [
     ReactiveFormsModule,
-    MatButtonModule, 
+    MatButtonModule,
     MatCheckboxModule,
     MatTableModule,
     MatInputModule,
@@ -50,7 +51,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatTooltipModule,
     MatDialogModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatExpansionModule
   ]
 })
 export class AngularMaterialModule { }
