@@ -186,7 +186,7 @@ export class CopaymentComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.dataSource.data = [];
-        this.notifier.notify('success', 'Copagos entregados con exito, se ha descargado un pdf con la informacion');
+        this.notifier.notify('success', 'Copagos entregados con éxito, se ha descargado un pdf con la informacion');
       }
     });
   }

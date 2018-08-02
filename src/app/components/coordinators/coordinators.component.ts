@@ -241,7 +241,7 @@ export class CoordinatorsComponent implements OnInit {
 
 		this.coordService.createOrUpdate(coord, this.currentCoord)
 			.subscribe(res => {
-				this.notifier.notify('success', this.currentCoord ? 'Se aplicaron los cambios con exito' : 'Se creo el coordinador con exito');
+				this.notifier.notify('success', this.currentCoord ? 'Se aplicaron los cambios con éxito' : 'Se creo el coordinador con éxito');
 				this.hideForm();
 			}, err => {
 				this.loading = false;

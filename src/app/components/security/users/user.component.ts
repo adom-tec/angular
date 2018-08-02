@@ -165,7 +165,7 @@ export class UserComponent implements OnInit {
 
         this.userService.createOrUpdate(user, this.currentUser)  
             .subscribe(res => {
-                this.notifier.notify('success', this.currentUser ? 'El usuario se modifico con exito' : 'El usuario se creo con exito');
+                this.notifier.notify('success', this.currentUser ? 'El usuario se modifico con éxito' : 'El usuario se creo con éxito');
                 this.hideFormUser();
             }, err => {
                 if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');

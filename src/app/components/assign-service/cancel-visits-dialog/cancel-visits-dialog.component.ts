@@ -77,7 +77,7 @@ export class CancelVisitsDialogComponent implements OnInit {
 
     this.http.post(`${environment.apiUrl}/api/cancelreasons`, JSON.stringify(data))
       .subscribe(() => {
-        this.notifier.notify('success', 'Se cancelaron las visitas con exito');
+        this.notifier.notify('success', 'Se cancelaron las visitas con éxito');
         this.onNoClick(visits);
       }, err => {
         this.loading = false;

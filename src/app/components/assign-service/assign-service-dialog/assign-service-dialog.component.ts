@@ -205,7 +205,7 @@ export class AssignServiceDialogComponent implements OnInit {
 
     this.assignService.createOrUpdate(this.currentPatient, patientService)
       .subscribe(data => {
-        this.notifier.notify('success', 'Se asigno el servico al paciente con exito');
+        this.notifier.notify('success', 'Se asigno el servico al paciente con éxito');
         this.onNoClick();
       }, err => {
         this.loading = false;

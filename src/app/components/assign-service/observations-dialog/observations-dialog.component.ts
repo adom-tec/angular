@@ -77,7 +77,7 @@ export class ObservationsDialogComponent implements OnInit {
       .subscribe(res => {
         this.observations.push(res.json());
         this.mainSpinner = false;
-        this.notifier.notify('success', 'Se creo la observacion con exito');
+        this.notifier.notify('success', 'Se creo la observacion con éxito');
         this.clearForm();
       }, err => {
         this.mainSpinner = false;
@@ -92,7 +92,7 @@ export class ObservationsDialogComponent implements OnInit {
       .subscribe(res => {
         this.mainSpinner = false;
         this.observations = this.observations.filter(obvs => obvs.AssignServiceObservationId !== id);
-        this.notifier.notify('success', 'Se elimino la observacion con exito');
+        this.notifier.notify('success', 'Se elimino la observacion con éxito');
       }, err => {
         this.mainSpinner = false;
         if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');

@@ -218,7 +218,7 @@ export class PatientComponent implements OnInit {
 
         this.patientService.createOrUpdate(patient, this.currentPatient)
             .subscribe(res => {
-                this.notifier.notify('success', this.currentPatient ? 'Se aplicaron los cambios con exito' : 'Se creo el paciente con exito');
+                this.notifier.notify('success', this.currentPatient ? 'Se aplicaron los cambios con éxito' : 'Se creo el paciente con éxito');
                 this.hideForm();
             }, err => {
                 if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');

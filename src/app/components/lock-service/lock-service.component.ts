@@ -53,7 +53,7 @@ export class LockServiceComponent implements OnInit {
     
     this.http.put(`${environment.apiUrl}/api/lockservice`, JSON.stringify({ ServicesLockDate: date }))
       .subscribe(res => {
-        this.notifier.notify('success', 'Se aplicaron los cambios con exito');
+        this.notifier.notify('success', 'Se aplicaron los cambios con éxito');
         this.loading = false;
       }, err => {
         if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');

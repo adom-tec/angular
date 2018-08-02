@@ -127,7 +127,7 @@ export class PlansRatesDialog implements OnInit {
 				this.plansByEntity.push(data)
 				this.toogleNewPlanEntity();
 				this.loading = false;
-				this.notifier.notify('success', 'Se creo el plan con exito');
+				this.notifier.notify('success', 'Se creo el plan con éxito');
 			}, err => {
 				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
@@ -150,7 +150,7 @@ export class PlansRatesDialog implements OnInit {
 			.map(res => res.json())
 			.subscribe(data => {
 				this.loading = false;
-				this.notifier.notify('success', 'Se cambio el estado del plan con exito');
+				this.notifier.notify('success', 'Se cambio el estado del plan con éxito');
 			}, err => {
 				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
@@ -204,7 +204,7 @@ export class PlansRatesDialog implements OnInit {
 		this.planRatesService.createOrUpdate(planRate, this.currentPlanEntiy, this.currentPlanRate)
 			.map(res => res.json())
 			.subscribe(data => {
-				this.notifier.notify('success', this.currentPlanRate ? 'Se aplicaron los cambios con exito' : 'Se creo la tarifa de servicio con exito');
+				this.notifier.notify('success', this.currentPlanRate ? 'Se aplicaron los cambios con éxito' : 'Se creo la tarifa de servicio con éxito');
 				this.getPlanRates(this.currentPlanEntiy, false);
 			}, err => {
 				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
@@ -216,7 +216,7 @@ export class PlansRatesDialog implements OnInit {
 
 		this.planRatesService.delete(this.currentPlanEntiy, planRateId)
 			.subscribe(() => {
-				this.notifier.notify('success', 'Se elimino la tirifa de servicio con exito');
+				this.notifier.notify('success', 'Se elimino la tirifa de servicio con éxito');
 				this.getPlanRates(this.currentPlanEntiy, false);
 			}, err => {
 				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');

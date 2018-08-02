@@ -80,7 +80,7 @@ export class EditAssignedServiceDialogComponent implements OnInit {
 
     this.assignService.createOrUpdate(this.currentPatient, assignedService, assignedService.AssignServiceId)
       .subscribe(res => {
-        this.notifier.notify('success', 'Se aplicaron los cambios con exito');
+        this.notifier.notify('success', 'Se aplicaron los cambios con éxito');
         this.onNoClick(res.json());
       }, err => {
         this.loading = false;

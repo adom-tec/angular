@@ -139,7 +139,7 @@ export class UserRoleComponent implements OnInit {
         this.loading = true;
         this.http.post(`${environment.apiUrl}/api/users/${this.currentUser}/roles`, JSON.stringify(roles))
             .subscribe(res => {
-                this.notifier.notify('success', 'Se aplicaron los cambios con exito');
+                this.notifier.notify('success', 'Se aplicaron los cambios con éxito');
                 this.hideForm();
             }, err => {
                 if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');

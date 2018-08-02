@@ -297,7 +297,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
 
     this.visitsDetail.updateDetail(row, row.AssignServiceId, row.AssignServiceDetailId)
       .subscribe(() => {
-        this.notifier.notify('success','Se aplicaron los cambios con exito');
+        this.notifier.notify('success','Se aplicaron los cambios con éxito');
 
         this.visitsDetail.getMyAssignedServiceDetail(this.currentAssignService.AssignServiceId)
           .subscribe(data => {

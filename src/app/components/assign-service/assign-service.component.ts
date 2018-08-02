@@ -501,7 +501,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 		this.visitsDetail.update(assignSeriviceDetail, this.currentAssignService.AssignServiceId)
 			.subscribe(res => {
 				this.visitsSpinner = false;
-				this.notifier.notify('success', 'Se aplicaron los cambios con exito');
+				this.notifier.notify('success', 'Se aplicaron los cambios con éxito');
 				this.getPatientServices(this.currentPatient.PatientId);
 				this.showDetailAssignService({ assignServiceId: this.currentAssignService.AssignServiceId });
 
@@ -519,7 +519,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 		this.visitsDetail.updateDetail(assignSeriviceDetail, this.currentAssignService.AssignServiceId, assignSeriviceDetail.AssignServiceDetailId)
 			.subscribe(res => {
 				this.visitsSpinner = false;
-				this.notifier.notify('success', 'Se aplicaron los cambios con exito');
+				this.notifier.notify('success', 'Se aplicaron los cambios con éxito');
 			}, err => {
 				this.visitsSpinner = false;
         assignSeriviceDetail.Verified = this.assignSeriviceDetailCopy
@@ -551,7 +551,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 		this.suppliesSpinner = true;
 		this.assignServiceSupplyService.delete(this.currentAssignService.AssignServiceId, id)
 			.subscribe(res => {
-				this.notifier.notify('success', 'Se elimino el insumo con exito');
+				this.notifier.notify('success', 'Se elimino el insumo con éxito');
 				this.assignServiceSupplies = this.assignServiceSupplies.filter(supply => supply.AssignServiceSupplyId !== id);
 				this.suppliesSource.data = this.assignServiceSupplyService.mapToTableFormat(this.assignServiceSupplies);
 				this.suppliesSpinner = false;

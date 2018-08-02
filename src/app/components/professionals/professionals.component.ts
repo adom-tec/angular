@@ -275,7 +275,7 @@ export class ProfessionalComponent implements OnInit {
 
 		this.professionalService.createOrUpdate(professional, this.currentProfessional)
 			.subscribe(() => {
-				this.notifier.notify('success', this.currentProfessional ? 'Se aplicaron los cambios con exito' : 'Se creo al profesional con exito');
+				this.notifier.notify('success', this.currentProfessional ? 'Se aplicaron los cambios con éxito' : 'Se creo al profesional con éxito');
 				this.hideForm();
 			}, err => {
 				this.loading = false;
@@ -296,9 +296,9 @@ export class ProfessionalComponent implements OnInit {
 		this.userService.createOrUpdate(user, user.UserId)
 			.subscribe(() => {
 				this.hideForm();
-				this.notifier.notify('success', 'Se actualizo el estado del profesional con exito');
+				this.notifier.notify('success', 'Se actualizo el estado del profesional con éxito');
 			}, err => {
-				this.loading = false;
+				this.mainSpinner = false;
 				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}

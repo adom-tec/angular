@@ -138,7 +138,7 @@ export class RoleComponent implements OnInit {
         
         this.roleService.createOrUpdate(role, this.currentRole)
             .subscribe(res => {
-                this.notifier.notify('success', this.currentRole ? 'Se aplicaron los cambios con exito' : 'Se creo el role con exito');
+                this.notifier.notify('success', this.currentRole ? 'Se aplicaron los cambios con éxito' : 'Se creo el role con éxito');
                 this.hideForm();
             }, err => {
                 if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
