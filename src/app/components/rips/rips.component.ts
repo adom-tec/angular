@@ -222,7 +222,7 @@ export class RipsComponent implements OnInit {
    * toogle state all table rows
    */
   public toogleStateAll(): void {
-    this.dataSource.data.forEach(row => {
+    this.dataSource.filteredData.forEach(row => {
       row.isSelected = this.allSelected;
     });
   }
@@ -257,29 +257,15 @@ export class RipsComponent implements OnInit {
    * clearForm
    */
   public clearForm() {
-    Object.keys(this.filters).forEach(key => {
-      this.filters[key] = null;
-    });
-
-    Object.keys(this.validator).forEach(key => {
-      this.validator[key].reset();
-    });
-
     Object.keys(this.invoiceValidator).forEach(key => {
       this.invoiceValidator[key].reset();
     });
 
-    this.formFilters.resetForm();
     this.formInvoice.resetForm();
 
     this.filter = null;
     this.applyFilter('');
-    this.ripDateRage = {
-      InitDate: null,
-      FinalDate: null
-    };
-    this.plansEntity = [];
-    this.dataSource.data = [];
+    this.getRips(this.filters);
   }
 
   /**
@@ -315,8 +301,6 @@ export class RipsComponent implements OnInit {
         FileSaver.saveAs(blob, 'rips.zip');
         this.notifier.notify('success', 'Se han generado los rips con éxito, se descargó un comprimido con la información');
         this.clearForm();
-
-        this.mainSpinner = false;
       }, err => {
         this.mainSpinner = false;
         if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
