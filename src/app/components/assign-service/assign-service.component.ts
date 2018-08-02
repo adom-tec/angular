@@ -176,6 +176,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 			let withoutProfessional = new SelectOption();
 			withoutProfessional.Id = -1;
 			withoutProfessional.Name = 'POR ASIGNAR';
+			withoutProfessional.State = true;
 
 			if (!this.routeParams.patientId) {
 				this.mapPatientToTableFormat(res[0]);
@@ -186,6 +187,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
           return {
             Id: pro.ProfessionalId,
             Name: `${pro.user.FirstName} ${pro.user.SecondName || ''} ${pro.user.Surname} ${pro.user.SecondSurname || ''}`,
+            State: +pro.user.State ? true : false
           }
         });
       this.professionals = [withoutProfessional].concat(this.professionals);

@@ -99,7 +99,7 @@ export class AssignServiceDialogComponent implements OnInit {
     this.currentPatient = this.data.patientId;
     this.patientService.PatientId = this.currentPatient;
     this.professionals = this.data.professionals
-      .filter(pro => (+pro.Id) !== -1);
+      .filter(pro => pro.State);
     this.professionalFilteredData.next(this.professionals.slice());
   }
 

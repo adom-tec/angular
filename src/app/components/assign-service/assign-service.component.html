@@ -118,10 +118,10 @@
     </div>
 
     <div class="form-button" style="width: 100%;">
-      <button mat-button style="margin: 20px 0;" (click)="hideForm()">VOLVER
+      <button mat-raised-button style="margin: 20px 10px;" (click)="hideForm()">VOLVER
         <mat-icon style="margin-left: 10px;">arrow_back</mat-icon>
       </button>
-      <button mat-button style="margin: 20px 0;" (click)="openDialogPatient()" *ngIf="permissions.patientUpdate">EDITAR
+      <button mat-raised-button class="button-purple" style="margin: 20px 0;" (click)="openDialogPatient()" *ngIf="permissions.patientUpdate">EDITAR
         <mat-icon style="margin-left: 10px;">edit</mat-icon>
       </button>
     </div>

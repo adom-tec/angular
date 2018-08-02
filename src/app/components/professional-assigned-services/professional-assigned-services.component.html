@@ -164,15 +164,14 @@
     </div>
 
     <div class="form-button" style="width: 100%;">
-      <button mat-button (click)="hideForm()">VOLVER</button>
+      <button mat-raised-button (click)="hideForm()">VOLVER
+        <mat-icon style="margin-left: 10px;">arrow_back</mat-icon>
+      </button>
     </div>
   </mat-card-content>
 </mat-card>
 
 <mat-card id="form-visits-detail" class="mat-card-form" *ngIf="formActive">
-  <div class="spinner-container" *ngIf="visitsSpinner">
-    <mat-spinner></mat-spinner>
-  </div>
   <mat-card-title>
     <h4>Detalle de Visitas</h4>
   </mat-card-title>
