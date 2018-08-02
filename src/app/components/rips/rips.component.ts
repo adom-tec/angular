@@ -192,7 +192,11 @@ export class RipsComponent implements OnInit {
     this.plansEntityService.getPlansByEntity(entityId)
     .pipe(takeUntil(this._onDestroy))
     .subscribe(data => {
-      this.plansEntity = data;
+      let plan = new PlanEntity();
+      plan.PlanEntityId = 0;
+      plan.Name = "TODOS";
+
+      this.plansEntity = [plan].concat(data.filter(plan => +plan.State ? true : false));
       this.filters.PlanEntity = null;
       this.planEntityFilteredData.next(this.plansEntity.slice());
       this.mainSpinner = false;

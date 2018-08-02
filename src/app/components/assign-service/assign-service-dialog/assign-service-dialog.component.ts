@@ -140,7 +140,7 @@ export class AssignServiceDialogComponent implements OnInit {
 
     this.plansEntityService.getPlansByEntity(id)
       .subscribe(data => {
-        this.planEntities = data;
+        this.planEntities = data.filter(plan => +plan.State ? true : false);
         this.loadingBar = false;
       }, err => {
         this.loadingBar = false;
