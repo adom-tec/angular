@@ -56,7 +56,7 @@ export class ChangePasswordComponent implements OnInit {
               this.user[key] = data[key] ? data[key] : null;
             });
           }, err => {
-              this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+              this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
           });
       } else {
         this.route.params.subscribe( params => {
@@ -64,7 +64,7 @@ export class ChangePasswordComponent implements OnInit {
           this.auth.verifyLinkValidity(this.uuid)
             .subscribe(() => { },
               err => {
-                this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : 'El link al que intenta acceder es incorrecto, por favor solicite otro nuevamente');
+                this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : 'El link al que intenta acceder es incorrecto, por favor solicite otro nuevamente');
 
                 setTimeout(() => {
                   this.router.navigate(['/login']);
@@ -100,7 +100,7 @@ export class ChangePasswordComponent implements OnInit {
                 this.notifier.notify('success', 'se actualizaron los datos con éxito');
             }, err => {
                 this.loading = false;
-                if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+                if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
         } else {
           this.auth.updatePassword(this.uuid, this.user.Password)
@@ -110,7 +110,7 @@ export class ChangePasswordComponent implements OnInit {
               this.router.navigate(['/login']);
             }, err => {
                 this.loading = false;
-                this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+                this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
         }
     }

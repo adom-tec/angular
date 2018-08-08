@@ -87,7 +87,7 @@ export class UserComponent implements OnInit {
                 this.displayedColumns = data.length ? Object.keys(data[0]).filter(col => !['IsAdmin', 'SecondName', 'SecondSurname'].includes(col)) : [];
                 this.mainSpinner = false;
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 this.mainSpinner = false;
             });
     }
@@ -168,7 +168,7 @@ export class UserComponent implements OnInit {
                 this.notifier.notify('success', this.currentUser ? 'El usuario se modifico con éxito' : 'El usuario se creo con éxito');
                 this.hideFormUser();
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
                 this.loading = false;
             });
     }

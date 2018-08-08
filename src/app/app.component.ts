@@ -1,8 +1,7 @@
 import { User } from './models/user';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { Module } from './models/module';
-import { Resource } from './models/resource';
+import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { menuIcons } from '../environments/menu-icons';
 
 @Component({
     selector: 'app-root',
@@ -12,106 +11,13 @@ import { Resource } from './models/resource';
 export class AppComponent {
     public isMobile: Boolean = false;
     public openMenu: Boolean = false;
+    public showNotice: Boolean = false;
     public logoMiddle: number = 0;
 
     public showMenu: Boolean = false;
     public menuModules: any = [];
     public menuResources: any = [];
     public user: User;
-    public menuIcons = [
-        {
-            resourceId: "1",
-            icon: "person_pin"
-        },
-        {
-            resourceId: "2",
-            icon: "group"
-        },
-        {
-            resourceId: "3",
-            icon: "group_add"
-        },
-        {
-            resourceId: "4",
-            icon: "recent_actors"
-        },
-        {
-            resourceId: "35",
-            icon: "vpn_key"
-        },
-        {
-            resourceId: "logout",
-            icon: "exit_to_app"
-        },
-        {
-            resourceId: "5",
-            icon: "perm_identity"
-        },
-        {
-            resourceId: "46",
-            icon: "how_to_reg"
-        },
-        {
-            resourceId: "7",
-            icon: "school"
-        },
-        {
-            resourceId: "9",
-            icon: "supervisor_account"
-        },
-        {
-            resourceId: "11",
-            icon: "business"
-        },
-        {
-            resourceId: "48",
-            icon: "category"
-        },
-        {
-            resourceId: "1052",
-            icon: "lock"
-        },
-        {
-            resourceId: "14",
-            icon: "category"
-        },
-        {
-            resourceId: "16",
-            icon: "shopping_cart"
-        },
-        {
-            resourceId: "47",
-            icon: "cast"
-        },
-        {
-            resourceId: "23",
-            icon: "local_printshop"
-        },
-        {
-            resourceId: "30",
-            icon: "stars"
-        },
-        {
-            resourceId: "1053",
-            icon: "pie_chart"
-        },
-        {
-            resourceId: "31",
-            icon: "payment"
-        },
-        {
-            resourceId: "51",
-            icon: "account_balance"
-        },
-        {
-            resourceId: "44",
-            icon: "autorenew"
-        },
-        {
-            resourceId: "50",
-            icon: "payment"
-        }
-    ];
 
     constructor(
         private router: Router
@@ -138,6 +44,9 @@ export class AppComponent {
                 this.menuModules = currentUser.permissions;
                 this.user = me;
                 this.user.fullname = `${this.user.FirstName} ${(this.user.SecondName || '')} ${this.user.Surname} ${(this.user.SecondSurname || '')}`;
+
+                let moduleAjuste = this.menuModules.find(module => module.moduleId === 2);
+                this.showNotice = moduleAjuste ? moduleAjuste.resources.find(resource => (+resource.resourceId) === 47) ? true : false : false;
             }
         });
     }
@@ -166,7 +75,7 @@ export class AppComponent {
             }
 
             this.menuResources.forEach(resource => {
-                let menuIcon = this.menuIcons.find(icon => icon.resourceId === resource.resourceId);
+                let menuIcon = menuIcons.find(icon => icon.resourceId === resource.resourceId);
 
                 if (menuIcon) {
                     resource['icon'] = menuIcon.icon;

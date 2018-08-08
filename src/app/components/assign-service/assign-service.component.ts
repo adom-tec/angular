@@ -202,7 +202,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 				this.showForm(+this.routeParams.patientId);
 			}
 		}, err => {
-			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+			if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 		});
 	}
 
@@ -267,7 +267,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 					this.showDetailAssignService({ assignServiceId: +this.routeParams.assignServiceId });
 				}
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.servicesSpinner = false;
 			});
 	}
@@ -425,7 +425,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 				this.showTableDetails = this.assignSeriviceDetailCopy.length ? true : false;
 				this.showQualityTest = this.allVisitsCompleted();
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.visitsSpinner = false;
 			});
 	}
@@ -507,7 +507,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 
 			}, err => {
 				this.visitsSpinner = false;
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -525,7 +525,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
         assignSeriviceDetail.Verified = this.assignSeriviceDetailCopy
           .find(visit => visit.AssignServiceDetailId === assignSeriviceDetail.AssignServiceDetailId).Verified;
 
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 			});
 	}
 
@@ -542,7 +542,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 				this.suppliesSource.data = this.assignServiceSupplyService.mapToTableFormat(data);
 				this.suppliesDisplayedColumns = this.suppliesSource.data.length ? Object.keys(this.suppliesSource.data[0]) : [];
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.suppliesSpinner = false;
 			});
 	}
@@ -556,7 +556,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 				this.suppliesSource.data = this.assignServiceSupplyService.mapToTableFormat(this.assignServiceSupplies);
 				this.suppliesSpinner = false;
 			}, err => {
-				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador se sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+				if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
 				this.suppliesSpinner = false;
 			});
 	}

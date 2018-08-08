@@ -34,6 +34,10 @@
                     </mat-expansion-panel>
                 </mat-accordion>
 
+                <a mat-list-item [routerLink]="'/notices'" [routerLinkActive]="'active'" (click)="closeSidenav()" *ngIf="showNotice">
+                  <mat-icon>cast</mat-icon> Anuncios
+                </a>
+
                 <a mat-list-item routerLink="/changepassword" [routerLinkActive]="'active'" (click)="closeSidenav()">
                     <mat-icon>vpn_key</mat-icon> Cambiar contraseña
                 </a>
@@ -56,7 +60,8 @@
             </a>
 
             <nav class="header-nav" *ngIf="!isMobile">
-                <a class="header-nav-link" (click)="showResources(module.resources)" *ngFor="let module of menuModules;">{{ module.moduleName }}</a>
+              <a class="header-nav-link" (click)="showResources(module.resources)" *ngFor="let module of menuModules;">{{ module.moduleName }}</a>
+              <a class="header-nav-link" [routerLink]="'/notices'" [routerLinkActive]="'active'" *ngIf="showNotice">Anuncios</a>
             </nav>
 
             <a class="header-nav-link user-logged" (click)="showResources('me')" *ngIf="!isMobile">
