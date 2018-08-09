@@ -1,0 +1,98 @@
+export const menuIcons = [
+  {
+      resourceId: "1",
+      icon: "person_pin"
+  },
+  {
+      resourceId: "2",
+      icon: "group"
+  },
+  {
+      resourceId: "3",
+      icon: "group_add"
+  },
+  {
+      resourceId: "4",
+      icon: "recent_actors"
+  },
+  {
+      resourceId: "35",
+      icon: "vpn_key"
+  },
+  {
+      resourceId: "logout",
+      icon: "exit_to_app"
+  },
+  {
+      resourceId: "5",
+      icon: "perm_identity"
+  },
+  {
+      resourceId: "46",
+      icon: "how_to_reg"
+  },
+  {
+      resourceId: "7",
+      icon: "school"
+  },
+  {
+      resourceId: "9",
+      icon: "supervisor_account"
+  },
+  {
+      resourceId: "11",
+      icon: "business"
+  },
+  {
+      resourceId: "48",
+      icon: "category"
+  },
+  {
+      resourceId: "1052",
+      icon: "lock"
+  },
+  {
+      resourceId: "14",
+      icon: "category"
+  },
+  {
+      resourceId: "16",
+      icon: "shopping_cart"
+  },
+  {
+      resourceId: "47",
+      icon: "cast"
+  },
+  {
+      resourceId: "23",
+      icon: "local_printshop"
+  },
+  {
+      resourceId: "30",
+      icon: "stars"
+  },
+  {
+      resourceId: "1053",
+      icon: "pie_chart"
+  },
+  {
+      resourceId: "31",
+      icon: "payment"
+  },
+  {
+      resourceId: "51",
+      icon: "account_balance"
+  },
+  {
+      resourceId: "44",
+      icon: "autorenew"
+  },
+  {
+      resourceId: "45",
+      icon: "autorenew"
+  },
+  {
+      resourceId: "50",
+      icon: "payment"
+  }
+];
