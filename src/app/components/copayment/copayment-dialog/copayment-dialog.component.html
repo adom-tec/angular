@@ -15,7 +15,7 @@
     <span>
       <strong>Fecha de cuenta de cobro: </strong>{{ today | date:'dd/MM/yyyy' }}</span>
     <span>
-      <strong>Perido de cuenta de cobro:</strong> {{ currentCopaymentParams.initDate.format('DD/MM/YYYY') }} hasta {{ currentCopaymentParams.finalDate.format('DD/MM/YYYY')
+      <strong>Periodo de cuenta de cobro:</strong> {{ currentCopaymentParams.initDate.format('DD/MM/YYYY') }} hasta {{ currentCopaymentParams.finalDate.format('DD/MM/YYYY')
       }}</span>
     <span>
       <strong>Nombre profesional:</strong> {{ (currentProfessional.user.FirstName + ' ' + (currentProfessional.user.SecondName ||

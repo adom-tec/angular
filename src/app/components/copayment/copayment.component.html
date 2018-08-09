@@ -46,7 +46,7 @@
       </mat-form-field>
 
       <mat-form-field style="width: 25%;">
-        <input matInput [matDatepicker]="initDate" placeholder="Fecha desde" [(ngModel)]="copaymentParams.initDate" name="initDate"
+        <input matInput [matDatepicker]="initDate" placeholder="Fecha de atención desde" [(ngModel)]="copaymentParams.initDate" name="initDate"
           [formControl]="validator.initDate" required>
         <mat-datepicker-toggle matSuffix [for]="initDate"></mat-datepicker-toggle>
         <mat-datepicker #initDate></mat-datepicker>
@@ -54,7 +54,7 @@
       </mat-form-field>
 
       <mat-form-field style="width: 25%;">
-        <input matInput [matDatepicker]="finalDate" placeholder="Fecha hasta" [(ngModel)]="copaymentParams.finalDate" name="finalDate"
+        <input matInput [matDatepicker]="finalDate" placeholder="Fecha de atención hasta" [(ngModel)]="copaymentParams.finalDate" name="finalDate"
           [formControl]="validator.finalDate" required>
         <mat-datepicker-toggle matSuffix [for]="finalDate"></mat-datepicker-toggle>
         <mat-datepicker #finalDate></mat-datepicker>
@@ -67,7 +67,7 @@
     </form>
   </mat-card-content>
 
-  <mat-card-content *ngIf="dataSource.data.length ? true : false">
+  <mat-card-content [hidden]="!dataSource.data.length ? true : false">
     <mat-toolbar class="table-search">
       <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filter)" [(ngModel)]="filter">
     </mat-toolbar>
@@ -76,7 +76,9 @@
       <mat-table [dataSource]="dataSource" matSort>
         <!-- actions -->
         <ng-container matColumnDef="isSelected">
-          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="toogleStateAll()" [(ngModel)]="allSelected" name="allSelected"></mat-checkbox>
+          </mat-header-cell>
           <mat-cell *matCellDef="let element">
             <mat-checkbox (change)="toogleState(element)" [checked]="element.isSelected"></mat-checkbox>
           </mat-cell>
@@ -175,7 +177,7 @@
     </div>
   </mat-card-content>
 
-  <mat-card-content style="overflow: hidden;" *ngIf="permissions.create">
+  <mat-card-content style="overflow: hidden;" *ngIf="permissions.update">
     <button mat-raised-button class="button-purple" style="float: right;" (click)="openDialog()" [disabled]="nothingSelected()"
       *ngIf="dataSource.data.length && copaymentParams.copaymentState !== 1">
       ENTREGAR COPAGOS

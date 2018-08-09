@@ -26,8 +26,8 @@ export class CopaymentComponent implements OnInit {
   public dataSource = new MatTableDataSource([]);
   public filter: string;
   public formActive: boolean = false;
+  public allSelected: boolean = false;
   public permissions: any = {
-    create: false,
     update: false
   };
 
@@ -91,7 +91,6 @@ export class CopaymentComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.permissions.create = this.auth.hasActionResource('Create');
     this.permissions.update = this.auth.hasActionResource('Update');
 
     this.mainSpinner = true;
@@ -134,6 +133,15 @@ export class CopaymentComponent implements OnInit {
   getErrorMessage(formcontrol): string {
     return formcontrol.hasError('required') ? 'El campo no puede estar vacio' :
       formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' : '';
+  }
+
+    /**
+   * toogle state all table rows
+   */
+  public toogleStateAll(): void {
+    this.dataSource.filteredData.forEach(row => {
+      row.isSelected = this.allSelected;
+    });
   }
 
   getCopayments(copaymentParams: CopaymentParams): void {
