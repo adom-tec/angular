@@ -180,7 +180,7 @@ export class RoleActionResourceComponent implements OnInit {
     }
 
 
-    private filterRoles(value: string): void {
+    public filterRoles(value: string): void {
         if (!this.roles) {
             return;
         }
@@ -197,7 +197,7 @@ export class RoleActionResourceComponent implements OnInit {
         );
     }
 
-    private resetSelectList(): void {
+    public resetSelectList(): void {
         this.filteredRoles.next(this.roles.slice())
     }
 }

@@ -131,7 +131,7 @@ export class CopaymentReportComponent implements OnInit {
   }
 
   //select professionals filtro
-  private selectFilterData(value: string): void {
+  public selectFilterData(value: string): void {
     if (!this.professionals) {
       return;
     }
@@ -148,7 +148,7 @@ export class CopaymentReportComponent implements OnInit {
 		);
   }
 
-  private resetSelectList(): void {
+  public resetSelectList(): void {
     this.selectFilteredData.next(this.professionals.slice());
     this.changeTopPosition();
   }

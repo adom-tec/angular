@@ -169,7 +169,7 @@ export class AssignServiceDialogComponent implements OnInit {
       })
   }
 
-  calculateFinalDate(quantity: number, serviceFrecuencyId: number, initialDate: Moment): void  {
+  calculateFinalDate(quantity: number, serviceFrecuencyId: number, initialDate: any): void  {
     this.loadingBar = true;
 
     this.assignService.calculateFinalDateAssignService(quantity, serviceFrecuencyId, initialDate.format('YYYY-DD-MM'))

@@ -166,7 +166,7 @@ export class PaymentReportComponent implements OnInit {
   }
 
   //select professinals filtro
-  private selectFilterData(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[], value: string): void {
+  public selectFilterData(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[], value: string): void {
     if (!dataSource) {
       return;
     }
@@ -184,7 +184,7 @@ export class PaymentReportComponent implements OnInit {
     );
   }
 
-  private resetSelectList(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[]): void {
+  public resetSelectList(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[]): void {
     selectFilterSubject.next(dataSource.slice());
     this.changeTopPosition();
   }
