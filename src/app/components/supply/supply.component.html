@@ -34,7 +34,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Code">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Código </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.Code}} </mat-cell>
         </ng-container>
 
@@ -46,7 +46,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>

@@ -14,7 +14,7 @@
         <table class="table-info" *ngIf="visits.length ? true : false">
             <thead>
                 <tr>
-                    <th>Numero de visita</th>
+                    <th>Número de visita</th>
                     <th>Motivo de Cancelacion</th>
                 </tr>
             </thead>
@@ -23,7 +23,7 @@
                     <td>{{ visit.Consecutive }}</td>
                     <td style="width: 80%;">
                         <mat-form-field style="width: 100%;">
-                            <mat-select placeholder="Razon de cancelacion" [(ngModel)]="visit.cancelReasonId" [name]="'answer-' + i" required>
+                            <mat-select placeholder="Razón de cancelacion" [(ngModel)]="visit.cancelReasonId" [name]="'answer-' + i" required>
                                 <mat-option *ngFor="let reason of cancelReasons" [value]="reason.id">
                                     {{ reason.name }}
                                 </mat-option>

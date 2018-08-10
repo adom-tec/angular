@@ -29,7 +29,7 @@
         </ng-container>
 
         <ng-container matColumnDef="numDoc">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Numero de Doc. </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Número de Doc. </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.numDoc}} </mat-cell>
         </ng-container>
 
@@ -44,7 +44,7 @@
         </ng-container>
 
         <ng-container matColumnDef="telephone">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Teléfono </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.telephone}} </mat-cell>
         </ng-container>
 
@@ -56,7 +56,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator #patientPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -75,14 +75,14 @@
         <p>
           <strong>Tipo de Documento:</strong> {{ currentPatient.document_type.Name }}</p>
         <p>
-          <strong>Numero de Documento:</strong> {{ currentPatient.Document }}</p>
+          <strong>Número de Documento:</strong> {{ currentPatient.Document }}</p>
         <p>
           <strong>Nombre completo:</strong> {{ currentPatient.FirstName + ' ' + (currentPatient.SecondName || '') + ' ' + currentPatient.Surname
           + ' ' + (currentPatient.SecondSurname || '')}}</p>
         <p>
           <strong>Sexo:</strong> {{ currentPatient.gender.Name }}</p>
         <p>
-          <strong>Ocupacion:</strong> {{ currentPatient.Occupation }}</p>
+          <strong>Ocupación:</strong> {{ currentPatient.Occupation }}</p>
         <p>
           <strong>Perfil:</strong> {{ currentPatient.Profile }}</p>
         <p>
@@ -105,15 +105,15 @@
         <legend>Datos de Contacto</legend>
 
         <p>
-          <strong>Direccion:</strong> {{ currentPatient.Address }}</p>
+          <strong>Dirección:</strong> {{ currentPatient.Address }}</p>
         <p>
           <strong>Barrio:</strong> {{ currentPatient.Neighborhood }}</p>
         <p>
-          <strong>Telefono:</strong> {{ currentPatient.Telephone1 }}</p>
+          <strong>Teléfono:</strong> {{ currentPatient.Telephone1 }}</p>
         <p>
-          <strong>Telefono secundario:</strong> {{ currentPatient.Telephone2 }}</p>
+          <strong>Teléfono secundario:</strong> {{ currentPatient.Telephone2 }}</p>
         <p>
-          <strong>Correo Electronico:</strong> {{ currentPatient.Email }}</p>
+          <strong>Correo Electrónico:</strong> {{ currentPatient.Email }}</p>
       </fieldset>
     </div>
 
@@ -194,7 +194,7 @@
         <mat-header-row *matHeaderRowDef="assignServiceDisplayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: assignServiceDisplayedColumns;" (click)="showDetailAssignService(row)" [class.row-selected]="rowIsActive(row)"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!assignServiceSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!assignServiceSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator #asgServicePager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
 
@@ -415,7 +415,7 @@
               <div *ngIf="visit.isSelected; then pinContent else pinVisit">here is ignored</div>
               <ng-template #pinContent>
                 <mat-form-field *ngIf="visit.PaymentType === 2">
-                  <input matInput (keydown)="validateKey($event)" placeholder="Numero de pin" [attr.name]="'pin' + visit.AssignServiceDetailId"
+                  <input matInput (keydown)="validateKey($event)" placeholder="Número de pin" [attr.name]="'pin' + visit.AssignServiceDetailId"
                     [(ngModel)]="visit.Pin">
                 </mat-form-field>
               </ng-template>
@@ -490,7 +490,7 @@
         <mat-header-row *matHeaderRowDef="suppliesDisplayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: suppliesDisplayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!suppliesSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!suppliesSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator #suppliesPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>

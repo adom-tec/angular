@@ -64,7 +64,7 @@ export class AppComponent {
                     {
                         actions: [],
                         resourceId: "logout",
-                        resourceName: "Cerrar Sesion",
+                        resourceName: "Cerrar Sesión",
                         route: "/logout"
                     }
                 ]

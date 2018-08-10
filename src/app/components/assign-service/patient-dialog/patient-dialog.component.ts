@@ -109,7 +109,7 @@ export class PatientDialogComponent implements OnInit {
   }
 
   getErrorMessage(formcontrol): string {
-    return formcontrol.hasError('required') ? 'El campo no puede estar vacio' :
+    return formcontrol.hasError('required') ? 'El campo no puede estar vacío' :
       formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' : '';
   }
 

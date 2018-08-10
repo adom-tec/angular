@@ -95,7 +95,7 @@ export class HttpService extends Http {
             if (err.status == 401) {
                 if (err.json().message === "The refresh token is invalid.") {
                     this.router.navigate(['/login']);
-                    this.notifier.notify('error','Su sesion ha expirado, por favor ingrese nuevamente');
+                    this.notifier.notify('error','Su sesión ha expirado, por favor ingrese nuevamente');
                     return Observable.throw(new Error('No se pudo logear'));
                 }
 

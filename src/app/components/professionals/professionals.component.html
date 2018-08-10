@@ -56,7 +56,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -91,7 +91,7 @@
         </mat-form-field>
 
         <mat-form-field style="width: 40%;">
-          <input id="coord-email" matInput placeholder="Correo Electronico" type="email" [(ngModel)]="professional.Email" name="Email"
+          <input id="coord-email" matInput placeholder="Correo Electrónico" type="email" [(ngModel)]="professional.Email" name="Email"
             [formControl]="validator.email" (change)="verifyUserExist(professional.Email)" required>
           <mat-error *ngIf="validator.email.invalid">{{ getErrorMessage(validator.email) }}</mat-error>
         </mat-form-field>
@@ -161,7 +161,7 @@
         <legend>Datos de Contacto</legend>
 
         <mat-form-field style="width: 100%;">
-          <input matInput placeholder="Direccion" [(ngModel)]="professional.Address" name="Address" [formControl]="validator.addess"
+          <input matInput placeholder="Dirección" [(ngModel)]="professional.Address" name="Address" [formControl]="validator.addess"
             required>
           <mat-error *ngIf="validator.addess.invalid">{{ getErrorMessage(validator.addess) }}</mat-error>
         </mat-form-field>
@@ -171,13 +171,13 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Telefono" type="tel" [(ngModel)]="professional.Telephone1" name="Telephone1" [formControl]="validator.phone"
+          <input matInput placeholder="Teléfono" type="tel" [(ngModel)]="professional.Telephone1" name="Telephone1" [formControl]="validator.phone"
             (keydown)="validateKey($event, professional.Telephone1)" required>
           <mat-error *ngIf="validator.phone.invalid">{{ getErrorMessage(validator.phone) }}</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Telefono Secundario" type="tel" [(ngModel)]="professional.Telephone2" name="Telephone2" (keydown)="validateKey($event, professional.Telephone2)">
+          <input matInput placeholder="Teléfono Secundario" type="tel" [(ngModel)]="professional.Telephone2" name="Telephone2" (keydown)="validateKey($event, professional.Telephone2)">
         </mat-form-field>
 
         <mat-form-field>
@@ -198,11 +198,11 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Relacion" [(ngModel)]="professional.FamilyRelationship" name="FamilyRelationship">
+          <input matInput placeholder="Relación" [(ngModel)]="professional.FamilyRelationship" name="FamilyRelationship">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Telefono" type="tel" [(ngModel)]="professional.FamilyPhone" name="FamilyPhone">
+          <input matInput placeholder="Teléfono" type="tel" [(ngModel)]="professional.FamilyPhone" name="FamilyPhone">
         </mat-form-field>
       </fieldset>
 

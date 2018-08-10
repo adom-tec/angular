@@ -21,11 +21,11 @@
       <strong>Nombre profesional:</strong> {{ (currentProfessional.user.FirstName + ' ' + (currentProfessional.user.SecondName ||
       '') + ' ' + currentProfessional.user.Surname + ' ' + (currentProfessional.user.SecondSurname || '')).trim() }}</span>
     <span>
-      <strong>Direccion:</strong> {{ currentProfessional.Address }}</span>
+      <strong>Dirección:</strong> {{ currentProfessional.Address }}</span>
     <span>
-      <strong>Correo Electronico:</strong> {{ currentProfessional.Email }}</span>
+      <strong>Correo Electrónico:</strong> {{ currentProfessional.Email }}</span>
     <span>
-      <strong>Telefono:</strong> {{ currentProfessional.Telephone1 }}</span>
+      <strong>Teléfono:</strong> {{ currentProfessional.Telephone1 }}</span>
   </fieldset>
 </mat-dialog-content>
 
@@ -125,7 +125,7 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-    <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+    <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
     <mat-paginator [pageSize]="5"></mat-paginator>
   </div>
 </mat-dialog-content>

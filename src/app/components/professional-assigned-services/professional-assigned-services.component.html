@@ -51,7 +51,7 @@
         <mat-header-row *matHeaderRowDef="servicesInProcessColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: servicesInProcessColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!servicesInProcessSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!servicesInProcessSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator #inProcessPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -106,7 +106,7 @@
         <mat-header-row *matHeaderRowDef="historyColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: historyColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!historySource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!historySource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator #historyPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -125,7 +125,7 @@
         <p>
           <strong>Tipo de Documento:</strong> {{ currentPatient.document_type.Name }}</p>
         <p>
-          <strong>Numero de Documento:</strong> {{ currentPatient.Document }}</p>
+          <strong>Número de Documento:</strong> {{ currentPatient.Document }}</p>
         <p>
           <strong>Nombre completo:</strong> {{ currentAssignService.patient.NameCompleted }}
         </p>
@@ -258,7 +258,7 @@
               <div *ngIf="visit.StateId === 1 && visit.PaymentType === 2; then pinContent else pinVisit">here is ignored</div>
               <ng-template #pinContent>
                 <mat-form-field>
-                  <input matInput (keydown)="validateKey($event)" placeholder="Numero de pin" [attr.name]="'pin' + visit.AssignServiceDetailId"
+                  <input matInput (keydown)="validateKey($event)" placeholder="Número de pin" [attr.name]="'pin' + visit.AssignServiceDetailId"
                     [(ngModel)]="visit.Pin">
                 </mat-form-field>
               </ng-template>

@@ -95,7 +95,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="Numero de Factura" [(ngModel)]="filters.InvoiceNumber" name="invoiceNumber" [formControl]="invoiceValidator.invoiceNumber"
+        <input matInput placeholder="Número de Factura" [(ngModel)]="filters.InvoiceNumber" name="invoiceNumber" [formControl]="invoiceValidator.invoiceNumber"
           required>
         <mat-error *ngIf="invoiceValidator.invoiceNumber.invalid">{{ getErrorMessage(invoiceValidator.invoiceNumber) }}</mat-error>
       </mat-form-field>
@@ -184,7 +184,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{ 'has-invoice': row.invoice && row.isSelected }"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>

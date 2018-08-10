@@ -72,7 +72,7 @@ export class UserComponent implements OnInit {
     }
 
     getErrorMessage(formcontrol): string {
-        return formcontrol.hasError('required') ? 'El campo no puede estar vacio' :
+        return formcontrol.hasError('required') ? 'El campo no puede estar vacío' :
             formcontrol.hasError('email') ? 'Ingrese un email con el formato correcto' : '';
     }
 

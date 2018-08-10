@@ -38,12 +38,12 @@
         </ng-container>
 
         <ng-container matColumnDef="BusinessName">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Razon Social </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Razón Social </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.BusinessName}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="Code">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Código </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.Code}} </mat-cell>
         </ng-container>
 
@@ -55,7 +55,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -76,13 +76,13 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="Razon Social" [(ngModel)]="entity.BusinessName" name="BusinessName" [formControl]="validator.businessName"
+        <input matInput placeholder="Razón Social" [(ngModel)]="entity.BusinessName" name="BusinessName" [formControl]="validator.businessName"
           required>
         <mat-error *ngIf="validator.businessName.invalid">{{ getErrorMessage(validator.businessName) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="Codigo" [(ngModel)]="entity.Code" name="code" [formControl]="validator.code" required>
+        <input matInput placeholder="Código" [(ngModel)]="entity.Code" name="code" [formControl]="validator.code" required>
         <mat-error *ngIf="validator.code.invalid">{{ getErrorMessage(validator.code) }}</mat-error>
       </mat-form-field>
 

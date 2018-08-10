@@ -95,7 +95,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
   }
 
   getErrorMessage(formcontrol): string {
-    return formcontrol.hasError('required') ? 'El campo no puede estar vacio' :
+    return formcontrol.hasError('required') ? 'El campo no puede estar vacío' :
       formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' :
         formcontrol.hasError('email') ? 'Ingrese un email con el formato correcto' : '';
   }
@@ -287,7 +287,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
     }
 
     if (row.PaymentType === 2 && !row.Pin) {
-      this.notifier.notify('error', 'Por favor ingrese el numero de pin');
+      this.notifier.notify('error', 'Por favor ingrese el número de pin');
       return;
     }
 

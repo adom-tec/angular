@@ -53,7 +53,7 @@ export class QuialityTestDialogComponent implements OnInit {
   }
 
   getErrorMessage(formcontrol): string {
-    return formcontrol.hasError('required') ? 'El campo no puede estar vacio' : '';
+    return formcontrol.hasError('required') ? 'El campo no puede estar vacío' : '';
   }
 
   /**

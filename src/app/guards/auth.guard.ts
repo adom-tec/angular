@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
 
             this.notifier.notify('error','No puede acceder a esta ruta, por favor ingrese nuevamente');
         } else {
-          this.notifier.notify('error','Su sesion ha expirado, por favor ingrese nuevamente');
+          this.notifier.notify('error','Su sesión ha expirado, por favor ingrese nuevamente');
         }
 
         this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});

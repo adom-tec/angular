@@ -34,7 +34,7 @@
         </ng-container>
 
         <ng-container matColumnDef="numDoc">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Numero de Doc. </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Número de Doc. </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.numDoc}} </mat-cell>
         </ng-container>
 
@@ -49,7 +49,7 @@
         </ng-container>
 
         <ng-container matColumnDef="telephone">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Telefono </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Teléfono </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.telephone}} </mat-cell>
         </ng-container>
 
@@ -61,7 +61,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -123,7 +123,7 @@
         </fieldset>
 
         <mat-form-field>
-          <input matInput placeholder="Ocupacion" [(ngModel)]="patient.Occupation" name="Occupation">
+          <input matInput placeholder="Ocupación" [(ngModel)]="patient.Occupation" name="Occupation">
         </mat-form-field>
 
         <mat-form-field>
@@ -131,7 +131,7 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-select placeholder="Tipos de paciente" [(ngModel)]="patient.PatientTypeId" name="patientType" [formControl]="validator.patientType"
+          <mat-select placeholder="Tipo de paciente" [(ngModel)]="patient.PatientTypeId" name="patientType" [formControl]="validator.patientType"
             required>
             <mat-option *ngFor="let patientType of patientTypes" [value]="patientType.Id">
               {{ patientType.Name }}
@@ -170,7 +170,7 @@
         <legend>Datos de Contacto</legend>
 
         <mat-form-field>
-          <input matInput placeholder="Direccion" [(ngModel)]="patient.Address" name="Address" [formControl]="validator.addess" required>
+          <input matInput placeholder="Dirección" [(ngModel)]="patient.Address" name="Address" [formControl]="validator.addess" required>
           <mat-error *ngIf="validator.addess.invalid">{{ getErrorMessage(validator.addess) }}</mat-error>
         </mat-form-field>
 
@@ -179,17 +179,17 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Telefono" type="tel" [(ngModel)]="patient.Telephone1" name="Telephone1" [formControl]="validator.phone"
+          <input matInput placeholder="Teléfono" type="tel" [(ngModel)]="patient.Telephone1" name="Telephone1" [formControl]="validator.phone"
             required>
           <mat-error *ngIf="validator.phone.invalid">{{ getErrorMessage(validator.phone) }}</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Telefono Secundario" type="tel" [(ngModel)]="patient.Telephone2" name="Telephone2">
+          <input matInput placeholder="Teléfono Secundario" type="tel" [(ngModel)]="patient.Telephone2" name="Telephone2">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Correo Electronico" type="email" [(ngModel)]="patient.Email" name="Email">
+          <input matInput placeholder="Correo Electrónico" type="email" [(ngModel)]="patient.Email" name="Email">
         </mat-form-field>
       </fieldset>
 
@@ -200,15 +200,15 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Relacion" [(ngModel)]="patient.AttendantRelationship" name="AttendantRelationship">
+          <input matInput placeholder="Relación" [(ngModel)]="patient.AttendantRelationship" name="AttendantRelationship">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Telefono" type="tel" [(ngModel)]="patient.AttendantPhone" name="AttendantPhone">
+          <input matInput placeholder="Teléfono" type="tel" [(ngModel)]="patient.AttendantPhone" name="AttendantPhone">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Correo Electronico" type="email" [(ngModel)]="patient.AttendantEmail" name="AttendantEmail">
+          <input matInput placeholder="Correo Electrónico" type="email" [(ngModel)]="patient.AttendantEmail" name="AttendantEmail">
         </mat-form-field>
       </fieldset>
 

@@ -56,7 +56,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontaron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!dataSource.filteredData.length">No se encontraron registros.</p>
       <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -81,7 +81,7 @@
 
         <div class="flex-group">
           <mat-form-field>
-            <input matInput type="number" placeholder="Tarifa Estandar" [(ngModel)]="service.Value" name="value" [formControl]="validator.value"
+            <input matInput type="number" placeholder="Tarifa Estándar" [(ngModel)]="service.Value" name="value" [formControl]="validator.value"
               min="1" required>
             <mat-error *ngIf="validator.value.invalid">{{ getErrorMessage(validator.value) }}</mat-error>
           </mat-form-field>

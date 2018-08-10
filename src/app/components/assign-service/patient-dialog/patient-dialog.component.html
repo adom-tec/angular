@@ -1,7 +1,6 @@
 <div class="spinner-container" *ngIf="loading">
     <mat-spinner></mat-spinner>
 </div>
-<mat-progress-bar mode="indeterminate" *ngIf="loadingBar"></mat-progress-bar>
 
 <h2 mat-dialog-title>Datos del Paciente
     <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
@@ -54,7 +53,7 @@
             </fieldset>
 
             <mat-form-field>
-                <input matInput placeholder="Ocupacion" [(ngModel)]="patient.Occupation" name="Occupation">
+                <input matInput placeholder="Ocupación" [(ngModel)]="patient.Occupation" name="Occupation">
             </mat-form-field>
 
             <mat-form-field>
@@ -62,7 +61,7 @@
             </mat-form-field>
 
             <mat-form-field>
-                <mat-select placeholder="Tipos de paciente" [(ngModel)]="patient.PatientTypeId" name="patientType" [formControl]="validator.patientType" required>
+                <mat-select placeholder="Tipo de paciente" [(ngModel)]="patient.PatientTypeId" name="patientType" [formControl]="validator.patientType" required>
                     <mat-option *ngFor="let patientType of patientTypes" [value]="patientType.Id">
                         {{ patientType.Name }}
                     </mat-option>
@@ -99,7 +98,7 @@
             <legend>Datos de Contacto</legend>
 
             <mat-form-field>
-                <input matInput placeholder="Direccion" [(ngModel)]="patient.Address" name="Address" [formControl]="validator.addess" required>
+                <input matInput placeholder="Dirección" [(ngModel)]="patient.Address" name="Address" [formControl]="validator.addess" required>
                 <mat-error *ngIf="validator.addess.invalid">{{ getErrorMessage(validator.addess) }}</mat-error>
             </mat-form-field>
 
@@ -108,16 +107,16 @@
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Telefono" type="tel" [(ngModel)]="patient.Telephone1" name="Telephone1" [formControl]="validator.phone" required>
+                <input matInput placeholder="Teléfono" type="tel" [(ngModel)]="patient.Telephone1" name="Telephone1" [formControl]="validator.phone" required>
                 <mat-error *ngIf="validator.phone.invalid">{{ getErrorMessage(validator.phone) }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Telefono Secundario" type="tel" [(ngModel)]="patient.Telephone2" name="Telephone2">
+                <input matInput placeholder="Teléfono Secundario" type="tel" [(ngModel)]="patient.Telephone2" name="Telephone2">
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Correo Electronico" type="email" [(ngModel)]="patient.Email" name="Email">
+                <input matInput placeholder="Correo Electrónico" type="email" [(ngModel)]="patient.Email" name="Email">
             </mat-form-field>
         </fieldset>
 
@@ -128,15 +127,15 @@
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Relacion" [(ngModel)]="patient.AttendantRelationship" name="AttendantRelationship">
+                <input matInput placeholder="Relación" [(ngModel)]="patient.AttendantRelationship" name="AttendantRelationship">
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Telefono" type="tel" [(ngModel)]="patient.AttendantPhone" name="AttendantPhone">
+                <input matInput placeholder="Teléfono" type="tel" [(ngModel)]="patient.AttendantPhone" name="AttendantPhone">
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="Correo Electronico" type="email" [(ngModel)]="patient.AttendantEmail" name="AttendantEmail">
+                <input matInput placeholder="Correo Electrónico" type="email" [(ngModel)]="patient.AttendantEmail" name="AttendantEmail">
             </mat-form-field>
         </fieldset>
     </form>
