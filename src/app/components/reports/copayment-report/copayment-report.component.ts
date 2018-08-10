@@ -26,7 +26,7 @@ export class CopaymentReportComponent implements OnInit {
     },
     {
       Id: 'nomina',
-      Name: 'Nomina'
+      Name: 'Nómina'
     }
   ];
   public filters: any = {
