@@ -25,7 +25,7 @@ export class EditAssignedServiceDialogComponent implements OnInit {
   //Validators
   public validator = {
     authorizationNumber: new FormControl('', [Validators.required]),
-    coPaymentAmount: new FormControl('', [Validators.required, Validators.min(1)]),
+    coPaymentAmount: new FormControl('', [Validators.required, Validators.min(0)]),
     coPaymentFrecuency: new FormControl('', [Validators.required])
   };
 
@@ -58,7 +58,7 @@ export class EditAssignedServiceDialogComponent implements OnInit {
   }
 
   getErrorMessage(formcontrol): string {
-    return formcontrol.hasError('required') ? 'El campo no puede estar vacío' : 
+    return formcontrol.hasError('required') ? 'El campo no puede estar vacío' :
       formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' : '';
   }
 

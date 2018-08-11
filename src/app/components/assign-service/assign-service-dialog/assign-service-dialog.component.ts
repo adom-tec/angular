@@ -72,7 +72,7 @@ export class AssignServiceDialogComponent implements OnInit {
     initialDate: new FormControl('', [Validators.required]),
     finalDate: new FormControl('', [Validators.required]),
     professionalId: new FormControl('', [Validators.required]),
-    coPaymentAmount: new FormControl('', [Validators.required, Validators.min(1)]),
+    coPaymentAmount: new FormControl('', [Validators.required, Validators.min(0)]),
     coPaymentFrecuency: new FormControl('', [Validators.required]),
     consultation: new FormControl('', [Validators.required, Validators.min(1)]),
     external: new FormControl('', [Validators.required, Validators.min(1)]),
@@ -172,14 +172,16 @@ export class AssignServiceDialogComponent implements OnInit {
   calculateFinalDate(quantity: number, serviceFrecuencyId: number, initialDate: any): void  {
     this.loadingBar = true;
 
-    this.assignService.calculateFinalDateAssignService(quantity, serviceFrecuencyId, initialDate.format('YYYY-DD-MM'))
-      .subscribe(data => {
-        this.loadingBar = false;
-        this.patientService.FinalDate = moment(data.date);
-      }, err => {
-        this.loadingBar = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
-      });
+    if (initialDate.format() !== 'Invalid date') {
+      this.assignService.calculateFinalDateAssignService(quantity, serviceFrecuencyId, initialDate.format('YYYY-DD-MM'))
+        .subscribe(data => {
+          this.loadingBar = false;
+          this.patientService.FinalDate = moment(data.date);
+        }, err => {
+          this.loadingBar = false;
+          if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+        });
+    }
   }
 
   /**

@@ -12,7 +12,7 @@
 <mat-dialog-content>
     <form novalidate autocomplete="off" id="form-edit-assigned-service">
         <mat-form-field>
-            <input matInput type="number" placeholder="Nro. autorización" [(ngModel)]="currentAssignedService.AuthorizationNumber" name="authorizationNumber" [formControl]="validator.authorizationNumber" min="1" required>
+            <input matInput placeholder="Nro. autorización" [(ngModel)]="currentAssignedService.AuthorizationNumber" name="authorizationNumber" [formControl]="validator.authorizationNumber" required>
             <mat-error *ngIf="validator.authorizationNumber.invalid">{{ getErrorMessage(validator.authorizationNumber) }}</mat-error>
         </mat-form-field>
 
@@ -26,7 +26,7 @@
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput type="number" placeholder="Valor de copago" [(ngModel)]="currentAssignedService.CoPaymentAmount" name="coPaymentAmount" [formControl]="validator.coPaymentAmount" min="1" required>
+            <input matInput type="number" placeholder="Valor de copago" [(ngModel)]="currentAssignedService.CoPaymentAmount" name="coPaymentAmount" [formControl]="validator.coPaymentAmount" min="0" required>
             <mat-error *ngIf="validator.coPaymentAmount.invalid">{{ getErrorMessage(validator.coPaymentAmount) }}</mat-error>
         </mat-form-field>
     </form>
