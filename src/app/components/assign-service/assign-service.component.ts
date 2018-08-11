@@ -284,6 +284,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 
 		dialogRef.afterClosed().subscribe(patient => {
 			if (patient) {
+        patient.BirthDate = moment(patient.BirthDate)
 				this.currentPatient = patient;
 			}
 		});
