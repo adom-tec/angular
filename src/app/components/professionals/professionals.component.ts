@@ -264,7 +264,7 @@ export class ProfessionalComponent implements OnInit {
 		});
 
 
-		return invalid;
+		return invalid || this.loading;
 	}
 
 	/**
@@ -287,7 +287,7 @@ export class ProfessionalComponent implements OnInit {
 	 * updateStateProfessional
 	 */
 	public updateStateProfessional(id: number) {
-		let user = this.professionals.find(professional => professional.ProfessionalId === id).user;
+		let user = {...this.professionals.find(professional => professional.ProfessionalId === id).user};
 
 		user.State = user.State === '0' ? true : false;
 

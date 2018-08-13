@@ -50,7 +50,7 @@ export class AssignServiceService {
                 service: asgService.service.Name,
                 quantity: asgService.Quantity,
                 countMadeVisits: asgService.countMadeVisits,
-                copaymentFrecuency: asgService.co_payment_frecuency.Name,
+                serviceFrecuency: asgService.service_frecuency.Name,
                 initialDate: moment(asgService.InitialDate).format('DD/MM/YYYY'),
                 state: asgService.state.Name.toUpperCase()
             };

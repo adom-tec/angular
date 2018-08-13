@@ -207,7 +207,7 @@ export class PatientComponent implements OnInit {
             invalid = this.validator[key].invalid || invalid;
         });
 
-        return invalid;
+        return invalid || this.loading;
     }
 
     /**
@@ -221,7 +221,9 @@ export class PatientComponent implements OnInit {
                 this.notifier.notify('success', this.currentPatient ? 'Se aplicaron los cambios con éxito' : 'Se creo el paciente con éxito');
                 this.hideForm();
             }, err => {
-                if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+              this.loading = false;
+
+              if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
             });
     }
 }

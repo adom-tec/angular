@@ -98,9 +98,19 @@ export class AssignServiceDialogComponent implements OnInit {
   ) {
     this.currentPatient = this.data.patientId;
     this.patientService.PatientId = this.currentPatient;
+    console.log(this.data.professionals.length)
     this.professionals = this.data.professionals
       .filter(pro => pro.State);
+    console.log(this.professionals.length)
     this.professionalFilteredData.next(this.professionals.slice());
+
+    this.patientService.ContractNumber = this.data.lastestService.ContractNumber;
+    this.patientService.EntityId = +this.data.lastestService.EntityId;
+    this.getPlansEntity(this.patientService.EntityId);
+    this.patientService.PlanEntityId = +this.data.lastestService.PlanEntityId;
+    this.getPlanRates(this.patientService.PlanEntityId);
+    this.patientService.Cie10 = this.data.lastestService.Cie10;
+    this.patientService.DescriptionCie10 = this.data.lastestService.DescriptionCie10;
   }
 
   ngOnInit() {

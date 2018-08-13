@@ -230,7 +230,7 @@ export class CoordinatorsComponent implements OnInit {
 			invalid = this.validator[key].invalid || invalid;
 		});
 
-		return invalid;
+		return invalid || this.loading;
 	}
 
 	/**

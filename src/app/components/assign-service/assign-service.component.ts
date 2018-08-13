@@ -291,13 +291,22 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	}
 
 	openDialogServices(): void {
+    let lastestService = this.patientAssignServices.sort((a, b) => {
+      let first = moment(a.RecordDate)
+      let second = moment(b.RecordDate)
+      let diff = first.diff(second);
+
+      return diff < 0 ? 1 : diff > 0 ? -1 : 0;
+    });
+
 		let dialogRef = this.dialog.open(AssignServiceDialogComponent, {
 			width: '900px',
 			height: '600px',
 			panelClass: 'myapp-position-relative-dialog',
 			data: {
 				patientId: this.currentPatient.PatientId,
-				professionals: this.professionals
+        professionals: this.professionals,
+        lastestService: lastestService[0]
 			}
 		});
 
@@ -602,12 +611,13 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
         visit.DateVisit = null;
       }, 200);
 
-    } else if (diff > 2) {
-      this.notifier.notify('error', 'La fecha de visita no puede ser menor a 2 días, por favor vuelva a ingresarla');
-      setTimeout(()=> {
-        visit.DateVisit = null;
-      }, 200);
     }
+    // else if (diff > 2) {
+    //   this.notifier.notify('error', 'La fecha de visita no puede ser menor a 2 días, por favor vuelva a ingresarla');
+    //   setTimeout(()=> {
+    //     visit.DateVisit = null;
+    //   }, 200);
+    // }
   }
 
 	public clearValues(visit: AssignServiceDetail): void {
