@@ -599,19 +599,21 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
     let serviceInitialDate = moment(this.currentAssignService.InitialDate);
     let diffInitAndVisitDate = serviceInitialDate.diff(visitDate);
 
-    if (diff < 0) {
-      this.notifier.notify('error', 'La fecha de visita no puede ser una fecha del futuro, por favor vuelva a ingresarla');
-      setTimeout(()=> {
-        visit.DateVisit = null;
-      }, 200);
+    // if (diff < 0) {
+    //   this.notifier.notify('error', 'La fecha de visita no puede ser una fecha del futuro, por favor vuelva a ingresarla');
+    //   setTimeout(()=> {
+    //     visit.DateVisit = null;
+    //   }, 200);
 
-    } else if (diffInitAndVisitDate > 0) {
+    // } else 
+    
+    if (diffInitAndVisitDate > 0) {
       this.notifier.notify('error', 'La fecha de visita no puede ser menor a la fecha de inicio del servicio');
       setTimeout(()=> {
         visit.DateVisit = null;
       }, 200);
-
     }
+
     // else if (diff > 2) {
     //   this.notifier.notify('error', 'La fecha de visita no puede ser menor a 2 días, por favor vuelva a ingresarla');
     //   setTimeout(()=> {
