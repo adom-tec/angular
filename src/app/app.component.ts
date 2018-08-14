@@ -71,7 +71,11 @@ export class AppComponent {
 
 
             } else if (resources.length) {
-                this.menuResources = resources.filter(resource => resource.resourceId !== '35' && resource.visible);
+                this.menuResources = resources.filter(resource =>
+                  resource.resourceId !== '35'
+                  && resource.visible
+                  && resource.actions.includes('Read')
+                );
             }
 
             this.menuResources.forEach(resource => {
