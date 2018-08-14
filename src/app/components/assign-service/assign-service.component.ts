@@ -260,7 +260,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 			.subscribe(data => {
 				this.servicesSpinner = false;
 				this.patientAssignServices = data;
-				this.assignServiceSource.data = this.assignService.mapToTableFormat(data);
+				this.assignServiceSource.data = data.length ? this.assignService.mapToTableFormat(data) : [];
 				this.assignServiceDisplayedColumns = this.assignServiceSource.data.length ? Object.keys(this.assignServiceSource.data[0]) : [];
 
 				if (this.routeParams.assignServiceId) {
@@ -291,13 +291,20 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 	}
 
 	openDialogServices(): void {
-    let lastestService = this.patientAssignServices.sort((a, b) => {
-      let first = moment(a.RecordDate)
-      let second = moment(b.RecordDate)
-      let diff = first.diff(second);
+    let lastestService = null;
 
-      return diff < 0 ? 1 : diff > 0 ? -1 : 0;
-    });
+    if (this.patientAssignServices.length > 1) {
+      lastestService = this.patientAssignServices
+        .sort((a, b) => {
+          let first = moment(a.RecordDate)
+          let second = moment(b.RecordDate)
+          let diff = first.diff(second);
+
+          return diff < 0 ? 1 : diff > 0 ? -1 : 0;
+        })[0];
+    } else if (this.patientAssignServices.length === 1) {
+      lastestService = this.patientAssignServices[0];
+    }
 
 		let dialogRef = this.dialog.open(AssignServiceDialogComponent, {
 			width: '900px',
@@ -306,7 +313,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 			data: {
 				patientId: this.currentPatient.PatientId,
         professionals: this.professionals,
-        lastestService: lastestService[0]
+        lastestService: lastestService
 			}
 		});
 
