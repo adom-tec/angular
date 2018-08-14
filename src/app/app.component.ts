@@ -41,11 +41,22 @@ export class AppComponent {
                 this.user = null;
             } else if (currentUser && nav.url) {
                 this.showMenu = true;
-                this.menuModules = currentUser.permissions;
+                //muestra los modulos del menu
+                this.menuModules = currentUser.permissions.filter(module => {
+                  return module.resources
+                    .filter(resource =>
+                      resource.resourceId !== '35'
+                      && resource.visible
+                      && resource.actions.includes('Read')
+                    ).length;
+                });
+
+                //mustra las opciones de usuario
                 this.user = me;
                 this.user.fullname = `${this.user.FirstName} ${(this.user.SecondName || '')} ${this.user.Surname} ${(this.user.SecondSurname || '')}`;
 
-                let moduleAjuste = this.menuModules.find(module => module.moduleId === 2);
+                //muestra el recurso Anuncios
+                let moduleAjuste = currentUser.permissions.find(module => module.moduleId === 2);
                 this.showNotice = moduleAjuste ? moduleAjuste.resources.find(resource => (+resource.resourceId) === 47) ? true : false : false;
             }
         });
