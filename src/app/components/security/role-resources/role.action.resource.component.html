@@ -38,7 +38,9 @@
         <mat-table #rolesTable [dataSource]="dataSource" matSort>
           <!-- actions -->
           <ng-container matColumnDef="actionResourceId">
-            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="toogleStateAll()" [(ngModel)]="allSelected" name="allSelected"></mat-checkbox>
+            </mat-header-cell>
             <mat-cell *matCellDef="let element">
               <mat-checkbox (change)="toogleState(element)" [checked]="element.actionResourceId.state"></mat-checkbox>
             </mat-cell>

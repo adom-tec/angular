@@ -24,15 +24,16 @@ export class RoleActionResourceComponent implements OnInit {
     public formActive: boolean = false;
     public loading: boolean = false;
     public filter: string;
+    public allSelected: boolean = false;
     public permissions: any = {
         update: false
     };
-    
+
     public currentModule: number;
     public roles: Role[] = [];
     public modules: Module[] = [];
     public actionResourcesByRole = [];
-    
+
     //select filters
     @ViewChild('selectRoles') selectRoles: MatSelect;
     public currentRole: number = null;
@@ -153,6 +154,15 @@ export class RoleActionResourceComponent implements OnInit {
     }
 
     /**
+     * toogle state all table rows
+     */
+    public toogleStateAll(): void {
+      this.dataSource.filteredData.forEach(row => {
+        row.actionResourceId.state = this.allSelected;
+      });
+    }
+
+    /**
      * create and update.
      */
     public submitForm(): void {
@@ -166,7 +176,7 @@ export class RoleActionResourceComponent implements OnInit {
                 })
                 .filter(id => id)
         };
-        
+
         this.loading = true;
 
         this.http.post(`${environment.apiUrl}/api/roles/${this.currentRole}/actionsresources`, JSON.stringify(actionsResources))

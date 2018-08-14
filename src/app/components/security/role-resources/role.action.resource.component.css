@@ -1,3 +1,4 @@
+.mat-header-cell.cdk-column-actionResourceId.mat-column-actionResourceId,
 .mat-cell.cdk-column-actionResourceId.mat-column-actionResourceId {
     height: 40px;
     display: flex;
@@ -6,3 +7,4 @@
     flex-flow: row wrap;
     overflow: visible;
 }
+
