@@ -112,7 +112,7 @@
         <mat-error *ngIf="invoiceValidator.netWorth.invalid">{{ getErrorMessage(invoiceValidator.netWorth) }}</mat-error>
       </mat-form-field>
 
-      <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="downloadReport()" [disabled]="generateActive()">
+      <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="downloadReport()" [disabled]="generateActive()" *ngIf="permissions.create">
         <mat-icon>save</mat-icon> GENERAR
       </button>
     </form>

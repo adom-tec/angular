@@ -158,16 +158,16 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
     //     visit.DateVisit = null;
     //   }, 200);
 
-    // } else 
-    
+    // } else
+
     if (diffInitAndVisitDate > 0) {
       this.notifier.notify('error', 'La fecha de visita no puede ser menor a la fecha de inicio del servicio');
       setTimeout(()=> {
         visit.DateVisit = null;
       }, 200);
 
-    } 
-    
+    }
+
     // else if (diff > 2) {
     //   this.notifier.notify('error', 'La fecha de visita no puede ser menor a 2 días, por favor vuelva a ingresarla');
     //   setTimeout(()=> {
@@ -280,18 +280,23 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
       return;
     }
 
-    if (row.PaymentType === 1 && typeof row.ReceivedAmount !== 'number') {
+    if (row.PaymentType === 3 && typeof row.ReceivedAmount !== 'number') {
       this.notifier.notify('error', 'Por favor ingrese el monto recibido');
       return;
     }
 
-    if (row.PaymentType === 1 && row.ReceivedAmount < 0) {
+    if (row.PaymentType === 3 && row.ReceivedAmount < 0) {
       this.notifier.notify('error', 'Por favor verifique el monto ingresado, el monto no puede ser menor a 0');
       return;
     }
 
     if (row.PaymentType === 2 && !row.Pin) {
       this.notifier.notify('error', 'Por favor ingrese el número de pin');
+      return;
+    }
+
+    if (row.OtherAmount && row.OtherAmount < 0) {
+      this.notifier.notify('error', 'Por favor verifique el monto de Otro Valor, el monto no puede ser menor a 0');
       return;
     }
 

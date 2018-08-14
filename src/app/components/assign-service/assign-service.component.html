@@ -401,7 +401,7 @@
               </ng-template>
             </td>
             <td *ngIf="permissions.update">
-              <div *ngIf="visit.isSelected; then amountContent else amountVisit">here is ignored</div>
+              <div *ngIf="visit.isSelected && visit.PaymentType === 3; then amountContent else amountVisit">here is ignored</div>
               <ng-template #amountContent>
                 <mat-form-field *ngIf="visit.PaymentType !== 2">
                   <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.ReceivedAmount">

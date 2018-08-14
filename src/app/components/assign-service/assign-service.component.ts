@@ -501,7 +501,22 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 				this.notifier.notify('error', `En la visita #${visit.Consecutive} es necesario ingresar la fecha de visita`);
 
 				invalid = true;
-			}
+      }
+
+      if (visit.PaymentType === 3 && visit.ReceivedAmount < 0) {
+        this.notifier.notify('error', `En la visita #${visit.Consecutive} por favor verifique el monto ingresado, el monto no puede ser menor a 0`);
+        invalid = true;
+      }
+
+      if (visit.PaymentType === 2 && !visit.Pin) {
+        this.notifier.notify('error', `En la visita #${visit.Consecutive} por favor ingrese el número de pin`);
+        invalid = true;
+      }
+
+      if (visit.OtherAmount && visit.OtherAmount < 0) {
+        this.notifier.notify('error', `En la visita #${visit.Consecutive} por favor verifique el monto de Otro Valor, el monto no puede ser menor a 0`);
+        invalid = true;
+      }
 		}
 
 		if (invalid) { return; }
@@ -605,8 +620,8 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
     //     visit.DateVisit = null;
     //   }, 200);
 
-    // } else 
-    
+    // } else
+
     if (diffInitAndVisitDate > 0) {
       this.notifier.notify('error', 'La fecha de visita no puede ser menor a la fecha de inicio del servicio');
       setTimeout(()=> {
@@ -624,7 +639,11 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 
 	public clearValues(visit: AssignServiceDetail): void {
 		visit.ReceivedAmount = null;
-		visit.Pin = null;
+    visit.Pin = null;
+
+    if (visit.PaymentType === 1) {
+      visit.ReceivedAmount = +this.currentAssignService.CoPaymentAmount;
+    }
 	}
 
 	getPaymentTypeName(id: number): string {
