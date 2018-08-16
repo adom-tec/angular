@@ -76,7 +76,7 @@ export class GraphicReportComponent implements OnInit {
     ).subscribe(res => {
       this.mapToChartFormat(res[0].json(), this.barChartNursingData, this.barChartNursingLabels);
       this.mapToChartFormat(res[1].json(), this.barChartTherapyData, this.barChartTherapyLabels);
-      
+
       this.irregularServices.data = res[2].json().map((patient: PatientReportData) => {
         return {
           AssignServiceId: patient.AssignServiceId,
@@ -149,6 +149,11 @@ export class GraphicReportComponent implements OnInit {
   public mapToChartFormat(nursing: ServiceChartStatus[], dataSource: any[], labels: string[]): void {
     let nursingStatus = [];
 
+    //ordena el array por mes y status
+    nursing = nursing.sort((a, b) => {
+        return (+a.Month) > (+b.Month) ? 1 : (+a.Month) < (+b.Month) ? -1 : (+a.Status) > (+b.Status) ? -1 : (+a.Status) < (+b.Status) ? 1 : 0;
+    });
+
     //devuelve un array con los status existentes
     nursing.map(obj => (+obj.Status)).forEach(status => {
       if (!nursingStatus.includes(status)) {
@@ -163,12 +168,9 @@ export class GraphicReportComponent implements OnInit {
         label: status === 1 ? 'PROGRAMADAS' : status === 2 ? 'COMPLETADAS' : 'CANCELADAS'
       });
     });
-    
-    //ordena el array y obtiene los el nombre de los meses
+
+    //obtiene el nombre de los meses
     nursing
-      .sort((a, b) => {
-          return (+a.Month) > (+b.Month) ? 1 : (+a.Month) < (+b.Month) ? -1 : 0;
-      })
       .map(obj => obj.Month)
       .forEach(val => {
         moment.locale('es');
@@ -184,11 +186,11 @@ export class GraphicReportComponent implements OnInit {
   }
 
   showMoreDatails(patientId: number, assignServiceId: number): void {
-    this.router.navigate(['/assignservice'], { 
+    this.router.navigate(['/assignservice'], {
       queryParams: {
         patientId: patientId,
         assignServiceId: assignServiceId
-      } 
+      }
     });
   }
 }
