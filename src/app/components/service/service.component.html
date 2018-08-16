@@ -82,25 +82,25 @@
         <div class="flex-group">
           <mat-form-field>
             <input matInput type="number" placeholder="Tarifa Estándar" [(ngModel)]="service.Value" name="value" [formControl]="validator.value"
-              min="1" required>
+              min="0" required>
             <mat-error *ngIf="validator.value.invalid">{{ getErrorMessage(validator.value) }}</mat-error>
           </mat-form-field>
 
           <mat-form-field>
             <input matInput type="number" placeholder="Tarifa Especial" [(ngModel)]="service.special_value" name="special_value" [formControl]="validator.special_value"
-              min="1" required>
+              min="0" required>
             <mat-error *ngIf="validator.special_value.invalid">{{ getErrorMessage(validator.special_value) }}</mat-error>
           </mat-form-field>
 
           <mat-form-field>
             <input matInput type="number" placeholder="Tarifa Particular" [(ngModel)]="service.particular_value" name="particular_value"
-              [formControl]="validator.particular_value" min="1" required>
+              [formControl]="validator.particular_value" min="0" required>
             <mat-error *ngIf="validator.particular_value.invalid">{{ getErrorMessage(validator.particular_value) }}</mat-error>
           </mat-form-field>
 
           <mat-form-field>
             <input matInput type="number" placeholder="Tarifa Dominical y Festivos" [(ngModel)]="service.holiday_value" name="holiday_value"
-              [formControl]="validator.holiday_value" min="1" required>
+              [formControl]="validator.holiday_value" min="0" required>
             <mat-error *ngIf="validator.holiday_value.invalid">{{ getErrorMessage(validator.holiday_value) }}</mat-error>
           </mat-form-field>
         </div>

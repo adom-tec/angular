@@ -27,7 +27,7 @@ export class ServiceComponent implements OnInit {
     create: false,
     update: false
   };
-  
+
   public currentService: number;
   public serviceTypes: SelectOption;
   public clasifications: SelectOption;
@@ -47,10 +47,10 @@ export class ServiceComponent implements OnInit {
   //Validators
   public validator = {
     name: new FormControl('', [Validators.required]),
-    value: new FormControl('', [Validators.required, Validators.min(1)]),
-    special_value: new FormControl('', [Validators.required, Validators.min(1)]),
-    particular_value: new FormControl('', [Validators.required, Validators.min(1)]),
-    holiday_value: new FormControl('', [Validators.required, Validators.min(1)]),
+    value: new FormControl('', [Validators.required, Validators.min(0)]),
+    special_value: new FormControl('', [Validators.required, Validators.min(0)]),
+    particular_value: new FormControl('', [Validators.required, Validators.min(0)]),
+    holiday_value: new FormControl('', [Validators.required, Validators.min(0)]),
     code: new FormControl('', [Validators.required]),
     classificationId: new FormControl('', [Validators.required]),
     serviceTypeId: new FormControl('', [Validators.required]),
@@ -71,7 +71,7 @@ export class ServiceComponent implements OnInit {
     this.permissions.create = this.auth.hasActionResource('Create');
     this.permissions.update = this.auth.hasActionResource('Update');
     this.mainSpinner = true;
-    
+
     Observable.forkJoin(
       this.servicesService.getServices(),
       this.http.get(`${environment.apiUrl}/api/classifications`),
@@ -102,7 +102,7 @@ export class ServiceComponent implements OnInit {
 
   getErrorMessage(formcontrol): string {
     return formcontrol.hasError('required') ? 'El campo no puede estar vacío' :
-      formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' : '';
+      formcontrol.hasError('min') ? 'El valor no puede ser menor a 0' : '';
   }
 
 	/**
