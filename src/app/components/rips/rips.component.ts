@@ -233,7 +233,7 @@ export class RipsComponent implements OnInit {
       hasInvoice = hasInvoice || row.invoice ? true : false;
     });
 
-    if (hasInvoice) {
+    if (hasInvoice && this.allSelected) {
       this.notifier.notify('info', 'Ha seleccionado servicios ya tienen asociada una factura');
     }
   }
