@@ -109,6 +109,7 @@ export class RoleActionResourceComponent implements OnInit {
      */
     public resetForm() {
         this.loading = false;
+        this.allSelected = false;
         this.currentRole = null;
         this.dataSource.data = [];
         this.currentModule = null;

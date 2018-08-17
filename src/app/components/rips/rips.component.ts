@@ -275,6 +275,7 @@ export class RipsComponent implements OnInit {
     this.formInvoice.resetForm();
 
     this.filter = null;
+    this.allSelected = false;
     this.applyFilter('');
     this.getRips(this.filters);
   }
@@ -316,7 +317,8 @@ export class RipsComponent implements OnInit {
         this.clearForm();
       }, err => {
         this.mainSpinner = false;
-        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+
+        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.status === 418 ? 'No ha seleccionado todos los servicios de la factura' : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
