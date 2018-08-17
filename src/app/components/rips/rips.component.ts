@@ -226,9 +226,16 @@ export class RipsComponent implements OnInit {
    * toogle state all table rows
    */
   public toogleStateAll(): void {
+    let hasInvoice = false;
+
     this.dataSource.filteredData.forEach(row => {
       row.isSelected = this.allSelected;
+      hasInvoice = hasInvoice || row.invoice ? true : false;
     });
+
+    if (hasInvoice) {
+      this.notifier.notify('info', 'Ha seleccionado servicios ya tienen asociada una factura');
+    }
   }
 
   /**
@@ -277,6 +284,8 @@ export class RipsComponent implements OnInit {
    */
   public downloadReport() {
     let rowSelecteds = this.dataSource.data.filter(rip => rip.isSelected);
+    let rowsWithInvoice = rowSelecteds.filter(rip => rip.invoice);
+    let invoiceNumber = rowsWithInvoice.length ? rowsWithInvoice[0].invoice : false;
 
     let body = {
       InitDate: this.ripDateRage.InitDate,
@@ -288,7 +297,7 @@ export class RipsComponent implements OnInit {
       services: rowSelecteds.map(rip => rip.assignServiceId)
     };
 
-    if (rowSelecteds.some(rip => rip.invoice)) {
+    if (invoiceNumber && !rowSelecteds.every(rip => rip.invoice === invoiceNumber)) {
       this.notifier.notify('error', 'Se han seleccionado servicios que ya tienen asociada una factura');
       return;
     }
