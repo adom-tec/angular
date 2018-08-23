@@ -25,6 +25,7 @@ import { SpecialReportComponent } from './components/reports/special-report/spec
 import { PaymentReportComponent } from './components/reports/payment-report/payment-report.component';
 import { CopaymentReportComponent } from './components/reports/copayment-report/copayment-report.component';
 import { RipsComponent } from './components/rips/rips.component';
+import { ProfessionalReportComponent } from './components/reports/professional-report/professional-report.component';
 
 const appRoutes: Routes = [
     { path: '', component: LoginComponent},
@@ -52,6 +53,7 @@ const appRoutes: Routes = [
     { path: 'reportspecial', component: SpecialReportComponent, canActivate: [AuthGuard] },
     { path: 'reportpayments', component: PaymentReportComponent, canActivate: [AuthGuard] },
     { path: 'copaymentreport', component: CopaymentReportComponent, canActivate: [AuthGuard] },
+    { path: 'prosessionalreport', component: ProfessionalReportComponent, canActivate: [AuthGuard] },
     { path: 'ripsentity', component: RipsComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: '' }
 ];
