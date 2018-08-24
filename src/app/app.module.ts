@@ -46,6 +46,7 @@ import { GraphicReportComponent } from './components/graphic-report/graphic-repo
 import { SpecialReportComponent } from './components/reports/special-report/special-report.component';
 import { PaymentReportComponent } from './components/reports/payment-report/payment-report.component';
 import { RipsComponent } from './components/rips/rips.component';
+import { ProfessionalReportComponent } from './components/reports/professional-report/professional-report.component';
 
 //services
 import { AuthGuard } from './guards/auth.guard';
@@ -99,6 +100,7 @@ registerLocaleData(lcoaleESCO)
     SpecialReportComponent,
     PaymentReportComponent,
     CopaymentReportComponent,
+    ProfessionalReportComponent,
     RipsComponent,
     //dialogs
     PlansRatesDialog,

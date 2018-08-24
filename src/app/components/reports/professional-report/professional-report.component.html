@@ -1,0 +1,47 @@
+<mat-card>
+  <div class="spinner-container" *ngIf="mainSpinner">
+      <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+      <h4>Reporte de Profesionales</h4>
+  </mat-card-title>
+
+  <mat-card-content>
+      <form novalidate id="form-consult-copayments">
+          <mat-form-field style="width: 30%;">
+              <mat-select placeholder="Especialidad" [(ngModel)]="filters.SpecialtyId" name="specialtyId" [formControl]="validator.specialtyId" required>
+                  <mat-option *ngFor="let specialty of specialties" [value]="specialty.Id">
+                      {{ specialty.Name }}
+                  </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="validator.specialtyId.invalid">{{ getErrorMessage(validator.specialtyId) }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="width: 30%;">
+              <mat-select placeholder="Tipo de contrato" [(ngModel)]="filters.ContractTypeId" name="contractTypeId" [formControl]="validator.contractTypeId" required>
+                  <mat-option *ngFor="let contractType of contractTypes" [value]="contractType.Id">
+                      {{ contractType.Name }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="validator.contractTypeId.invalid">{{ getErrorMessage(validator.contractTypeId) }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="width: 30%;">
+              <mat-select placeholder="Estado" [(ngModel)]="filters.State" name="state" [formControl]="validator.state" required>
+                  <mat-option *ngFor="let state of states" [value]="state.Id">
+                      {{ state.Name }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="validator.state.invalid">{{ getErrorMessage(validator.state) }}</mat-error>
+          </mat-form-field>
+      </form>
+  </mat-card-content>
+
+  <mat-card-content style="overflow: hidden;">
+      <button mat-raised-button class="button-purple" style="float: right;" (click)="downloadReport()" [disabled]="formInvalid()">
+    GENERAR REPORTE
+  </button>
+  </mat-card-content>
+</mat-card>
