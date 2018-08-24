@@ -107,7 +107,7 @@ export class ProfessionalReportComponent implements OnInit {
   public downloadReport() {
     this.mainSpinner = true;
 
-    this.http.get(`${environment.apiUrl}/api/reports/payment`, {
+    this.http.get(`${environment.apiUrl}/api/reports/professional`, {
       params: this.filters,
       responseType: ResponseContentType.Blob//requerido para que la response sea un blob
     })
