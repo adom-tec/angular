@@ -61,13 +61,14 @@ export class ProfessionalReportComponent implements OnInit {
       this.specialties = [optionAll].concat(res[0].json());
       this.contractTypes = [optionAll].concat(res[1].json());
       this.states = [
-        {
-          Id: 0,
-          Name: 'INACTIVO'
-        },
+        optionAll,
         {
           Id: 1,
           Name: 'ACTIVO'
+        },
+        {
+          Id: 2,
+          Name: 'INACTIVO'
         }
       ];
 
