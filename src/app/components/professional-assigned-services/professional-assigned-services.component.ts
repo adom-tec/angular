@@ -1,9 +1,8 @@
 import { Patient } from './../../models/patient';
 import { AssignService } from './../../models/assignService';
 import { environment } from './../../../environments/environment';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort, MatInput } from '@angular/material';
-import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import * as moment from 'moment';
@@ -12,7 +11,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { SelectOption } from '../../models/selectOption';
 import { ProfessionalAssignedServicesService, PatientService, AssignServiceDetailService } from '../../services';
 import { NotifierService } from 'angular-notifier';
-import { ProfessionalService, AssignServiceDetail } from '../../models';
+import { AssignServiceDetail } from '../../models';
 
 @Component({
   selector: 'app-professional-assigned-services',
