@@ -86,6 +86,7 @@ export class ProfessionalAssignedServicesComponent implements OnInit {
 
       case 'history':
         this.historySource.filter = filterValue;
+        break;
 
       default:
         this.servicesInProcessSource.filter = filterValue;
