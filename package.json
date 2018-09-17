@@ -27,6 +27,7 @@
         "@angular/platform-browser-dynamic": "^5.2.5",
         "@angular/platform-server": "^5.2.5",
         "@angular/router": "^5.2.5",
+        "amazing-time-picker": "^1.5.3",
         "angular-notifier": "^3.0.0",
         "classlist.js": "^1.1.20150312",
         "core-js": "^2.5.7",
@@ -34,7 +35,7 @@
         "moment": "^2.22.2",
         "ng2-charts": "^1.6.0",
         "ngx-mat-select-search": "^1.2.3",
-        "rxjs": "^5.5.2",
+        "rxjs": "^5.5.6",
         "web-animations-js": "^2.3.1",
         "zone.js": "^0.8.26"
     },

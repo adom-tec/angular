@@ -5,32 +5,36 @@ import * as FileSaver from 'file-saver';
 import { environment } from './../../../../environments/environment';
 import { AuthenticationService, ProfessionalService } from '../../../services';
 import { NotifierService } from 'angular-notifier';
-import { Service, Professional, User } from '../../../models';
 import { HttpService } from './../../../services/http-interceptor.service';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, Observable } from 'rxjs';
 import { ResponseContentType } from '@angular/http';
 import { SelectOption } from '../../../models/selectOption';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-copayment-report',
-  templateUrl: './copayment-report.component.html',
-  styleUrls: ['./copayment-report.component.css']
+  selector: 'app-hours-worked-nursing-report',
+  templateUrl: './hours-worked-nursing-report.component.html',
+  styleUrls: ['./hours-worked-nursing-report.component.css']
 })
-export class CopaymentReportComponent implements OnInit {
+export class HoursWorkedNursingReportComponent implements OnInit {
   public mainSpinner: boolean = false;
   public professionals: SelectOption[];
+  public states: SelectOption[];
+  public contractTypes: SelectOption[];
   public reportTypes: any[] = [
     {
-      Id: 'copayment',
+      Id: 'hoursnursing',
       Name: 'Consolidado'
     },
     {
-      Id: 'nomina',
-      Name: 'Nómina'
+      Id: 'hoursnursingdetail',
+      Name: 'Detallado'
     }
   ];
   public filters: any = {
     ProfessionalId: null,
+    StateId: null,
+    ContractTypeId: null,
     ReportType: null,
     InitDate: null,
     FinalDate: null
@@ -39,6 +43,8 @@ export class CopaymentReportComponent implements OnInit {
   //Validators
   public validator = {
     professionalId: new FormControl('', [Validators.required]),
+    stateId: new FormControl('', [Validators.required]),
+    contractTypeId: new FormControl('', [Validators.required]),
     reportType: new FormControl('', [Validators.required]),
     initDate: new FormControl('', [Validators.required]),
     finalDate: new FormControl('', [Validators.required])
@@ -59,19 +65,27 @@ export class CopaymentReportComponent implements OnInit {
   ngOnInit() {
     this.mainSpinner = true;
 
-    this.professionalService.getProfessionals()
-      .subscribe(data => {
-        let pro = new SelectOption();
-        pro.Id = 0;
-        pro.Name = 'TODOS';
+    Observable.forkJoin(
+			this.professionalService.getProfessionals(),
+			this.http.get(`${environment.apiUrl}/api/contracttypes`).map(res => res.json()),
+			this.http.get(`${environment.apiUrl}/api/states`).map(res => res.json()),
+    )
+    .pipe(takeUntil(this._onDestroy))
+    .subscribe(res => {
+        let optAll = new SelectOption();
+        optAll.Id = 0;
+        optAll.Name = 'TODOS';
 
-        this.professionals = [pro].concat(data.map(pro => {
+        this.professionals = [{...optAll}].concat(res[0].map(pro => {
           return {
             Id: pro.ProfessionalId,
             Name: `${pro.user.FirstName} ${pro.user.SecondName || ''} ${pro.user.Surname} ${pro.user.SecondSurname || ''}`,
           }
         }));
         this.selectFilteredData.next(this.professionals.slice());
+
+        this.contractTypes = [{...optAll}].concat(res[1]);
+        this.states = [{...optAll}].concat(res[2]);
 
         this.mainSpinner = false;
       }, err => {
@@ -119,8 +133,9 @@ export class CopaymentReportComponent implements OnInit {
       params: params,
       responseType: ResponseContentType.Blob//requerido para que la response sea un blob
     })
+      .pipe(takeUntil(this._onDestroy))
       .subscribe(res => {
-        FileSaver.saveAs(new Blob([res.blob()], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `Reporte copagos - ${this.filters.ReportType} - ${moment(Date.now()).format('DD-MM-YYYY')}.xlsx`);
+        FileSaver.saveAs(new Blob([res.blob()], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `Reporte Horas de Enfermeria - ${this.filters.ReportType} - ${moment(Date.now()).format('DD-MM-YYYY')}.xlsx`);
 
         this.notifier.notify('success', 'Se ha descargado un excel con la información solicitada');
         this.mainSpinner = false;
@@ -139,13 +154,13 @@ export class CopaymentReportComponent implements OnInit {
     if (!value) {
       this.selectFilteredData.next(this.professionals.slice());
       return;
-		} else {
-			value = value.toLowerCase().replace(/\s+/g, ' ');
-		}
-		// filter the professionals
-		this.selectFilteredData.next(
-			this.professionals.filter(pro => pro.Name.toLowerCase().replace(/\s+/g, ' ').indexOf(value) > -1)
-		);
+    } else {
+      value = value.toLowerCase().replace(/\s+/g, ' ');
+    }
+    // filter the professionals
+    this.selectFilteredData.next(
+      this.professionals.filter(pro => pro.Name.toLowerCase().replace(/\s+/g, ' ').indexOf(value) > -1)
+    );
   }
 
   public resetSelectList(): void {

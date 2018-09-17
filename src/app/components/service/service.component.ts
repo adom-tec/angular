@@ -29,8 +29,8 @@ export class ServiceComponent implements OnInit {
   };
 
   public currentService: number;
-  public serviceTypes: SelectOption;
-  public clasifications: SelectOption;
+  public serviceTypes: SelectOption[];
+  public clasifications: SelectOption[];
   public services: Service[];
   public service: Service = {
     Name: '',
@@ -41,7 +41,9 @@ export class ServiceComponent implements OnInit {
     Code: '',
     ClassificationId: null,
     ServiceTypeId: null,
-    HoursToInvest: 1
+    HoursToInvest: 1,
+    InitTime: null,
+    BreakTime: null
   }
 
   //Validators
@@ -54,7 +56,9 @@ export class ServiceComponent implements OnInit {
     code: new FormControl('', [Validators.required]),
     classificationId: new FormControl('', [Validators.required]),
     serviceTypeId: new FormControl('', [Validators.required]),
-    hoursToInvest: new FormControl('', [Validators.required, Validators.min(1)])
+    hoursToInvest: new FormControl('', [Validators.required, Validators.min(1)]),
+    initTime: new FormControl('', [Validators.required]),
+    breakTime: new FormControl('', [Validators.required, Validators.min(0)])
   };
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -155,14 +159,30 @@ export class ServiceComponent implements OnInit {
       });
   }
 
+  /**
+   * verifica si el servicio seleccionado es de enfermeria
+   */
+  public isNursing(serviceTypeId: number): boolean {
+    let service = this.serviceTypes.find(sType => (+sType.Id) === (+serviceTypeId));
+
+    return service ? service.Name === 'ENF' : false;
+  }
+
 	/**
 	 * formInvalid
 	 */
   public formInvalid(): boolean {
     let invalid = false;
+    let isNursing = this.isNursing(this.service.ServiceTypeId);
 
     Object.keys(this.validator).forEach(key => {
-      invalid = this.validator[key].invalid || invalid;
+      if (isNursing) {
+        invalid = this.validator[key].invalid || invalid;
+      } else {
+        if (!['initTime', 'breakTime'].includes(key)) {
+          invalid = this.validator[key].invalid || invalid;
+        }
+      }
     });
 
     return invalid;
@@ -172,6 +192,7 @@ export class ServiceComponent implements OnInit {
 	 * create and update.
 	 */
   public submitForm(service: Service): void {
+    console.log(service)
     this.loading = true;
 
     this.servicesService.createOrUpdate(service, this.currentService)

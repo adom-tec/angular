@@ -26,6 +26,7 @@ import { PaymentReportComponent } from './components/reports/payment-report/paym
 import { CopaymentReportComponent } from './components/reports/copayment-report/copayment-report.component';
 import { RipsComponent } from './components/rips/rips.component';
 import { ProfessionalReportComponent } from './components/reports/professional-report/professional-report.component';
+import { HoursWorkedNursingReportComponent } from './components/reports/hours-worked-nursing-report/hours-worked-nursing-report.component';
 
 const appRoutes: Routes = [
     { path: '', component: LoginComponent},
@@ -54,6 +55,7 @@ const appRoutes: Routes = [
     { path: 'reportpayments', component: PaymentReportComponent, canActivate: [AuthGuard] },
     { path: 'copaymentreport', component: CopaymentReportComponent, canActivate: [AuthGuard] },
     { path: 'prosessionalreport', component: ProfessionalReportComponent, canActivate: [AuthGuard] },
+    { path: 'hoursworkednursingreport', component: HoursWorkedNursingReportComponent, canActivate: [AuthGuard] },
     { path: 'ripsentity', component: RipsComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: '' }
 ];

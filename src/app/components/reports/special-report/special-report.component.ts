@@ -158,9 +158,9 @@ export class SpecialReportComponent implements OnInit {
       responseType: ResponseContentType.Blob//requerido para que la response sea un blob
     })
       .subscribe(res => {
-        FileSaver.saveAs(new Blob([res.blob()], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `Reporte especial ${moment(Date.now()).format('DD-MM-YYYY')}.xlsx`);
+        FileSaver.saveAs(new Blob([res.blob()], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `Reporte especial - ${this.filters.ReportType} - ${moment(Date.now()).format('DD-MM-YYYY')}.xlsx`);
 
-        this.notifier.notify('success', 'Se ha descargado un excel con la informacion solicitada');
+        this.notifier.notify('success', 'Se ha descargado un excel con la información solicitada');
         this.mainSpinner = false;
       }, err => {
         this.mainSpinner = false;

@@ -157,7 +157,7 @@ export class PaymentReportComponent implements OnInit {
       .subscribe(res => {
         FileSaver.saveAs(new Blob([res.blob()], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `Reporte de pagos ${moment(Date.now()).format('DD-MM-YYYY')}.xlsx`);
 
-        this.notifier.notify('success', 'Se ha descargado un excel con la informacion solicitada');
+        this.notifier.notify('success', 'Se ha descargado un excel con la información solicitada');
         this.mainSpinner = false;
       }, err => {
         this.mainSpinner = false;

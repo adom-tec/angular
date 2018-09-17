@@ -11,6 +11,8 @@ export class Service {
     ClassificationId: number;
     ServiceTypeId: number;
     HoursToInvest: number;
+    InitTime: string;
+    BreakTime: number;
     //relations
     service_type?: any;
     classification?: SelectOption;

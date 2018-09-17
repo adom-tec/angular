@@ -138,6 +138,16 @@
         <mat-error *ngIf="validator.hoursToInvest.invalid">{{ getErrorMessage(validator.hoursToInvest) }}</mat-error>
       </mat-form-field>
 
+      <mat-form-field *ngIf="isNursing(service.ServiceTypeId)" style="width: 30%; margin-right: 10%;">
+        <input matInput atp-time-picker placeholder="Hora de Inicio" [(ngModel)]="service.InitTime" name="initTime" [formControl]="validator.initTime" required>
+        <mat-error *ngIf="validator.initTime.invalid">{{ getErrorMessage(validator.initTime) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="isNursing(service.ServiceTypeId)" style="width: 30%;">
+        <input matInput type="number" placeholder="Horas de Descanso" [(ngModel)]="service.BreakTime" name="breakTime" [formControl]="validator.breakTime" min="0" required>
+        <mat-error *ngIf="validator.breakTime.invalid">{{ getErrorMessage(validator.breakTime) }}</mat-error>
+      </mat-form-field>
+
       <div class="form-button">
         <button mat-button style="margin-bottom: 15px; margin-right: 15px;" (click)="hideForm()">VOLVER</button>
 

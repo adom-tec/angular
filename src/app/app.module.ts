@@ -10,6 +10,7 @@ import { AngularMaterialModule } from './angular-material.module';
 import { NotifierModule } from 'angular-notifier';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ChartsModule } from 'ng2-charts';
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 
 //components
 import { AppComponent } from './app.component';
@@ -47,6 +48,7 @@ import { SpecialReportComponent } from './components/reports/special-report/spec
 import { PaymentReportComponent } from './components/reports/payment-report/payment-report.component';
 import { RipsComponent } from './components/rips/rips.component';
 import { ProfessionalReportComponent } from './components/reports/professional-report/professional-report.component';
+import { HoursWorkedNursingReportComponent } from './components/reports/hours-worked-nursing-report/hours-worked-nursing-report.component';
 
 //services
 import { AuthGuard } from './guards/auth.guard';
@@ -73,7 +75,8 @@ registerLocaleData(lcoaleESCO)
         }
       },
     }),
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    AmazingTimePickerModule
   ],
   declarations: [
     AppComponent,
@@ -101,6 +104,7 @@ registerLocaleData(lcoaleESCO)
     PaymentReportComponent,
     CopaymentReportComponent,
     ProfessionalReportComponent,
+    HoursWorkedNursingReportComponent,
     RipsComponent,
     //dialogs
     PlansRatesDialog,
