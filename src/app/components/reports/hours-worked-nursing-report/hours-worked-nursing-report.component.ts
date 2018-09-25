@@ -23,11 +23,11 @@ export class HoursWorkedNursingReportComponent implements OnInit {
   public contractTypes: SelectOption[];
   public reportTypes: any[] = [
     {
-      Id: 'hoursnursing',
+      Id: 1,
       Name: 'Consolidado'
     },
     {
-      Id: 'hoursnursingdetail',
+      Id: 2,
       Name: 'Detallado'
     }
   ];
@@ -127,9 +127,8 @@ export class HoursWorkedNursingReportComponent implements OnInit {
 
     params.InitDate = params.InitDate.format('DD-MM-YYYY');
     params.FinalDate = params.FinalDate.format('DD-MM-YYYY');
-    delete params.ReportType;
 
-    this.http.get(`${environment.apiUrl}/api/reports/${this.filters.ReportType}`, {
+    this.http.get(`${environment.apiUrl}/api/reports/hoursnursing`, {
       params: params,
       responseType: ResponseContentType.Blob//requerido para que la response sea un blob
     })

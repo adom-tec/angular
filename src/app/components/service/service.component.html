@@ -139,7 +139,7 @@
       </mat-form-field>
 
       <mat-form-field *ngIf="isNursing(service.ServiceTypeId)" style="width: 30%; margin-right: 10%;">
-        <input matInput atp-time-picker placeholder="Hora de Inicio" [(ngModel)]="service.InitTime" name="initTime" [formControl]="validator.initTime" required>
+        <input matInput atp-time-picker placeholder="Hora de Inicio" [(ngModel)]="service.InitTime" name="initTime" [formControl]="validator.initTime" required (keydown)="denyKeybardEntry()">
         <mat-error *ngIf="validator.initTime.invalid">{{ getErrorMessage(validator.initTime) }}</mat-error>
       </mat-form-field>
 

@@ -113,7 +113,6 @@ export class WorkSchedulesComponent implements OnInit {
     });
     this.currentWorkScheduleName = this.schedules[0].work_schedule.Name;
     this.formActive = true;
-    console.log(this.schedules);
   }
 
 	/**
@@ -141,14 +140,12 @@ export class WorkSchedulesComponent implements OnInit {
   }
 
   public addRow(): void {
-    console.log(this.schedules)
     this.schedules.push({
       Id: null,
       WorkScheduleId: this.currentWorkSchedule,
       End: '00:00',
       Start: '00:00'
     });
-    console.log(this.schedules)
   }
 
   public delete(ScheduleId: number, idx: number): void {
@@ -161,9 +158,12 @@ export class WorkSchedulesComponent implements OnInit {
       return;
     }
 
+    this.mainSpinner = true;
+
     this.workSchedulesService.delete(ScheduleId)
       .pipe(takeUntil(this._onDestroy))
       .subscribe(data => {
+        this.mainSpinner = false;
         this.schedules = this.schedules.filter(item => item.Id !== ScheduleId);
         this.notifier.notify('success', 'Se eliminó el horario con éxito');
       }, err => {
@@ -192,12 +192,16 @@ export class WorkSchedulesComponent implements OnInit {
       }
     });
 
+    this.mainSpinner = true;
+
     Observable.forkJoin(request)
       .pipe(takeUntil(this._onDestroy))
       .subscribe(res => {
         this.notifier.notify('success', 'Se aplicaron los cambios con éxito');
         this.hideForm();
       }, err => {
+        this.mainSpinner = false;
+
         if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }

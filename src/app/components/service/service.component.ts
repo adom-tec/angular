@@ -168,6 +168,10 @@ export class ServiceComponent implements OnInit {
     return service ? service.Name === 'ENF' : false;
   }
 
+  public denyKeybardEntry(): boolean {
+    return false;
+  }
+
 	/**
 	 * formInvalid
 	 */
