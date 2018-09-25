@@ -15,3 +15,4 @@ export * from './supply.service';
 export * from './services.service';
 export * from './professional-assigned-services.service';
 export * from './assignServiceDetail.service';
+export * from './work-schedules.service';

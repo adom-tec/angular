@@ -102,5 +102,9 @@ export const menuIcons = [
   {
       resourceId: "2055",
       icon: "alarm"
+  },
+  {
+      resourceId: "2056",
+      icon: "schedule"
   }
 ];

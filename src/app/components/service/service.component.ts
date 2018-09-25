@@ -192,14 +192,17 @@ export class ServiceComponent implements OnInit {
 	 * create and update.
 	 */
   public submitForm(service: Service): void {
-    console.log(service)
     this.loading = true;
+
+    service = {...service};
+    service.InitTime = service.InitTime + ':00';
 
     this.servicesService.createOrUpdate(service, this.currentService)
       .subscribe(res => {
         this.notifier.notify('success',this.currentService ? 'Se aplicaron los cambios con éxito' : 'Se creo el servicio con éxito');
         this.hideForm();
       }, err => {
+        this.loading = false;
         if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }

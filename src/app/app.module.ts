@@ -49,10 +49,11 @@ import { PaymentReportComponent } from './components/reports/payment-report/paym
 import { RipsComponent } from './components/rips/rips.component';
 import { ProfessionalReportComponent } from './components/reports/professional-report/professional-report.component';
 import { HoursWorkedNursingReportComponent } from './components/reports/hours-worked-nursing-report/hours-worked-nursing-report.component';
+import { WorkSchedulesComponent } from './components/work-schedules/work-schedules.component';
 
 //services
 import { AuthGuard } from './guards/auth.guard';
-import { AuthenticationService, HttpService, RoleService, UserService, PatientService, EntityService, PlansEntityService, PlanRatesService, CoordinatorService, ProfessionalService, AssignServiceService, ObservationService, AssignServiceSupplyService, SupplyService, ServicesService, ProfessionalAssignedServicesService, AssignServiceDetailService } from './services/index';
+import { AuthenticationService, HttpService, RoleService, UserService, PatientService, EntityService, PlansEntityService, PlanRatesService, CoordinatorService, ProfessionalService, AssignServiceService, ObservationService, AssignServiceSupplyService, SupplyService, ServicesService, ProfessionalAssignedServicesService, AssignServiceDetailService, WorkSchedulesService } from './services/index';
 
 registerLocaleData(lcoaleESCO)
 
@@ -106,6 +107,7 @@ registerLocaleData(lcoaleESCO)
     ProfessionalReportComponent,
     HoursWorkedNursingReportComponent,
     RipsComponent,
+    WorkSchedulesComponent,
     //dialogs
     PlansRatesDialog,
     AssignServiceDialogComponent,
@@ -147,6 +149,7 @@ registerLocaleData(lcoaleESCO)
     SupplyService,
     AssignServiceDetailService,
     ProfessionalAssignedServicesService,
+    WorkSchedulesService,
     { provide: LOCALE_ID, useValue: "es-CO" }
   ],
   bootstrap: [AppComponent]

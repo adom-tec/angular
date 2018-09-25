@@ -1,0 +1,94 @@
+<mat-card #list [hidden]="formActive">
+  <div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>Tipos de Horario</h4>
+  </mat-card-title>
+
+  <mat-card-content>
+    <div class="mat-elevation-z2">
+      <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="WorkScheduleId">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button class="btn-edit" mat-icon-button color="default" (click)="showForm(element.WorkScheduleId)" *ngIf="permissions.update">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="range">
+          <mat-header-cell *matHeaderCellDef> Horario </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p *ngFor="let range of element.range;" >{{ range }}</p>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card #form id="form-service" class="mat-card-form" *ngIf="formActive">
+  <div class="spinner-container" *ngIf="mainSpinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card-title>
+    <h4>Programación de Horario - {{ currentWorkScheduleName }}</h4>
+  </mat-card-title>
+
+  <mat-card-content>
+    <button mat-raised-button class="button-green" (click)="addRow()">NUEVA FILA
+        <mat-icon style="margin-left: 10px;">add</mat-icon>
+      </button>
+    <button mat-raised-button class="button-purple" (click)="submitForm()">GUARDAR
+      <mat-icon style="margin-left: 10px;">save</mat-icon>
+    </button>
+    <button mat-raised-button (click)="hideForm()" style="float: right;">VOLVER
+      <mat-icon style="margin-left: 10px;">arrow_back</mat-icon>
+    </button>
+  </mat-card-content>
+
+  <mat-card-content>
+    <form novalidate autocomplete="off">
+      <table class="table-info">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Hora de Inicio</th>
+            <th>Hora de Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of schedules; let i = index;">
+            <td>
+              <button mat-icon-button color="warn" class="btn-delete" (click)="delete(row.Id, i)" matTooltip="Borrar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+            <td>
+                <mat-form-field>
+                    <input matInput atp-time-picker [(ngModel)]="row.Start" [name]="'start' + '-' + i" (keydown)="denyKeybardEntry()">
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-form-field>
+                  <input matInput atp-time-picker [(ngModel)]="row.End" [name]="'end' + '-' + i" (keydown)="denyKeybardEntry()">
+                </mat-form-field>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </mat-card-content>
+</mat-card>
