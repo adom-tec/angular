@@ -96,7 +96,7 @@ export class RipsComponent implements OnInit {
     Observable.forkJoin(
       this.entityService.getEntities(),
       this.http.get(`${environment.apiUrl}/api/servicetypes`).map(res => res.json())
-		)
+    )
       .pipe(takeUntil(this._onDestroy))
       .subscribe(data => {
         this.entities = data[0];
@@ -121,11 +121,11 @@ export class RipsComponent implements OnInit {
   }
 
 
-	public applyFilter(filterValue: string): void {
-		filterValue = filterValue.trim(); // Remove whitespace
-		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-		this.dataSource.filter = filterValue;
-	}
+  public applyFilter(filterValue: string): void {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+  }
 
   getErrorMessage(formcontrol): string {
     return formcontrol.hasError('required') ? 'El campo no puede estar vacío' :
@@ -135,18 +135,18 @@ export class RipsComponent implements OnInit {
   /**
    * mapRipsToTableFormat
    */
-	public mapRipsToTableFormat(data: Rips[]): void {
+  public mapRipsToTableFormat(data: Rips[]): void {
     this.rips = data.map(rip => {
       rip.AssignServiceId = +rip.AssignServiceId;
       return rip;
     });
 
-		this.dataSource.data = data.map(rip => {
-			return {
+    this.dataSource.data = data.map(rip => {
+      return {
         isSelected: false,
         assignServiceId: +rip.AssignServiceId,
-				document: rip.patient.Document,
-				patient: rip.patient.NameCompleted,
+        document: rip.patient.Document,
+        patient: rip.patient.NameCompleted,
         service: rip.service.Name,
         authorization: rip.AuthorizationNumber,
         entity: rip.entity.Name,
@@ -154,14 +154,14 @@ export class RipsComponent implements OnInit {
         initDate: rip.InitialDate,
         finalDate: rip.FinalDate,
         invoice: rip.InvoiceNumber
-			};
-		});
+      };
+    });
 
-		this.displayedColumns = this.dataSource.data.length ? Object.keys(this.dataSource.data[0]).filter(key => key !== 'assignServiceId') : [];
-	}
+    this.displayedColumns = this.dataSource.data.length ? Object.keys(this.dataSource.data[0]).filter(key => key !== 'assignServiceId') : [];
+  }
 
   public getRips(filters: any): void {
-    filters = {...filters};
+    filters = { ...filters };
     filters.InitDate = filters.InitDate.format('YYYY-MM-DD');
     filters.FinalDate = filters.FinalDate.format('YYYY-MM-DD');
     this.ripDateRage.InitDate = filters.InitDate;
@@ -194,21 +194,21 @@ export class RipsComponent implements OnInit {
     this.mainSpinner = true;
 
     this.plansEntityService.getPlansByEntity(entityId)
-    .pipe(takeUntil(this._onDestroy))
-    .subscribe(data => {
-      let plan = new PlanEntity();
-      plan.PlanEntityId = 0;
-      plan.Name = "TODOS";
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(data => {
+        let plan = new PlanEntity();
+        plan.PlanEntityId = 0;
+        plan.Name = "TODOS";
 
-      this.plansEntity = [plan].concat(data.filter(plan => +plan.State ? true : false));
-      this.filters.PlanEntity = null;
-      this.planEntityFilteredData.next(this.plansEntity.slice());
-      this.mainSpinner = false;
-    }, err => {
-      this.mainSpinner = false;
+        this.plansEntity = [plan].concat(data.filter(plan => +plan.State ? true : false));
+        this.filters.PlanEntity = null;
+        this.planEntityFilteredData.next(this.plansEntity.slice());
+        this.mainSpinner = false;
+      }, err => {
+        this.mainSpinner = false;
 
-      if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
-    });
+        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+      });
   }
 
   /**
@@ -285,23 +285,23 @@ export class RipsComponent implements OnInit {
    */
   public downloadReport() {
     let rowSelecteds = this.dataSource.data.filter(rip => rip.isSelected);
-    let rowsWithInvoice = rowSelecteds.filter(rip => rip.invoice);
-    let invoiceNumber = rowsWithInvoice.length ? rowsWithInvoice[0].invoice : false;
+    // let rowsWithInvoice = rowSelecteds.filter(rip => rip.invoice);
+    // let invoiceNumber = rowsWithInvoice.length ? rowsWithInvoice[0].invoice : false;
 
     let body = {
       InitDate: this.ripDateRage.InitDate,
       FinalDate: this.ripDateRage.FinalDate,
       InvoiceDate: this.filters.InvoiceDate.format('YYYY-MM-DD'),
-      InvoiceNumber: this.filters.InvoiceNumber,
+      // InvoiceNumber: this.filters.InvoiceNumber,
       CopaymentAmount: this.filters.CopaymentAmount,
       NetWorth: this.filters.NetWorth,
       services: rowSelecteds.map(rip => rip.assignServiceId)
     };
 
-    if (invoiceNumber && !rowSelecteds.every(rip => rip.invoice === invoiceNumber)) {
-      this.notifier.notify('error', 'Se han seleccionado servicios que ya tienen asociada una factura');
-      return;
-    }
+    // if (invoiceNumber && !rowSelecteds.every(rip => rip.invoice === invoiceNumber)) {
+    //   this.notifier.notify('error', 'Se han seleccionado servicios que ya tienen asociada una factura');
+    //   return;
+    // }
 
     this.mainSpinner = true;
 
@@ -310,7 +310,7 @@ export class RipsComponent implements OnInit {
     })
       .pipe(takeUntil(this._onDestroy))
       .subscribe(res => {
-        let blob = new Blob([res.blob()], { type: 'application/zip'});
+        let blob = new Blob([res.blob()], { type: 'application/zip' });
 
         FileSaver.saveAs(blob, 'rips.zip');
         this.notifier.notify('success', 'Se han generado los rips con éxito, se descargó un comprimido con la información');
@@ -323,7 +323,7 @@ export class RipsComponent implements OnInit {
   }
 
   //select filtro
-  public selectFilterData(origin : any[], filter: ReplaySubject<any[]>, value: string): void {
+  public selectFilterData(origin: any[], filter: ReplaySubject<any[]>, value: string): void {
     if (!origin) {
       return;
     }
@@ -340,7 +340,7 @@ export class RipsComponent implements OnInit {
     );
   }
 
-  public resetSelectList(origin : any[], filter: ReplaySubject<any[]>): void {
+  public resetSelectList(origin: any[], filter: ReplaySubject<any[]>): void {
     filter.next(origin.slice());
     this.changeTopPosition();
   }
@@ -350,7 +350,7 @@ export class RipsComponent implements OnInit {
       let nodes = document.getElementsByClassName('cdk-overlay-pane');
       let cardTop = document.querySelector('.mat-card').getBoundingClientRect().top;
 
-      for (let i=0; i < nodes.length; i++) {
+      for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].clientHeight) {
           let panelTop = nodes[i].getBoundingClientRect().top;
           if (panelTop < cardTop) {
