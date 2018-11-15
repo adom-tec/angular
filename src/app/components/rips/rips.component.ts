@@ -292,7 +292,7 @@ export class RipsComponent implements OnInit {
       InitDate: this.ripDateRage.InitDate,
       FinalDate: this.ripDateRage.FinalDate,
       InvoiceDate: this.filters.InvoiceDate.format('YYYY-MM-DD'),
-      // InvoiceNumber: this.filters.InvoiceNumber,
+      InvoiceNumber: this.filters.InvoiceNumber,
       CopaymentAmount: this.filters.CopaymentAmount,
       NetWorth: this.filters.NetWorth,
       services: rowSelecteds.map(rip => rip.assignServiceId)
