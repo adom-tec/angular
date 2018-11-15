@@ -217,9 +217,9 @@ export class RipsComponent implements OnInit {
   public toogleState(row: any): void {
     row.isSelected = !row.isSelected;
 
-    if (row.invoice && row.isSelected) {
-      this.notifier.notify('info', 'El servicio ya tiene asociada una factura');
-    }
+    // if (row.invoice && row.isSelected) {
+    //   this.notifier.notify('info', 'El servicio ya tiene asociada una factura');
+    // }
   }
 
   /**
