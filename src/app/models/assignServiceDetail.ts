@@ -30,12 +30,12 @@ export class AssignServiceDetail {
   //key front-end
   isSelected?: boolean;
   cancelReasonId?: number;
+  authorizationFC?: FormControl;
   //professional filter
   selectFilter?: string;
   selectFilteredData?: ReplaySubject<SelectOption[]>;
   //relation
   state?: SelectOption;
-  authorizationFC?: FormControl;
 }
 
 
