@@ -63,7 +63,7 @@ export class AssignServiceDialogComponent implements OnInit {
     entity: new FormControl('', [Validators.required]),
     planEntityId: new FormControl('', [Validators.required]),
     cie10: new FormControl('', [Validators.required]),
-    authorizationNumber: new FormControl('', [Validators.required]),
+    authorizationNumber: new FormControl('', [Validators.required, Validators.maxLength(15), Validators.pattern('[a-zA-Z0-9]+')]),
     validity: new FormControl('', [Validators.required]),
     applicantName: new FormControl('', [Validators.required]),
     serviceId: new FormControl('', [Validators.required]),
@@ -128,7 +128,7 @@ export class AssignServiceDialogComponent implements OnInit {
       this.loading = false;
     }, err => {
       this.loading = false;
-      if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+      if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
     });
   }
 
@@ -138,7 +138,9 @@ export class AssignServiceDialogComponent implements OnInit {
 
   getErrorMessage(formcontrol): string {
     return formcontrol.hasError('required') ? 'El campo no puede estar vacío' :
-      formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' : '';
+      formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' :
+        formcontrol.hasError('maxLength') ? 'No puede ingresar más de 15 caracteres' :
+          formcontrol.hasError('pattern') ? 'Ingrese solo valores alfanuméricos' : '';
   }
 
   getPlansEntity(id: number): void {
@@ -154,7 +156,7 @@ export class AssignServiceDialogComponent implements OnInit {
         this.loadingBar = false;
       }, err => {
         this.loadingBar = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       })
   }
 
@@ -175,11 +177,11 @@ export class AssignServiceDialogComponent implements OnInit {
         this.loadingBar = false;
       }, err => {
         this.loadingBar = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       })
   }
 
-  calculateFinalDate(quantity: number, serviceFrecuencyId: number, initialDate: any): void  {
+  calculateFinalDate(quantity: number, serviceFrecuencyId: number, initialDate: any): void {
     this.loadingBar = true;
 
     if (initialDate.format() !== 'Invalid date') {
@@ -189,7 +191,7 @@ export class AssignServiceDialogComponent implements OnInit {
           this.patientService.FinalDate = moment(data.date);
         }, err => {
           this.loadingBar = false;
-          if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+          if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
         });
     }
   }
@@ -197,15 +199,15 @@ export class AssignServiceDialogComponent implements OnInit {
   /**
 	 * formInvalid
 	 */
-	public formInvalid(): boolean {
-	  let invalid = false;
+  public formInvalid(): boolean {
+    let invalid = false;
 
-	  Object.keys(this.validator).forEach(key => {
-	    invalid = this.validator[key].invalid || invalid;
-	  });
+    Object.keys(this.validator).forEach(key => {
+      invalid = this.validator[key].invalid || invalid;
+    });
 
-	  return invalid;
-	}
+    return invalid;
+  }
 
   submitForm(patientService: AssignService): void {
     patientService = Object.assign({}, patientService);
@@ -221,7 +223,7 @@ export class AssignServiceDialogComponent implements OnInit {
         this.onNoClick();
       }, err => {
         this.loading = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -254,7 +256,7 @@ export class AssignServiceDialogComponent implements OnInit {
       let nodes = document.getElementsByClassName('cdk-overlay-pane');
       let cardTop = document.querySelector('.mat-card').getBoundingClientRect().top;
 
-      for (let i=0; i < nodes.length; i++) {
+      for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].clientHeight) {
           let panelTop = nodes[i].getBoundingClientRect().top;
           if (panelTop < cardTop) {

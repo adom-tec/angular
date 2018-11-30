@@ -49,7 +49,7 @@
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput placeholder="Nro. autorización" [(ngModel)]="patientService.AuthorizationNumber" name="authorizationNumber" [formControl]="validator.authorizationNumber" required>
+            <input matInput placeholder="Nro. autorización" [(ngModel)]="patientService.AuthorizationNumber" name="authorizationNumber" [formControl]="validator.authorizationNumber" maxlength="15" required>
             <mat-error *ngIf="validator.authorizationNumber.invalid">{{ getErrorMessage(validator.authorizationNumber) }}</mat-error>
         </mat-form-field>
 

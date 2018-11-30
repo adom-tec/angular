@@ -94,7 +94,8 @@
 
         <p>
           <strong>Fecha de Nacimiento:</strong> {{ currentPatient.BirthDate.format() === 'Invalid date' ? 'No Registrado' : currentPatient.BirthDate.format('DD/MM/YYYY')
-          }}</p>
+          }}
+        </p>
         <p>
           <strong>Edad:</strong> {{ currentPatient.Age }}</p>
         <p>
@@ -249,13 +250,13 @@
 
   <mat-card-content>
     <div class="buttons-group" style="margin-bottom: 40px;" *ngIf="permissions.update">
-      <button mat-raised-button class="button-purple" (click)="saveVisits(assignSeriviceDetail)" [disabled]="notVisitsSelected">GUARDAR CAMBIOS
+      <button mat-raised-button class="button-purple" (click)="saveVisits(assignServiceDetail)" [disabled]="notVisitsSelected">GUARDAR CAMBIOS
         <mat-icon style="margin-left: 10px;">save</mat-icon>
       </button>
       <button style="margin-left: 20px;" mat-raised-button class="button-green" (click)="openDialogEditAssinedService()">EDITAR SERVICIO
         <mat-icon style="margin-left: 10px;">edit</mat-icon>
       </button>
-      <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignSeriviceDetail)"
+      <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignServiceDetail)"
         [disabled]="notVisitsSelected">CANCELAR VISITAS
         <mat-icon style="margin-left: 10px;">cancel</mat-icon>
       </button>
@@ -271,6 +272,7 @@
             <th *ngIf="permissions.update"></th>
             <th>Visita</th>
             <th>Fecha</th>
+            <th>Nro. de Autorización</th>
             <th>Profesional</th>
             <th>Estado</th>
             <th>Comentarios</th>
@@ -285,7 +287,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let visit of assignSeriviceDetail">
+          <tr *ngFor="let visit of assignServiceDetail">
             <td *ngIf="permissions.update">
               <mat-checkbox (change)="toogleVisitRowState(visit, 'isSelected')" [checked]="visit.isSelected"></mat-checkbox>
             </td>
@@ -294,13 +296,26 @@
               <div *ngIf="permissions.update && visit.isSelected; then dateVisit else onlyShowDateVisit">here is ignored</div>
               <ng-template #dateVisit>
                 <mat-form-field>
-                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit" (dateChange)="validateVisitDate(visit)">
+                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit"
+                    (dateChange)="validateVisitDate(visit)">
                   <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                   <mat-datepicker #date></mat-datepicker>
                 </mat-form-field>
               </ng-template>
               <ng-template #onlyShowDateVisit>
                 {{ visit.DateVisit.format() !== 'Invalid date' ? visit.DateVisit.format('DD/MM/YYYY') : '' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="permissions.update && visit.isSelected; then authorizationVisit else onlyShowAuthorizationVisit">here is ignored</div>
+              <ng-template #authorizationVisit>
+                <mat-form-field>
+                  <input matInput placeholder="Nro. autorización" [(ngModel)]="visit.AuthorizationNumber" [name]="'authorizationNumber-' + visit.AssignServiceDetailId" maxlength="15" [formControl]="visit.authorizationFC" required>
+                  <mat-error *ngIf="visit.authorizationFC.invalid">{{ getErrorMessage(visit.authorizationFC) }}</mat-error>
+                </mat-form-field>
+              </ng-template>
+              <ng-template #onlyShowAuthorizationVisit>
+                {{ visit.AuthorizationNumber ? visit.AuthorizationNumber : 'NO APLICA' }}
               </ng-template>
             </td>
             <td>
