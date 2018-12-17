@@ -437,7 +437,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
           visit.selectFilter = null;
           visit.selectFilteredData = new ReplaySubject<SelectOption[]>(1);
           visit.selectFilteredData.next(this.professionals.slice());
-          visit.authorizationFC = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9]+')]);
+          visit.authorizationFC = new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9 ]+$')]);
           return visit;
         });
 

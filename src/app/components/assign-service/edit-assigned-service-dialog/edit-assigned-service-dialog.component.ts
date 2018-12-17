@@ -24,7 +24,6 @@ export class EditAssignedServiceDialogComponent implements OnInit {
 
   //Validators
   public validator = {
-    authorizationNumber: new FormControl('', [Validators.required]),
     coPaymentAmount: new FormControl('', [Validators.required, Validators.min(0)]),
     coPaymentFrecuency: new FormControl('', [Validators.required])
   };
@@ -49,7 +48,7 @@ export class EditAssignedServiceDialogComponent implements OnInit {
         this.coPaymentFrecuencies = data;
       }, err => {
         this.loading = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 
@@ -66,13 +65,13 @@ export class EditAssignedServiceDialogComponent implements OnInit {
 	 * formInvalid
 	 */
   public formInvalid(): boolean {
-	  let invalid = false;
+    let invalid = false;
 
-	  Object.keys(this.validator).forEach(key => {
-	    invalid = this.validator[key].invalid || invalid;
-	  });
+    Object.keys(this.validator).forEach(key => {
+      invalid = this.validator[key].invalid || invalid;
+    });
 
-	  return invalid;
+    return invalid;
   }
 
   submitForm(assignedService: AssignService): void {
@@ -84,7 +83,7 @@ export class EditAssignedServiceDialogComponent implements OnInit {
         this.onNoClick(res.json());
       }, err => {
         this.loading = false;
-        if (err.status === 401) { return; }  this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
       });
   }
 }

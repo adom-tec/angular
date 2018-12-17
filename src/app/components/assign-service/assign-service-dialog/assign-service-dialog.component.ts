@@ -63,7 +63,7 @@ export class AssignServiceDialogComponent implements OnInit {
     entity: new FormControl('', [Validators.required]),
     planEntityId: new FormControl('', [Validators.required]),
     cie10: new FormControl('', [Validators.required]),
-    authorizationNumber: new FormControl('', [Validators.required, Validators.maxLength(15), Validators.pattern('[a-zA-Z0-9]+')]),
+    authorizationNumber: new FormControl('', [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9 ]+$')]),
     validity: new FormControl('', [Validators.required]),
     applicantName: new FormControl('', [Validators.required]),
     serviceId: new FormControl('', [Validators.required]),
