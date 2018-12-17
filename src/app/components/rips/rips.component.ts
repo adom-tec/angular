@@ -226,16 +226,16 @@ export class RipsComponent implements OnInit {
    * toogle state all table rows
    */
   public toogleStateAll(): void {
-    let hasInvoice = false;
+    // let hasInvoice = false;
 
     this.dataSource.filteredData.forEach(row => {
       row.isSelected = this.allSelected;
-      hasInvoice = hasInvoice || row.invoice ? true : false;
+      // hasInvoice = hasInvoice || row.invoice ? true : false;
     });
 
-    if (hasInvoice && this.allSelected) {
-      this.notifier.notify('info', 'Ha seleccionado servicios ya tienen asociada una factura');
-    }
+    // if (hasInvoice && this.allSelected) {
+    //   this.notifier.notify('info', 'Ha seleccionado servicios ya tienen asociada una factura');
+    // }
   }
 
   /**
