@@ -183,6 +183,7 @@
           <tr>
             <th># Visita</th>
             <th>Fecha</th>
+            <th>Nro. de Autorización</th>
             <th>Tipo de Terapia</th>
             <th *ngIf="showProfessionalRateValue">Valor a pagar Terapeuta</th>
             <th>Medio de Pago</th>
@@ -200,7 +201,8 @@
               <div *ngIf="visit.StateId === 1; then dateContent else dateVisit">here is ignored</div>
               <ng-template #dateContent>
                 <mat-form-field>
-                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit" (dateChange)="validateVisitDate(visit)">
+                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit"
+                    (dateChange)="validateVisitDate(visit)">
                   <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                   <mat-datepicker #date></mat-datepicker>
                 </mat-form-field>
@@ -209,6 +211,7 @@
                 {{ visit.DateVisit.format('DD/MM/YYYY') }}
               </ng-template>
             </td>
+            <td>{{ visit.AuthorizationNumber || 'No registrado' }}</td>
             <td>
               <div *ngIf="visit.StateId === 1; then rateContent else rateVisit">here is ignored</div>
               <ng-template #rateContent>

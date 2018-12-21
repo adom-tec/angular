@@ -256,8 +256,7 @@
       <button style="margin-left: 20px;" mat-raised-button class="button-green" (click)="openDialogEditAssinedService()">EDITAR SERVICIO
         <mat-icon style="margin-left: 10px;">edit</mat-icon>
       </button>
-      <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignServiceDetail)"
-        [disabled]="notVisitsSelected">CANCELAR VISITAS
+      <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignServiceDetail)" [disabled]="notVisitsSelected">CANCELAR VISITAS
         <mat-icon style="margin-left: 10px;">cancel</mat-icon>
       </button>
       <button style="margin-left: 20px;" mat-raised-button (click)="openDialogQualitytest()" *ngIf="showQualityTest">CALIFICAR SERVICIO
@@ -310,12 +309,13 @@
               <div *ngIf="permissions.update && visit.isSelected; then authorizationVisit else onlyShowAuthorizationVisit">here is ignored</div>
               <ng-template #authorizationVisit>
                 <mat-form-field>
-                  <input matInput placeholder="Nro. autorización" [(ngModel)]="visit.AuthorizationNumber" [name]="'authorizationNumber-' + visit.AssignServiceDetailId" maxlength="15" [formControl]="visit.authorizationFC" required>
+                  <input matInput placeholder="Nro. autorización" [(ngModel)]="visit.AuthorizationNumber" [name]="'authorizationNumber-' + visit.AssignServiceDetailId"
+                    maxlength="15" [formControl]="visit.authorizationFC" required>
                   <mat-error *ngIf="visit.authorizationFC.invalid">{{ getErrorMessage(visit.authorizationFC) }}</mat-error>
                 </mat-form-field>
               </ng-template>
               <ng-template #onlyShowAuthorizationVisit>
-                {{ visit.AuthorizationNumber ? visit.AuthorizationNumber : 'NO APLICA' }}
+                {{ visit.AuthorizationNumber || 'No registrado' }}
               </ng-template>
             </td>
             <td>
