@@ -1,13 +1,16 @@
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
+import { FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { Subject, ReplaySubject } from 'rxjs';
+import 'rxjs/add/observable/forkJoin';
+import * as moment from 'moment';
+
 import { AssignServiceService } from './../../services/assignService.service';
-import { Professional } from './../../models/professional';
 import { AssignService } from './../../models/assignService';
 import { ProfessionalService } from './../../services/professional.service';
 import { environment } from './../../../environments/environment';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort, MatInput, MatDialog } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
-import * as moment from 'moment';
 import { HttpService } from './../../services/http-interceptor.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { SelectOption } from '../../models/selectOption';
@@ -16,16 +19,13 @@ import { Patient } from '../../models/patient';
 import { AssignServiceDialogComponent } from './assign-service-dialog/assign-service-dialog.component';
 import { PatientDialogComponent } from './patient-dialog/patient-dialog.component';
 import { ObservationsDialogComponent } from './observations-dialog/observations-dialog.component';
-import { AssignServiceSupply, AssignServiceDetail, User } from '../../models';
+import { AssignServiceSupply, AssignServiceDetail } from '../../models';
 import { ServiceSupplyDialogComponent } from './service-supply-dialog/service-supply-dialog.component';
 import { NotifierService } from 'angular-notifier';
 import { EditAssignedServiceDialogComponent } from './edit-assigned-service-dialog/edit-assigned-service-dialog.component';
 import { QuialityTestDialogComponent } from './quiality-test-dialog/quiality-test-dialog.component';
 import { CancelVisitsDialogComponent } from './cancel-visits-dialog/cancel-visits-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AssignServiceParams } from '../../models/assign-service-params';
-import { Subject, ReplaySubject } from 'rxjs';
-import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-assign-service',

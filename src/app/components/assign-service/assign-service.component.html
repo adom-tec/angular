@@ -9,7 +9,8 @@
 
   <mat-card-content>
     <mat-toolbar class="table-search">
-      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterMain, 'main')" [(ngModel)]="filterMain">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterMain, 'main')"
+        [(ngModel)]="filterMain">
     </mat-toolbar>
 
     <div class="mat-elevation-z2">
@@ -77,7 +78,8 @@
         <p>
           <strong>Número de Documento:</strong> {{ currentPatient.Document }}</p>
         <p>
-          <strong>Nombre completo:</strong> {{ currentPatient.FirstName + ' ' + (currentPatient.SecondName || '') + ' ' + currentPatient.Surname
+          <strong>Nombre completo:</strong> {{ currentPatient.FirstName + ' ' + (currentPatient.SecondName || '') + ' '
+          + currentPatient.Surname
           + ' ' + (currentPatient.SecondSurname || '')}}</p>
         <p>
           <strong>Sexo:</strong> {{ currentPatient.gender.Name }}</p>
@@ -93,7 +95,8 @@
         <legend>Datos de Nacimiento</legend>
 
         <p>
-          <strong>Fecha de Nacimiento:</strong> {{ currentPatient.BirthDate.format() === 'Invalid date' ? 'No Registrado' : currentPatient.BirthDate.format('DD/MM/YYYY')
+          <strong>Fecha de Nacimiento:</strong> {{ currentPatient.BirthDate.format() === 'Invalid date' ? 'No
+          Registrado' : currentPatient.BirthDate.format('DD/MM/YYYY')
           }}
         </p>
         <p>
@@ -140,12 +143,14 @@
 
   <mat-card-content style="padding-bottom: 0;" *ngIf="permissions.create">
     <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="openDialogServices()">
-      <mat-icon>add</mat-icon> AÑADIR SERVICIO</button>
+      <mat-icon>add</mat-icon> AÑADIR SERVICIO
+    </button>
   </mat-card-content>
 
   <mat-card-content id="card-services-content">
     <mat-toolbar class="table-search">
-      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterAssignServices, 'service')" [(ngModel)]="filterAssignServices">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterAssignServices, 'service')"
+        [(ngModel)]="filterAssignServices">
     </mat-toolbar>
 
     <div class="mat-elevation-z2 table-services-container">
@@ -188,14 +193,17 @@
         <ng-container matColumnDef="state">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <span class="chip-default" [ngClass]="{'chip-primary': element.state === 'COMPLETADA', 'chip-warn': element.state === 'CANCELADA'}">{{ element.state }}</span>
+            <span class="chip-default" [ngClass]="{'chip-primary': element.state === 'COMPLETADA', 'chip-warn': element.state === 'CANCELADA'}">{{
+              element.state }}</span>
           </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="assignServiceDisplayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: assignServiceDisplayedColumns;" (click)="showDetailAssignService(row)" [class.row-selected]="rowIsActive(row)"></mat-row>
+        <mat-row *matRowDef="let row; columns: assignServiceDisplayedColumns;" (click)="showDetailAssignService(row)"
+          [class.row-selected]="rowIsActive(row)"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!assignServiceSource.filteredData.length">No se encontraron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!assignServiceSource.filteredData.length">No se encontraron
+        registros.</p>
       <mat-paginator #asgServicePager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
 
@@ -203,6 +211,19 @@
       <h4>Detalle del Servicio</h4>
       <p *ngIf="!currentAssignService" style="text-align: center;">Seleccione un servicio</p>
       <mat-list *ngIf="currentAssignService">
+        <mat-list-item>
+          <p mat-line>
+            <strong>Paciente:</strong> {{ currentPatient.FirstName + ' ' + (currentPatient.SecondName || '') + ' ' +
+            currentPatient.Surname + ' ' + (currentPatient.SecondSurname || '')}}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Dirección:</strong> {{ currentPatient.Address }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Teléfono:</strong> {{ currentPatient.Telephone1 }}</p>
+        </mat-list-item>
         <mat-list-item>
           <p mat-line>
             <strong>Entidad:</strong> {{ currentAssignService.entity.Name }}</p>
@@ -250,16 +271,20 @@
 
   <mat-card-content>
     <div class="buttons-group" style="margin-bottom: 40px;" *ngIf="permissions.update">
-      <button mat-raised-button class="button-purple" (click)="saveVisits(assignServiceDetail)" [disabled]="notVisitsSelected">GUARDAR CAMBIOS
+      <button mat-raised-button class="button-purple" (click)="saveVisits(assignServiceDetail)" [disabled]="notVisitsSelected">GUARDAR
+        CAMBIOS
         <mat-icon style="margin-left: 10px;">save</mat-icon>
       </button>
-      <button style="margin-left: 20px;" mat-raised-button class="button-green" (click)="openDialogEditAssinedService()">EDITAR SERVICIO
+      <button style="margin-left: 20px;" mat-raised-button class="button-green" (click)="openDialogEditAssinedService()">EDITAR
+        SERVICIO
         <mat-icon style="margin-left: 10px;">edit</mat-icon>
       </button>
-      <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignServiceDetail)" [disabled]="notVisitsSelected">CANCELAR VISITAS
+      <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="openDialogCancelVisits(assignServiceDetail)"
+        [disabled]="notVisitsSelected">CANCELAR VISITAS
         <mat-icon style="margin-left: 10px;">cancel</mat-icon>
       </button>
-      <button style="margin-left: 20px;" mat-raised-button (click)="openDialogQualitytest()" *ngIf="showQualityTest">CALIFICAR SERVICIO
+      <button style="margin-left: 20px;" mat-raised-button (click)="openDialogQualitytest()" *ngIf="showQualityTest">CALIFICAR
+        SERVICIO
         <mat-icon style="margin-left: 10px;">done_outline</mat-icon>
       </button>
     </div>
@@ -292,11 +317,12 @@
             </td>
             <td>{{ visit.Consecutive }}</td>
             <td>
-              <div *ngIf="permissions.update && visit.isSelected; then dateVisit else onlyShowDateVisit">here is ignored</div>
+              <div *ngIf="permissions.update && visit.isSelected; then dateVisit else onlyShowDateVisit">here is
+                ignored</div>
               <ng-template #dateVisit>
                 <mat-form-field>
-                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit"
-                    (dateChange)="validateVisitDate(visit)">
+                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.DateVisit" (dateChange)="validateVisitDate(visit)">
                   <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                   <mat-datepicker #date></mat-datepicker>
                 </mat-form-field>
@@ -306,7 +332,8 @@
               </ng-template>
             </td>
             <td>
-              <div *ngIf="permissions.update && visit.isSelected; then authorizationVisit else onlyShowAuthorizationVisit">here is ignored</div>
+              <div *ngIf="permissions.update && visit.isSelected; then authorizationVisit else onlyShowAuthorizationVisit">here
+                is ignored</div>
               <ng-template #authorizationVisit>
                 <mat-form-field>
                   <input matInput placeholder="Nro. autorización" [(ngModel)]="visit.AuthorizationNumber" [name]="'authorizationNumber-' + visit.AssignServiceDetailId"
@@ -319,14 +346,16 @@
               </ng-template>
             </td>
             <td>
-              <div *ngIf="permissions.update && visit.isSelected; then professional else onlyShowProfessional">here is ignored</div>
+              <div *ngIf="permissions.update && visit.isSelected; then professional else onlyShowProfessional">here is
+                ignored</div>
               <ng-template #professional>
                 <mat-form-field>
-                  <mat-select placeholder="Profesional" [attr.name]="'professional' + visit.AssignServiceDetailId" [(ngModel)]="visit.ProfessionalId"
-                    (openedChange)="resetSelectList(visit.selectFilteredData)">
+                  <mat-select placeholder="Profesional" [attr.name]="'professional' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.ProfessionalId" (openedChange)="resetSelectList(visit.selectFilteredData)">
 
-                    <ngx-mat-select-search [(ngModel)]="visit.selectFilter" [name]="'selectFilter' + visit.AssignServiceDetailId" (keyup)="selectFilterData(visit.selectFilteredData, visit.selectFilter)"
-                      placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+                    <ngx-mat-select-search [(ngModel)]="visit.selectFilter" [name]="'selectFilter' + visit.AssignServiceDetailId"
+                      (keyup)="selectFilterData(visit.selectFilteredData, visit.selectFilter)" placeholderLabel="Buscar..."
+                      noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
 
                     <mat-option *ngFor="let pro of visit.selectFilteredData | async" [value]="pro.Id">
                       {{ pro.Name }}
@@ -336,8 +365,10 @@
               </ng-template>
 
               <ng-template #onlyShowProfessional>
-                {{ visit.ProfessionalId === -1 ? 'POR ASIGNAR' : (visit.professional.user.FirstName + ' ' + (visit.professional.user.SecondName
-                || '') + ' ' + visit.professional.user.Surname + ' ' + (visit.professional.user.SecondSurname || '')).trim()
+                {{ visit.ProfessionalId === -1 ? 'POR ASIGNAR' : (visit.professional.user.FirstName + ' ' +
+                (visit.professional.user.SecondName
+                || '') + ' ' + visit.professional.user.Surname + ' ' + (visit.professional.user.SecondSurname ||
+                '')).trim()
                 }}
               </ng-template>
             </td>
@@ -356,7 +387,8 @@
                 <p style="margin: 5px 0;">{{ visit.state.Name }}</p>
               </ng-template>
               <div class="alert-cancel-reason" *ngIf="visit.StateId === 3">
-                <strong>Motivo: </strong>{{ visit.detail_cancel_reason ? visit.detail_cancel_reason.cancel_reason.name : 'No Registrado'
+                <strong>Motivo: </strong>{{ visit.detail_cancel_reason ? visit.detail_cancel_reason.cancel_reason.name
+                : 'No Registrado'
                 }}
               </div>
             </td>
@@ -364,7 +396,8 @@
               <div *ngIf="permissions.update && visit.isSelected; then comment else onlyShowComment">here is ignored</div>
               <ng-template #comment>
                 <mat-form-field>
-                  <input matInput placeholder="Comentario" [attr.name]="'comment' + visit.AssignServiceDetailId" [(ngModel)]="visit.Observation">
+                  <input matInput placeholder="Comentario" [attr.name]="'comment' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.Observation">
                 </mat-form-field>
               </ng-template>
               <ng-template #onlyShowComment>
@@ -385,7 +418,8 @@
               <div *ngIf="visit.isSelected; then rateContent else rateVisit">here is ignored</div>
               <ng-template #rateContent>
                 <mat-form-field>
-                  <mat-select placeholder="Tarifa" [attr.name]="'professionalRate-' + visit.AssignServiceDetailId" [(ngModel)]="visit.professional_rate_id">
+                  <mat-select placeholder="Tarifa" [attr.name]="'professionalRate-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.professional_rate_id">
                     <mat-option *ngFor="let professionalRate of professionalRates" [value]="professionalRate.id">
                       {{ professionalRate.Name }}
                     </mat-option>
@@ -403,8 +437,8 @@
               <div *ngIf="visit.isSelected; then paymentContent else paymentVisit">here is ignored</div>
               <ng-template #paymentContent>
                 <mat-form-field>
-                  <mat-select placeholder="Metodo de pago" [attr.name]="'paymentType-' + visit.AssignServiceDetailId" [(ngModel)]="visit.PaymentType"
-                    (change)="clearValues(visit)">
+                  <mat-select placeholder="Metodo de pago" [attr.name]="'paymentType-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.PaymentType" (change)="clearValues(visit)">
                     <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType.Id">
                       {{ paymentType.Name }}
                     </mat-option>
@@ -416,10 +450,12 @@
               </ng-template>
             </td>
             <td *ngIf="permissions.update">
-              <div *ngIf="visit.isSelected && visit.PaymentType === 3; then amountContent else amountVisit">here is ignored</div>
+              <div *ngIf="visit.isSelected && visit.PaymentType === 3; then amountContent else amountVisit">here is
+                ignored</div>
               <ng-template #amountContent>
                 <mat-form-field *ngIf="visit.PaymentType !== 2">
-                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.ReceivedAmount">
+                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.ReceivedAmount">
                 </mat-form-field>
               </ng-template>
               <ng-template #amountVisit>
@@ -442,7 +478,8 @@
               <div *ngIf="visit.isSelected; then otherAmountContent else otherAmountVisit">here is ignored</div>
               <ng-template #otherAmountContent>
                 <mat-form-field>
-                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'otherAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.OtherAmount">
+                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'otherAmount' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.OtherAmount">
                 </mat-form-field>
               </ng-template>
               <ng-template #otherAmountVisit>
@@ -467,12 +504,14 @@
 
   <mat-card-content style="padding-bottom: 0;" *ngIf="permissions.update">
     <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="openDialogSupplies()">
-      <mat-icon>add</mat-icon> AÑADIR INSUMO</button>
+      <mat-icon>add</mat-icon> AÑADIR INSUMO
+    </button>
   </mat-card-content>
 
   <mat-card-content>
     <mat-toolbar class="table-search">
-      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterSupplies, 'supply')" [(ngModel)]="filterSupplies">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterSupplies, 'supply')"
+        [(ngModel)]="filterSupplies">
     </mat-toolbar>
 
     <div class="mat-elevation-z2">
@@ -480,8 +519,8 @@
         <ng-container matColumnDef="assignServiceSupplyId">
           <mat-header-cell *matHeaderCellDef></mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <button class="btn-delete" mat-icon-button color="warn" (click)="deleteSupply(element.assignServiceSupplyId)" matTooltip="Borrar"
-              *ngIf="permissions.update">
+            <button class="btn-delete" mat-icon-button color="warn" (click)="deleteSupply(element.assignServiceSupplyId)"
+              matTooltip="Borrar" *ngIf="permissions.update">
               <mat-icon>delete</mat-icon>
             </button>
           </mat-cell>
@@ -505,7 +544,8 @@
         <mat-header-row *matHeaderRowDef="suppliesDisplayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: suppliesDisplayedColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!suppliesSource.filteredData.length">No se encontraron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!suppliesSource.filteredData.length">No se encontraron
+        registros.</p>
       <mat-paginator #suppliesPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
