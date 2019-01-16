@@ -8,8 +8,8 @@
   </mat-card-title>
 
   <mat-card-content *ngIf="showChart">
-    <canvas baseChart [datasets]="barChartNursingData" [labels]="barChartNursingLabels" [options]="barChartOptions" [legend]="barChartLegend"
-      [chartType]="barChartType"></canvas>
+    <canvas baseChart [datasets]="barChartNursingData" [labels]="barChartNursingLabels" [options]="barChartOptions"
+      [legend]="barChartLegend" [chartType]="barChartType"></canvas>
   </mat-card-content>
 </mat-card>
 
@@ -19,12 +19,13 @@
   </mat-card-title>
 
   <mat-card-content *ngIf="showChart">
-    <canvas baseChart [datasets]="barChartTherapyData" [labels]="barChartTherapyLabels" [options]="barChartOptions" [legend]="barChartLegend"
-      [chartType]="barChartType"></canvas>
+    <canvas baseChart [datasets]="barChartTherapyData" [labels]="barChartTherapyLabels" [options]="barChartOptions"
+      [legend]="barChartLegend" [chartType]="barChartType"></canvas>
   </mat-card-content>
 </mat-card>
 
 <mat-card>
+  <mat-progress-bar mode="indeterminate" *ngIf="irregServicesSipinner" style="position: absolute; top: 0; left: 0;"></mat-progress-bar>
   <mat-card-title>
     <h4>Servicios Irregulares</h4>
   </mat-card-title>
@@ -38,9 +39,15 @@
     <div class="mat-elevation-z2">
       <mat-table #irregularServTable="matSort" [dataSource]="irregularServices" matSort>
         <ng-container matColumnDef="AssignServiceId">
-          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>
+            <button mat-raised-button class="button-green" style="margin: 5px; font-size: 12px; padding: 0 8px;"
+              (click)="downloadReport()">
+              <mat-icon>get_app</mat-icon> EXPORTAR A EXCEL
+            </button>
+          </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <button class="btn-edit" mat-raised-button color="default" (click)="showMoreDatails(element.PatientId, element.AssignServiceId)">VER MAS
+            <button class="btn-edit" mat-raised-button color="default" (click)="showMoreDatails(element.PatientId, element.AssignServiceId)">VER
+              MAS
             </button>
           </mat-cell>
         </ng-container>
@@ -63,7 +70,8 @@
         <mat-header-row *matHeaderRowDef="irregularServiceColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: irregularServiceColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!irregularServices.filteredData.length">No se encontraron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!irregularServices.filteredData.length">No se encontraron
+        registros.</p>
       <mat-paginator #irregularServPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -85,7 +93,8 @@
         <ng-container matColumnDef="AssignServiceId">
           <mat-header-cell *matHeaderCellDef></mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <button class="btn-edit" mat-raised-button color="default" (click)="showMoreDatails(element.PatientId, element.AssignServiceId)">VER MAS
+            <button class="btn-edit" mat-raised-button color="default" (click)="showMoreDatails(element.PatientId, element.AssignServiceId)">VER
+              MAS
             </button>
           </mat-cell>
         </ng-container>
@@ -103,7 +112,8 @@
         <mat-header-row *matHeaderRowDef="withoutProfessionalColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: withoutProfessionalColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!withoutProfessional.filteredData.length">No se encontraron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!withoutProfessional.filteredData.length">No se encontraron
+        registros.</p>
       <mat-paginator #noProfessionalPager [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -116,7 +126,8 @@
 
   <mat-card-content>
     <mat-toolbar class="table-search">
-      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterCopayments, 'copayments')" [(ngModel)]="filterCopayments">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterCopayments, 'copayments')"
+        [(ngModel)]="filterCopayments">
     </mat-toolbar>
 
     <div class="mat-elevation-z2">
