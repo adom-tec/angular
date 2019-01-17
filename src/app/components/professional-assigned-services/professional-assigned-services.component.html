@@ -51,7 +51,8 @@
         <mat-header-row *matHeaderRowDef="servicesInProcessColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: servicesInProcessColumns;"></mat-row>
       </mat-table>
-      <p style="margin: 0; padding: 20px 30px;" *ngIf="!servicesInProcessSource.filteredData.length">No se encontraron registros.</p>
+      <p style="margin: 0; padding: 20px 30px;" *ngIf="!servicesInProcessSource.filteredData.length">No se encontraron
+        registros.</p>
       <mat-paginator #inProcessPager [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
@@ -64,7 +65,8 @@
 
   <mat-card-content>
     <mat-toolbar class="table-search">
-      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterHistory, 'history')" [(ngModel)]="filterHistory">
+      <input matInput placeholder="Buscar..." style="border: none;" (keyup)="applyFilter(filterHistory, 'history')"
+        [(ngModel)]="filterHistory">
     </mat-toolbar>
 
     <div class="mat-elevation-z2">
@@ -185,6 +187,7 @@
             <th>Fecha</th>
             <th>Nro. de Autorización</th>
             <th>Tipo de Terapia</th>
+            <th>Comentarios</th>
             <th *ngIf="showProfessionalRateValue">Valor a pagar Terapeuta</th>
             <th>Medio de Pago</th>
             <th>Valor Recibido</th>
@@ -201,8 +204,8 @@
               <div *ngIf="visit.StateId === 1; then dateContent else dateVisit">here is ignored</div>
               <ng-template #dateContent>
                 <mat-form-field>
-                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId" [(ngModel)]="visit.DateVisit"
-                    (dateChange)="validateVisitDate(visit)">
+                  <input matInput [matDatepicker]="date" placeholder="Fecha de visita" [name]="'date-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.DateVisit" (dateChange)="validateVisitDate(visit)">
                   <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                   <mat-datepicker #date></mat-datepicker>
                 </mat-form-field>
@@ -216,7 +219,8 @@
               <div *ngIf="visit.StateId === 1; then rateContent else rateVisit">here is ignored</div>
               <ng-template #rateContent>
                 <mat-form-field>
-                  <mat-select placeholder="Tarifa" [attr.name]="'professionalRate-' + visit.AssignServiceDetailId" [(ngModel)]="visit.professional_rate_id">
+                  <mat-select placeholder="Tarifa" [attr.name]="'professionalRate-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.professional_rate_id">
                     <mat-option *ngFor="let professionalRate of professionalRates" [value]="professionalRate.id">
                       {{ professionalRate.Name }}
                     </mat-option>
@@ -227,6 +231,7 @@
                 {{ visit.professional_rate_id ? getRateName(+visit.professional_rate_id) : 'No se selecciono' }}
               </ng-template>
             </td>
+            <td>{{ visit.Observation }}</td>
             <td *ngIf="showProfessionalRateValue">
               {{ getRateValue(visit.professional_rate_id) | currency }}
             </td>
@@ -234,8 +239,8 @@
               <div *ngIf="visit.StateId === 1; then paymentContent else paymentVisit">here is ignored</div>
               <ng-template #paymentContent>
                 <mat-form-field>
-                  <mat-select placeholder="Metodo de pago" [attr.name]="'paymentType-' + visit.AssignServiceDetailId" [(ngModel)]="visit.PaymentType"
-                    (change)="clearValues(visit)">
+                  <mat-select placeholder="Metodo de pago" [attr.name]="'paymentType-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.PaymentType" (change)="clearValues(visit)">
                     <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType.Id">
                       {{ paymentType.Name }}
                     </mat-option>
@@ -247,10 +252,12 @@
               </ng-template>
             </td>
             <td>
-              <div *ngIf="visit.StateId === 1 && visit.PaymentType === 3; then amountContent else amountVisit">here is ignored</div>
+              <div *ngIf="visit.StateId === 1 && visit.PaymentType === 3; then amountContent else amountVisit">here is
+                ignored</div>
               <ng-template #amountContent>
                 <mat-form-field>
-                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.ReceivedAmount">
+                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'receivedAmount' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.ReceivedAmount">
                 </mat-form-field>
               </ng-template>
               <ng-template #amountVisit>
@@ -258,7 +265,8 @@
               </ng-template>
             </td>
             <td>
-              <div *ngIf="visit.StateId === 1 && visit.PaymentType === 2; then pinContent else pinVisit">here is ignored</div>
+              <div *ngIf="visit.StateId === 1 && visit.PaymentType === 2; then pinContent else pinVisit">here is
+                ignored</div>
               <ng-template #pinContent>
                 <mat-form-field>
                   <input matInput (keydown)="validateKey($event)" placeholder="Número de pin" [attr.name]="'pin' + visit.AssignServiceDetailId"
@@ -273,7 +281,8 @@
               <div *ngIf="visit.StateId === 1; then otherAmountContent else otherAmountVisit">here is ignored</div>
               <ng-template #otherAmountContent>
                 <mat-form-field>
-                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'otherAmount' + visit.AssignServiceDetailId" [(ngModel)]="visit.OtherAmount">
+                  <input matInput type="number" min="0" placeholder="Monto" [attr.name]="'otherAmount' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.OtherAmount">
                 </mat-form-field>
               </ng-template>
               <ng-template #otherAmountVisit>

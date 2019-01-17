@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+import { ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { ReplaySubject, Subject } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
+import { NotifierService } from 'angular-notifier';
 import * as moment from 'moment';
 import * as FileSaver from 'file-saver';
+
 import { environment } from './../../../../environments/environment';
 import { AuthenticationService } from '../../../services';
-import { NotifierService } from 'angular-notifier';
 import { Service } from '../../../models';
 import { SelectOption } from './../../../models/selectOption';
 import { Entity } from './../../../models/entity';
 import { HttpService } from './../../../services/http-interceptor.service';
 import { EntityService } from './../../../services/entity.service';
 import { ServicesService } from './../../../services/services.service';
-import { Moment } from 'moment';
-import { ReplaySubject, Subject } from 'rxjs';
-import { ResponseContentType } from '@angular/http';
 
 @Component({
   selector: 'app-special-report',
@@ -23,12 +23,13 @@ import { ResponseContentType } from '@angular/http';
   styleUrls: ['./special-report.component.css']
 })
 export class SpecialReportComponent implements OnInit {
-  public mainSpinner: boolean = false;
-  public services: Service[];
-  public entities: Entity[];
-  public patientTypes: SelectOption[];
-  public serviceTypes: SelectOption[];
-  public reportTypes: any[] = [
+  mainSpinner: boolean = false;
+  services: Service[];
+  entities: Entity[];
+  patientTypes: SelectOption[];
+  serviceTypes: SelectOption[];
+  states: SelectOption[];
+  reportTypes: any[] = [
     {
       Id: 'consolidado',
       Name: 'Consolidado'
@@ -38,8 +39,9 @@ export class SpecialReportComponent implements OnInit {
       Name: 'Detallado'
     }
   ];
-  public filters: any = {
+  filters: any = {
     ServiceId: null,
+    StateId: null,
     EntityId: null,
     PatientType: null,
     ServiceType: 0,
@@ -49,8 +51,9 @@ export class SpecialReportComponent implements OnInit {
   }
 
   //Validators
-  public validator = {
+  validator = {
     serviceId: new FormControl('', [Validators.required]),
+    stateId: new FormControl('', [Validators.required]),
     entityId: new FormControl('', [Validators.required]),
     patientType: new FormControl('', [Validators.required]),
     serviceType: new FormControl('', [Validators.required]),
@@ -60,10 +63,10 @@ export class SpecialReportComponent implements OnInit {
   };
 
   //select filters
-  public filterServices: string = null;
-  public filteredServices: ReplaySubject<Service[]> = new ReplaySubject<Service[]>(1);
-  public filterEntities: string = null;
-  public filteredEntities: ReplaySubject<Entity[]> = new ReplaySubject<Entity[]>(1);
+  filterServices: string = null;
+  filteredServices: ReplaySubject<Service[]> = new ReplaySubject<Service[]>(1);
+  filterEntities: string = null;
+  filteredEntities: ReplaySubject<Entity[]> = new ReplaySubject<Entity[]>(1);
   private _onDestroy = new Subject<void>();
 
   constructor(
@@ -81,7 +84,8 @@ export class SpecialReportComponent implements OnInit {
       this.servicesService.getServices(),
       this.entityService.getEntities(),
       this.http.get(`${environment.apiUrl}/api/patienttypes`),
-      this.http.get(`${environment.apiUrl}/api/servicetypes`)
+      this.http.get(`${environment.apiUrl}/api/servicetypes`),
+      this.http.get(`${environment.apiUrl}/api/states`)
     ).subscribe(res => {
       let service = new Service();
       service.Name = 'TODOS';
@@ -99,6 +103,7 @@ export class SpecialReportComponent implements OnInit {
       this.entities = [entity].concat(res[1]);
       this.patientTypes = [option].concat(res[2].json());
       this.serviceTypes = [Object.assign({}, option)].concat(res[3].json());
+      this.states = [Object.assign({}, option)].concat(res[4].json());
       this.filteredServices.next(this.services.slice());
       this.filteredEntities.next(this.entities.slice());
 
@@ -122,16 +127,16 @@ export class SpecialReportComponent implements OnInit {
   /**
    * disableServices
    */
-  public disableServices(serviceTypeId: number): void {
+  disableServices(serviceTypeId: number): void {
     if (serviceTypeId !== 0) {
       this.filters.ServiceId = 0;
     }
-   }
+  }
 
   /**
   * formInvalid
   */
-  public formInvalid(): boolean {
+  formInvalid(): boolean {
     let invalid = false;
 
     Object.keys(this.validator).forEach(key => {
@@ -144,7 +149,7 @@ export class SpecialReportComponent implements OnInit {
   /**
    * downloadReport
    */
-  public downloadReport() {
+  downloadReport() {
     this.mainSpinner = true;
 
     let params = Object.assign({}, this.filters);
@@ -169,7 +174,7 @@ export class SpecialReportComponent implements OnInit {
   }
 
   //select professinals filtro
-  public selectFilterData(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[], value: string): void {
+  selectFilterData(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[], value: string): void {
     if (!dataSource) {
       return;
     }
@@ -187,7 +192,7 @@ export class SpecialReportComponent implements OnInit {
     );
   }
 
-  public resetSelectList(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[]): void {
+  resetSelectList(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[]): void {
     selectFilterSubject.next(dataSource.slice());
     this.changeTopPosition();
   }
@@ -197,7 +202,7 @@ export class SpecialReportComponent implements OnInit {
       let nodes = document.getElementsByClassName('cdk-overlay-pane');
       let cardTop = document.querySelector('.mat-card').getBoundingClientRect().top;
 
-      for (let i=0; i < nodes.length; i++) {
+      for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].clientHeight) {
           let panelTop = nodes[i].getBoundingClientRect().top;
           if (panelTop < cardTop) {

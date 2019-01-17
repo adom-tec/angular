@@ -2,6 +2,7 @@
 import { ReplaySubject } from "rxjs";
 import { Professional } from "./professional";
 import { FormControl } from '@angular/forms';
+import { Moment } from 'moment';
 
 export class AssignServiceDetail {
   AssignServiceDetailId: number;
@@ -27,6 +28,8 @@ export class AssignServiceDetail {
   Professional: string;
   detail_cancel_reason: any;
   professional_rate_id: number;
+  InitDateAuthorizationNumber: string | Moment;
+  FinalDateAuthorizationNumber: string | Moment;
   //key front-end
   isSelected?: boolean;
   cancelReasonId?: number;

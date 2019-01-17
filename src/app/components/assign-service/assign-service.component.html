@@ -297,6 +297,8 @@
             <th>Visita</th>
             <th>Fecha</th>
             <th>Nro. de Autorización</th>
+            <th>Vig. Desde</th>
+            <th>Vig. Hasta</th>
             <th>Profesional</th>
             <th>Estado</th>
             <th>Comentarios</th>
@@ -328,7 +330,7 @@
                 </mat-form-field>
               </ng-template>
               <ng-template #onlyShowDateVisit>
-                {{ visit.DateVisit.format() !== 'Invalid date' ? visit.DateVisit.format('DD/MM/YYYY') : '' }}
+                {{ visit.DateVisit ? visit.DateVisit.format('DD/MM/YYYY') : '' }}
               </ng-template>
             </td>
             <td>
@@ -343,6 +345,34 @@
               </ng-template>
               <ng-template #onlyShowAuthorizationVisit>
                 {{ visit.AuthorizationNumber || 'No registrado' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="permissions.update && visit.isSelected; else onlyShowValidFrom">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="validFrom" placeholder="Vigente desde" [name]="'valid-from-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.InitDateAuthorizationNumber">
+                  <mat-datepicker-toggle matSuffix [for]="validFrom"></mat-datepicker-toggle>
+                  <mat-datepicker #validFrom></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <ng-template #onlyShowValidFrom>
+                {{ visit.InitDateAuthorizationNumber ? visit.InitDateAuthorizationNumber.format('DD/MM/YYYY') : 'No
+                registrado' }}
+              </ng-template>
+            </td>
+            <td>
+              <div *ngIf="permissions.update && visit.isSelected; else onlyShowValidTo">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="validTo" placeholder="Vigente hasta" [name]="'valid-to-' + visit.AssignServiceDetailId"
+                    [(ngModel)]="visit.FinalDateAuthorizationNumber">
+                  <mat-datepicker-toggle matSuffix [for]="validTo"></mat-datepicker-toggle>
+                  <mat-datepicker #validTo></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <ng-template #onlyShowValidTo>
+                {{ visit.FinalDateAuthorizationNumber ? visit.FinalDateAuthorizationNumber.format('DD/MM/YYYY') : 'No
+                registrado' }}
               </ng-template>
             </td>
             <td>

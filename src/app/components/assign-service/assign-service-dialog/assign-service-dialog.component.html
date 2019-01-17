@@ -1,154 +1,190 @@
 <div class="spinner-container" *ngIf="loading">
-    <mat-spinner></mat-spinner>
+  <mat-spinner></mat-spinner>
 </div>
 <mat-progress-bar mode="indeterminate" *ngIf="loadingBar"></mat-progress-bar>
 
 <h2 mat-dialog-title>Añadir nuevo servicio
-    <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1"><mat-icon>close</mat-icon></button>
+  <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
 </h2>
 <p class="title-comment">Los campos con * son obligatorios</p>
 
 <mat-dialog-content>
-    <form novalidate autocomplete="off" id="form-assign-services">
-        <mat-form-field>
-            <input matInput placeholder="Nro. de Contrato" [(ngModel)]="patientService.ContractNumber" name="contractNumber" [formControl]="validator.contractNumber" required>
-            <mat-error *ngIf="validator.contractNumber.invalid">{{ getErrorMessage(validator.contractNumber) }}</mat-error>
-        </mat-form-field>
+  <form novalidate autocomplete="off" id="form-assign-services">
+    <mat-form-field>
+      <input matInput placeholder="Nro. de Contrato" [(ngModel)]="patientService.ContractNumber" name="contractNumber"
+        [formControl]="validator.contractNumber" required>
+      <mat-error *ngIf="validator.contractNumber.invalid">{{ getErrorMessage(validator.contractNumber) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <mat-select placeholder="Entidad" [(ngModel)]="patientService.EntityId" name="entity" [formControl]="validator.entity" required
-            (openedChange)="resetSelectList(entityFilteredData, entities)" (change)="getPlansEntity(patientService.EntityId)">
+    <mat-form-field>
+      <mat-select placeholder="Entidad" [(ngModel)]="patientService.EntityId" name="entity" [formControl]="validator.entity"
+        required (openedChange)="resetSelectList(entityFilteredData, entities)" (change)="getPlansEntity(patientService.EntityId)">
 
-              <ngx-mat-select-search [(ngModel)]="entityFilter" name="entityFilter" (keyup)="selectFilterData(entityFilteredData, entities, entityFilter)"
-                placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+        <ngx-mat-select-search [(ngModel)]="entityFilter" name="entityFilter" (keyup)="selectFilterData(entityFilteredData, entities, entityFilter)"
+          placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
 
-              <mat-option *ngFor="let entity of entityFilteredData | async" [value]="entity.EntityId">
-                {{ entity.Name }}
-              </mat-option>
-            </mat-select>
+        <mat-option *ngFor="let entity of entityFilteredData | async" [value]="entity.EntityId">
+          {{ entity.Name }}
+        </mat-option>
+      </mat-select>
 
-            <mat-error *ngIf="validator.entity.invalid">{{ getErrorMessage(validator.entity) }}</mat-error>
-        </mat-form-field>
+      <mat-error *ngIf="validator.entity.invalid">{{ getErrorMessage(validator.entity) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <mat-select placeholder="Plan" [(ngModel)]="patientService.PlanEntityId" name="planEntityId" [formControl]="validator.planEntityId" [disabled]="!(patientService.EntityId && planEntities.length)" (change)="getPlanRates(patientService.PlanEntityId)" required>
-                <mat-option *ngFor="let plan of planEntities" [value]="plan.PlanEntityId">
-                    {{ plan.Name }}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="validator.planEntityId.invalid">{{ getErrorMessage(validator.planEntityId) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Plan" [(ngModel)]="patientService.PlanEntityId" name="planEntityId" [formControl]="validator.planEntityId"
+        [disabled]="!(patientService.EntityId && planEntities.length)" (change)="getPlanRates(patientService.PlanEntityId)"
+        required>
+        <mat-option *ngFor="let plan of planEntities" [value]="plan.PlanEntityId">
+          {{ plan.Name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="validator.planEntityId.invalid">{{ getErrorMessage(validator.planEntityId) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="CIE10" [(ngModel)]="patientService.Cie10" name="cie10" [formControl]="validator.cie10" maxlength="5" required>
-            <mat-error *ngIf="validator.cie10.invalid">{{ getErrorMessage(validator.cie10) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="CIE10" [(ngModel)]="patientService.Cie10" name="cie10" [formControl]="validator.cie10"
+        maxlength="5" required>
+      <mat-error *ngIf="validator.cie10.invalid">{{ getErrorMessage(validator.cie10) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Descripción Cie10" [(ngModel)]="patientService.DescriptionCie10" name="descriptionCie10">
-        </mat-form-field>
+    <mat-form-field style="width: 96%;">
+      <input matInput placeholder="Descripción Cie10" [(ngModel)]="patientService.DescriptionCie10" name="descriptionCie10">
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Nro. autorización" [(ngModel)]="patientService.AuthorizationNumber" name="authorizationNumber" [formControl]="validator.authorizationNumber" maxlength="15" required>
-            <mat-error *ngIf="validator.authorizationNumber.invalid">{{ getErrorMessage(validator.authorizationNumber) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Nro. autorización" [(ngModel)]="patientService.AuthorizationNumber" name="authorizationNumber"
+        [formControl]="validator.authorizationNumber" maxlength="15" required>
+      <mat-error *ngIf="validator.authorizationNumber.invalid">{{ getErrorMessage(validator.authorizationNumber) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput [matDatepicker]="pickerValidity" placeholder="Fecha de Vigencia" [(ngModel)]="patientService.Validity" name="validity" [formControl]="validator.validity" required>
-            <mat-datepicker-toggle matSuffix [for]="pickerValidity"></mat-datepicker-toggle>
-            <mat-datepicker #pickerValidity></mat-datepicker>
-            <mat-error *ngIf="validator.validity.invalid">{{ getErrorMessage(validator.validity) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field style="width: 22%;">
+      <input matInput [matDatepicker]="validFrom" placeholder="Vigente desde" name="valid-from" [(ngModel)]="patientService.InitDateAuthorizationNumber">
+      <mat-datepicker-toggle matSuffix [for]="validFrom"></mat-datepicker-toggle>
+      <mat-datepicker #validFrom></mat-datepicker>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Nombre del solicitante" [(ngModel)]="patientService.ApplicantName" name="applicantName" [formControl]="validator.applicantName" required>
-            <mat-error *ngIf="validator.applicantName.invalid">{{ getErrorMessage(validator.applicantName) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field style="width: 22%;">
+      <input matInput [matDatepicker]="validTo" placeholder="Vigente hasta" name="valid-to" [(ngModel)]="patientService.FinalDateAuthorizationNumber">
+      <mat-datepicker-toggle matSuffix [for]="validTo"></mat-datepicker-toggle>
+      <mat-datepicker #validTo></mat-datepicker>
+    </mat-form-field>
 
-        <mat-form-field>
-            <mat-select placeholder="Servicio" [(ngModel)]="patientService.ServiceId" name="serviceId" [formControl]="validator.serviceId" (openedChange)="resetSelectList(serviceFilteredData, planRates)" [disabled]="!(patientService.PlanEntityId && planRates.length)" required>
+    <mat-form-field>
+      <input matInput [matDatepicker]="pickerValidity" placeholder="Fecha de Vigencia" [(ngModel)]="patientService.Validity"
+        name="validity" [formControl]="validator.validity" required>
+      <mat-datepicker-toggle matSuffix [for]="pickerValidity"></mat-datepicker-toggle>
+      <mat-datepicker #pickerValidity></mat-datepicker>
+      <mat-error *ngIf="validator.validity.invalid">{{ getErrorMessage(validator.validity) }}</mat-error>
+    </mat-form-field>
 
-              <ngx-mat-select-search [(ngModel)]="serviceFilter" name="serviceFilter" (keyup)="selectFilterData(serviceFilteredData, planRates, serviceFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+    <mat-form-field>
+      <input matInput placeholder="Nombre del solicitante" [(ngModel)]="patientService.ApplicantName" name="applicantName"
+        [formControl]="validator.applicantName" required>
+      <mat-error *ngIf="validator.applicantName.invalid">{{ getErrorMessage(validator.applicantName) }}</mat-error>
+    </mat-form-field>
 
-              <mat-option *ngFor="let planRate of serviceFilteredData | async" [value]="planRate.Id">
-                  {{ planRate.Name }}
-              </mat-option>
-            </mat-select>
+    <mat-form-field>
+      <mat-select placeholder="Servicio" [(ngModel)]="patientService.ServiceId" name="serviceId" [formControl]="validator.serviceId"
+        (openedChange)="resetSelectList(serviceFilteredData, planRates)" [disabled]="!(patientService.PlanEntityId && planRates.length)"
+        required>
 
-            <mat-error *ngIf="validator.serviceId.invalid">{{ getErrorMessage(validator.serviceId) }}</mat-error>
-        </mat-form-field>
+        <ngx-mat-select-search [(ngModel)]="serviceFilter" name="serviceFilter" (keyup)="selectFilterData(serviceFilteredData, planRates, serviceFilter)"
+          placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
 
-        <mat-form-field>
-            <input matInput type="number" placeholder="Cantidad" [(ngModel)]="patientService.Quantity" name="quantity" [formControl]="validator.quantity" min="1" required>
-            <mat-error *ngIf="validator.quantity.invalid">{{ getErrorMessage(validator.quantity) }}</mat-error>
-        </mat-form-field>
+        <mat-option *ngFor="let planRate of serviceFilteredData | async" [value]="planRate.Id">
+          {{ planRate.Name }}
+        </mat-option>
+      </mat-select>
 
-        <mat-form-field>
-            <mat-select placeholder="Frec. del Servicio" [(ngModel)]="patientService.ServiceFrecuencyId" name="serviceFrecuency" [formControl]="validator.serviceFrecuency" required>
-                <mat-option *ngFor="let serFrec of serviceFrecuencies" [value]="serFrec.ServiceFrecuencyId">
-                    {{ serFrec.Name }}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="validator.serviceFrecuency.invalid">{{ getErrorMessage(validator.serviceFrecuency) }}</mat-error>
-        </mat-form-field>
+      <mat-error *ngIf="validator.serviceId.invalid">{{ getErrorMessage(validator.serviceId) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput [matDatepicker]="pickerInitialDate" placeholder="Fecha de Inicio" [(ngModel)]="patientService.InitialDate" name="initialDate" [formControl]="validator.initialDate" (dateChange)="calculateFinalDate(patientService.Quantity, patientService.ServiceFrecuencyId, patientService.InitialDate)"
-                required>
-            <mat-datepicker-toggle matSuffix [for]="pickerInitialDate"></mat-datepicker-toggle>
-            <mat-datepicker #pickerInitialDate></mat-datepicker>
-            <mat-error *ngIf="validator.initialDate.invalid">{{ getErrorMessage(validator.initialDate) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Cantidad" [(ngModel)]="patientService.Quantity" name="quantity"
+        [formControl]="validator.quantity" min="1" required>
+      <mat-error *ngIf="validator.quantity.invalid">{{ getErrorMessage(validator.quantity) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput [matDatepicker]="pickerEndDate" placeholder="Fecha de Finalización" [(ngModel)]="patientService.FinalDate" name="finalDate" [formControl]="validator.finalDate" required>
-            <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
-            <mat-datepicker #pickerEndDate></mat-datepicker>
-            <mat-error *ngIf="validator.finalDate.invalid">{{ getErrorMessage(validator.finalDate) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Frec. del Servicio" [(ngModel)]="patientService.ServiceFrecuencyId" name="serviceFrecuency"
+        [formControl]="validator.serviceFrecuency" required>
+        <mat-option *ngFor="let serFrec of serviceFrecuencies" [value]="serFrec.ServiceFrecuencyId">
+          {{ serFrec.Name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="validator.serviceFrecuency.invalid">{{ getErrorMessage(validator.serviceFrecuency) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <mat-select placeholder="Profesional" [(ngModel)]="patientService.ProfessionalId" name="professionalId" [formControl]="validator.professionalId" (openedChange)="resetSelectList(professionalFilteredData, professionals)" required>
+    <mat-form-field>
+      <input matInput [matDatepicker]="pickerInitialDate" placeholder="Fecha de Inicio" [(ngModel)]="patientService.InitialDate"
+        name="initialDate" [formControl]="validator.initialDate" (dateChange)="calculateFinalDate(patientService.Quantity, patientService.ServiceFrecuencyId, patientService.InitialDate)"
+        required>
+      <mat-datepicker-toggle matSuffix [for]="pickerInitialDate"></mat-datepicker-toggle>
+      <mat-datepicker #pickerInitialDate></mat-datepicker>
+      <mat-error *ngIf="validator.initialDate.invalid">{{ getErrorMessage(validator.initialDate) }}</mat-error>
+    </mat-form-field>
 
-              <ngx-mat-select-search [(ngModel)]="professionalFilter" name="professionalFilter" (keyup)="selectFilterData(professionalFilteredData, professionals, professionalFilter)" placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
+    <mat-form-field>
+      <input matInput [matDatepicker]="pickerEndDate" placeholder="Fecha de Finalización" [(ngModel)]="patientService.FinalDate"
+        name="finalDate" [formControl]="validator.finalDate" required>
+      <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEndDate></mat-datepicker>
+      <mat-error *ngIf="validator.finalDate.invalid">{{ getErrorMessage(validator.finalDate) }}</mat-error>
+    </mat-form-field>
 
-              <mat-option *ngFor="let pro of professionalFilteredData | async" [value]="pro.Id">
-                  {{ pro.Name }}
-              </mat-option>
-            </mat-select>
+    <mat-form-field>
+      <mat-select placeholder="Profesional" [(ngModel)]="patientService.ProfessionalId" name="professionalId"
+        [formControl]="validator.professionalId" (openedChange)="resetSelectList(professionalFilteredData, professionals)"
+        required>
 
-            <mat-error *ngIf="validator.professionalId.invalid">{{ getErrorMessage(validator.professionalId) }}</mat-error>
-        </mat-form-field>
+        <ngx-mat-select-search [(ngModel)]="professionalFilter" name="professionalFilter" (keyup)="selectFilterData(professionalFilteredData, professionals, professionalFilter)"
+          placeholderLabel="Buscar..." noEntriesFoundLabel="No se encuentra en la lista"></ngx-mat-select-search>
 
-        <mat-form-field>
-            <input matInput type="number" placeholder="Valor del Copago" [(ngModel)]="patientService.CoPaymentAmount" name="coPaymentAmount" [formControl]="validator.coPaymentAmount" min="0" required>
-            <mat-error *ngIf="validator.coPaymentAmount.invalid">{{ getErrorMessage(validator.coPaymentAmount) }}</mat-error>
-        </mat-form-field>
+        <mat-option *ngFor="let pro of professionalFilteredData | async" [value]="pro.Id">
+          {{ pro.Name }}
+        </mat-option>
+      </mat-select>
 
-        <mat-form-field>
-            <mat-select placeholder="Frec. de Copago" [(ngModel)]="patientService.CoPaymentFrecuencyId" name="coPaymentFrecuency" [formControl]="validator.coPaymentFrecuency" required>
-                <mat-option *ngFor="let coFrec of coPaymentFrecuencies" [value]="coFrec.CoPaymentFrecuencyId">
-                    {{ coFrec.Name }}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="validator.coPaymentFrecuency.invalid">{{ getErrorMessage(validator.coPaymentFrecuency) }}</mat-error>
-        </mat-form-field>
+      <mat-error *ngIf="validator.professionalId.invalid">{{ getErrorMessage(validator.professionalId) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput type="number" placeholder="Consulta" [(ngModel)]="patientService.Consultation" name="consultation" [formControl]="validator.consultation" min="1" required>
-            <mat-error *ngIf="validator.consultation.invalid">{{ getErrorMessage(validator.consultation) }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Valor del Copago" [(ngModel)]="patientService.CoPaymentAmount" name="coPaymentAmount"
+        [formControl]="validator.coPaymentAmount" min="0" required>
+      <mat-error *ngIf="validator.coPaymentAmount.invalid">{{ getErrorMessage(validator.coPaymentAmount) }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput type="number" placeholder="Externa" [(ngModel)]="patientService.External" name="external" [formControl]="validator.external" min="1" required>
-            <mat-error *ngIf="validator.external.invalid">{{ getErrorMessage(validator.external) }}</mat-error>
-        </mat-form-field>
-    </form>
+    <mat-form-field>
+      <mat-select placeholder="Frec. de Copago" [(ngModel)]="patientService.CoPaymentFrecuencyId" name="coPaymentFrecuency"
+        [formControl]="validator.coPaymentFrecuency" required>
+        <mat-option *ngFor="let coFrec of coPaymentFrecuencies" [value]="coFrec.CoPaymentFrecuencyId">
+          {{ coFrec.Name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="validator.coPaymentFrecuency.invalid">{{ getErrorMessage(validator.coPaymentFrecuency) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="number" placeholder="Consulta" [(ngModel)]="patientService.Consultation" name="consultation"
+        [formControl]="validator.consultation" min="1" required>
+      <mat-error *ngIf="validator.consultation.invalid">{{ getErrorMessage(validator.consultation) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="number" placeholder="Externa" [(ngModel)]="patientService.External" name="external"
+        [formControl]="validator.external" min="1" required>
+      <mat-error *ngIf="validator.external.invalid">{{ getErrorMessage(validator.external) }}</mat-error>
+    </mat-form-field>
+  </form>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <div class="form-button">
-        <button mat-button mat-dialog-close>SALIR</button>
-        <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm(patientService)" [disabled]="formInvalid()">GUARDAR<mat-icon style="margin-left: 10px;">save</mat-icon></button>
-    </div>
+  <div class="form-button">
+    <button mat-button mat-dialog-close>SALIR</button>
+    <button mat-raised-button class="button-purple" style="margin-bottom: 15px;" (click)="submitForm(patientService)"
+      [disabled]="formInvalid()">GUARDAR<mat-icon style="margin-left: 10px;">save</mat-icon></button>
+  </div>
 </mat-dialog-actions>

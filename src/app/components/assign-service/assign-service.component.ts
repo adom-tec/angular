@@ -427,7 +427,9 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
       .subscribe(data => {
         this.visitsSpinner = false;
         this.assignServiceDetail = data.map(visit => {
-          visit.DateVisit = moment(visit.DateVisit);
+          visit.DateVisit = visit.DateVisit ? moment(visit.DateVisit) : visit.DateVisit;
+          visit.InitDateAuthorizationNumber = visit.InitDateAuthorizationNumber ? moment(visit.InitDateAuthorizationNumber) : visit.InitDateAuthorizationNumber;
+          visit.FinalDateAuthorizationNumber = visit.FinalDateAuthorizationNumber ? moment(visit.FinalDateAuthorizationNumber) : visit.FinalDateAuthorizationNumber;
           visit.Verified = visit.Verified === '0' ? false : true;
           visit.isSelected = false;
           visit.StateId = (+visit.StateId);

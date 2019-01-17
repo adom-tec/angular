@@ -1,3 +1,10 @@
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { NotifierService } from 'angular-notifier';
+import { ReplaySubject } from 'rxjs';
+import * as moment from 'moment';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+
 import { AssignService } from './../../../models/assignService';
 import { SelectOption } from './../../../models/selectOption';
 import { ServiceFrecuency } from './../../../models/serviceFrecuency';
@@ -6,19 +13,12 @@ import { PlanEntity } from './../../../models/planEntity';
 import { PlanRatesService } from './../../../services/plan-rates.service';
 import { PlanRate } from './../../../models/planRate';
 import { EntityService } from './../../../services/entity.service';
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { HttpService } from '../../../services/http-interceptor.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
 import { Entity } from './../../../models/entity';
-import * as moment from 'moment';
 import { environment } from './../../../../environments/environment';
 import { PlansEntityService, AssignServiceService } from '../../../services';
-import { NotifierService } from 'angular-notifier';
-import { Moment } from 'moment';
-import { ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'app-assign-service-dialog',
@@ -26,17 +26,17 @@ import { ReplaySubject } from 'rxjs';
   styleUrls: ['./assign-service-dialog.component.css']
 })
 export class AssignServiceDialogComponent implements OnInit {
-  public loading: boolean = false;
-  public loadingBar: boolean = false;
+  loading: boolean = false;
+  loadingBar: boolean = false;
 
-  public currentPatient: number;
-  public entities: Entity[];
-  public planRates: SelectOption[] = [];
-  public planEntities: PlanEntity[] = [];
-  public professionals: SelectOption[];
-  public coPaymentFrecuencies: CoPaymentFrecuency[];
-  public serviceFrecuencies: ServiceFrecuency[];
-  public patientService: AssignService = {
+  currentPatient: number;
+  entities: Entity[];
+  planRates: SelectOption[] = [];
+  planEntities: PlanEntity[] = [];
+  professionals: SelectOption[];
+  coPaymentFrecuencies: CoPaymentFrecuency[];
+  serviceFrecuencies: ServiceFrecuency[];
+  patientService: AssignService = {
     ContractNumber: '',
     EntityId: null,
     PlanEntityId: null,
@@ -55,10 +55,12 @@ export class AssignServiceDialogComponent implements OnInit {
     CoPaymentFrecuencyId: null,
     Consultation: 1,
     External: 1,
+    InitDateAuthorizationNumber: null,
+    FinalDateAuthorizationNumber: null,
   };
 
   //Validators
-  public validator = {
+  validator = {
     contractNumber: new FormControl('', [Validators.required]),
     entity: new FormControl('', [Validators.required]),
     planEntityId: new FormControl('', [Validators.required]),
@@ -79,12 +81,12 @@ export class AssignServiceDialogComponent implements OnInit {
   };
 
   //select filters
-  public entityFilter: string = null;
-  public entityFilteredData: ReplaySubject<Entity[]> = new ReplaySubject<Entity[]>(1);
-  public serviceFilter: string = null;
-  public serviceFilteredData: ReplaySubject<SelectOption[]> = new ReplaySubject<SelectOption[]>(1);
-  public professionalFilter: string = null;
-  public professionalFilteredData: ReplaySubject<SelectOption[]> = new ReplaySubject<SelectOption[]>(1);
+  entityFilter: string = null;
+  entityFilteredData: ReplaySubject<Entity[]> = new ReplaySubject<Entity[]>(1);
+  serviceFilter: string = null;
+  serviceFilteredData: ReplaySubject<SelectOption[]> = new ReplaySubject<SelectOption[]>(1);
+  professionalFilter: string = null;
+  professionalFilteredData: ReplaySubject<SelectOption[]> = new ReplaySubject<SelectOption[]>(1);
 
   constructor(
     public dialogRef: MatDialogRef<AssignServiceDialogComponent>,
@@ -199,7 +201,7 @@ export class AssignServiceDialogComponent implements OnInit {
   /**
 	 * formInvalid
 	 */
-  public formInvalid(): boolean {
+  formInvalid(): boolean {
     let invalid = false;
 
     Object.keys(this.validator).forEach(key => {
@@ -228,7 +230,7 @@ export class AssignServiceDialogComponent implements OnInit {
   }
 
   //select filters
-  public selectFilterData(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[], value: string): void {
+  selectFilterData(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[], value: string): void {
     if (!dataSource) {
       return;
     }
@@ -246,7 +248,7 @@ export class AssignServiceDialogComponent implements OnInit {
     );
   }
 
-  public resetSelectList(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[]): void {
+  resetSelectList(selectFilterSubject: ReplaySubject<any[]>, dataSource: any[]): void {
     selectFilterSubject.next(dataSource.slice());
     this.changeTopPosition();
   }
