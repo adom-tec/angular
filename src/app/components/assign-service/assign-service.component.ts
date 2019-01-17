@@ -361,6 +361,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
       panelClass: 'myapp-position-relative-dialog',
       data: {
         assignedService: this.currentAssignService,
+        serviceFirstVisit: this.assignServiceDetail[0],
         patientId: this.currentPatient.PatientId
       }
     });

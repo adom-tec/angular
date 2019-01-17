@@ -1,15 +1,19 @@
-import { AssignService } from './../../../models/assignService';
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { HttpService } from '../../../services/http-interceptor.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
-import { Supply, AssignServiceSupply, CoPaymentFrecuency } from '../../../models';
-import { SelectOption } from '../../../models/selectOption';
-import { environment } from '../../../../environments/environment';
-import { SupplyService, AssignServiceSupplyService, AssignServiceService } from '../../../services';
+import { Component, OnInit, Inject } from '@angular/core';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NotifierService } from 'angular-notifier';
+import { catchError, map, tap, takeUntil, pluck } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs';
+import * as moment from 'moment';
+
+import { AssignService } from './../../../models/assignService';
+import { HttpService } from '../../../services/http-interceptor.service';
+import { CoPaymentFrecuency } from '../../../models';
+import { environment } from '../../../../environments/environment';
+import { AssignServiceService } from '../../../services';
+import { ServiceFrecuency } from '../../../models/serviceFrecuency';
+import { SelectOption } from '../../../models/selectOption';
 
 @Component({
   selector: 'app-edit-assigned-service-dialog',
@@ -17,39 +21,116 @@ import { NotifierService } from 'angular-notifier';
   styleUrls: ['./edit-assigned-service-dialog.component.css']
 })
 export class EditAssignedServiceDialogComponent implements OnInit {
-  public loading: boolean = false;
-  public currentAssignedService: AssignService;
-  public coPaymentFrecuencies: CoPaymentFrecuency[];
-  public currentPatient: number;
+  loading: boolean = false;
+  currentAssignedService: AssignService;
+  copaymentFrecuencies$: Observable<CoPaymentFrecuency[]>;
+  serviceFrecuencies$: Observable<ServiceFrecuency[]>;
+  changeReasons$: Observable<SelectOption[]>;
+  form: FormGroup;
+  showServiceInitDate: boolean;
+  hideChangeReasons: boolean = true;
 
-  //Validators
-  public validator = {
-    coPaymentAmount: new FormControl('', [Validators.required, Validators.min(0)]),
-    coPaymentFrecuency: new FormControl('', [Validators.required])
-  };
+  private patientId: number;
+  private onDestroy$ = new Subject<void>();
 
   constructor(
-    public dialogRef: MatDialogRef<EditAssignedServiceDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<EditAssignedServiceDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: any,
     private http: HttpService,
-    private assignService: AssignServiceService,
-    private notifier: NotifierService
+    private asgServService: AssignServiceService,
+    private notifier: NotifierService,
+    private formBuilder: FormBuilder
   ) {
+    const firstVistiState = +this.data.serviceFirstVisit.StateId;
+
+    this.showServiceInitDate = firstVistiState === 1 ? true : false;
     this.currentAssignedService = this.data.assignedService;
-    this.currentAssignedService.CoPaymentFrecuencyId = (+this.currentAssignedService.CoPaymentFrecuencyId);
-    this.currentPatient = this.data.patientId;
+    this.currentAssignedService.CoPaymentFrecuencyId = +this.currentAssignedService.CoPaymentFrecuencyId;
+    this.currentAssignedService.ServiceFrecuencyId = +this.currentAssignedService.ServiceFrecuencyId;
+    this.currentAssignedService.CoPaymentAmount = +this.currentAssignedService.CoPaymentAmount;
+    this.patientId = this.data.patientId;
   }
 
   ngOnInit() {
-    this.loading = true;
-    this.http.get(`${environment.apiUrl}/api/copaymentfrecuencies`).map(res => res.json())
-      .subscribe(data => {
-        this.loading = false;
-        this.coPaymentFrecuencies = data;
-      }, err => {
-        this.loading = false;
-        if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');
+    this.form = this.formBuilder.group({
+      ServiceFrecuencyId: [{ value: this.currentAssignedService.ServiceFrecuencyId, disabled: true }],
+      InitialDate: [this.currentAssignedService.InitialDate],
+      FinalDate: [{ value: this.currentAssignedService.FinalDate, disabled: true }],
+      CoPaymentFrecuencyId: [{ value: this.currentAssignedService.CoPaymentFrecuencyId, disabled: true }, [Validators.required]],
+      CoPaymentAmount: [this.currentAssignedService.CoPaymentAmount, [Validators.required, Validators.min(0)]],
+      ReasonChangeInitDateId: [{ value: null, disabled: true }]
+    });
+
+    this.changeReasons$ = this.http.get(`${environment.apiUrl}/api/reasonchangeinitdate`)
+      .pipe(
+        map(res => res.json().map(item => new SelectOption(item))),
+        tap(() => this.form.get('ReasonChangeInitDateId').enable()),
+        catchError(this.handleError()),
+      );
+
+    this.copaymentFrecuencies$ = this.http.get(`${environment.apiUrl}/api/copaymentfrecuencies`)
+      .pipe(
+        map(res => <CoPaymentFrecuency[]>res.json()),
+        tap(() => this.form.get('ServiceFrecuencyId').enable()),
+        catchError(this.handleError()),
+      );
+
+    this.serviceFrecuencies$ = this.http.get(`${environment.apiUrl}/api/servicefrecuencies`)
+      .pipe(
+        map(res => <ServiceFrecuency[]>res.json()),
+        tap(() => this.form.get('CoPaymentFrecuencyId').enable()),
+        catchError(this.handleError())
+      );
+
+    this.form.get('InitialDate').valueChanges
+      .pipe(
+        takeUntil(this.onDestroy$),
+      )
+      .subscribe(date => {
+        let diff = moment(this.currentAssignedService.InitialDate).diff(date);
+        this.hideChangeReasons = diff ? false : true;
       });
+  }
+
+  ngOnDestroy() {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
+  handleError(): (err) => Observable<any> {
+    return (err) => {
+      let message = err.status >= 500
+        ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema'
+        : err.error.message
+          ? err.error.message
+          : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente';
+
+      if (err.status === 401) { return; }
+
+      this.notifier.notify('error', message);
+
+      return Observable.throw('ocurrio un error');
+    }
+  }
+
+  calculateFinalDate(): void {
+    let initialDate = this.form.get('InitialDate').value;
+
+    if (initialDate) {
+      let quantity = this.currentAssignedService.Quantity;
+      let serviceFrecuency = this.form.get('ServiceFrecuencyId').value;
+      initialDate = moment(initialDate).format('YYYY-DD-MM');
+
+      this.loading = true;
+
+      this.asgServService.calculateFinalDateAssignService(quantity, serviceFrecuency, initialDate)
+        .pipe(
+          takeUntil(this.onDestroy$),
+          pluck('date'),
+          tap(() => this.loading = false)
+        )
+        .subscribe(date => this.form.patchValue({ FinalDate: moment(date) }));
+    }
   }
 
   onNoClick(data: AssignService): void {
@@ -61,23 +142,11 @@ export class EditAssignedServiceDialogComponent implements OnInit {
       formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' : '';
   }
 
-  /**
-	 * formInvalid
-	 */
-  public formInvalid(): boolean {
-    let invalid = false;
-
-    Object.keys(this.validator).forEach(key => {
-      invalid = this.validator[key].invalid || invalid;
-    });
-
-    return invalid;
-  }
-
   submitForm(assignedService: AssignService): void {
     this.loading = true;
 
-    this.assignService.createOrUpdate(this.currentPatient, assignedService, assignedService.AssignServiceId)
+    this.asgServService.createOrUpdate(this.patientId, assignedService, assignedService.AssignServiceId)
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe(res => {
         this.notifier.notify('success', 'Se aplicaron los cambios con éxito');
         this.onNoClick(res.json());

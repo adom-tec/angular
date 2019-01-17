@@ -21,8 +21,8 @@ export class AssignService {
   ServiceId: number;
   Quantity: number;
   ServiceFrecuencyId: number;
-  InitialDate: string;
-  FinalDate: string | object;
+  InitialDate: string | Moment;
+  FinalDate: string | Moment;
   ProfessionalId: number;
   CoPaymentAmount: number;
   CoPaymentFrecuencyId: number;

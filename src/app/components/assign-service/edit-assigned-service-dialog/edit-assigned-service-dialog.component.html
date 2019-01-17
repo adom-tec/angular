@@ -1,6 +1,4 @@
-<div class="spinner-container" *ngIf="loading">
-  <mat-spinner></mat-spinner>
-</div>
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 
 <h2 mat-dialog-title>Editar Servicio
   <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
@@ -10,21 +8,54 @@
 <p class="title-comment">Los campos con * son obligatorios</p>
 
 <mat-dialog-content>
-  <form novalidate autocomplete="off" id="form-edit-assigned-service">
+  <form novalidate autocomplete="off" id="form-edit-assigned-service" [formGroup]="form">
     <mat-form-field>
-      <mat-select placeholder="Frec. de Copago" [(ngModel)]="currentAssignedService.CoPaymentFrecuencyId" name="coPaymentFrecuency"
-        [formControl]="validator.coPaymentFrecuency" required>
-        <mat-option *ngFor="let coFrec of coPaymentFrecuencies" [value]="coFrec.CoPaymentFrecuencyId">
-          {{ coFrec.Name }}
+      <mat-select placeholder="Frec. del Servicio" formControlName="ServiceFrecuencyId" (change)="calculateFinalDate()">
+        <mat-option *ngFor="let serFrec of serviceFrecuencies$ | async" [value]="serFrec.ServiceFrecuencyId">
+          {{ serFrec.Name }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="validator.coPaymentFrecuency.invalid">{{ getErrorMessage(validator.coPaymentFrecuency) }}</mat-error>
+      <mat-error>{{ getErrorMessage(form.get('ServiceFrecuencyId')) }}</mat-error>
+    </mat-form-field>
+
+    <ng-container *ngIf="showServiceInitDate">
+      <mat-form-field>
+        <input matInput [matDatepicker]="pickerInitialDate" placeholder="Fecha de Inicio" formControlName="InitialDate"
+          (dateChange)="calculateFinalDate()">
+        <mat-datepicker-toggle matSuffix [for]="pickerInitialDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerInitialDate></mat-datepicker>
+        <mat-error>{{ getErrorMessage(form.get('InitialDate')) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field [hidden]="hideChangeReasons">
+        <mat-select placeholder="Razón de cambio" formControlName="ReasonChangeInitDateId">
+          <mat-option *ngFor="let item of changeReasons$ | async" [value]="item.Id">
+            {{ item.Name }}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{ getErrorMessage(form.get('ReasonChangeInitDateId')) }}</mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="pickerEndDate" placeholder="Fecha de Finalización" formControlName="FinalDate">
+      <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEndDate></mat-datepicker>
+      <mat-error>{{ getErrorMessage(form.get('FinalDate')) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput type="number" placeholder="Valor de copago" [(ngModel)]="currentAssignedService.CoPaymentAmount" name="coPaymentAmount"
-        [formControl]="validator.coPaymentAmount" min="0" required>
-      <mat-error *ngIf="validator.coPaymentAmount.invalid">{{ getErrorMessage(validator.coPaymentAmount) }}</mat-error>
+      <mat-select placeholder="Frec. de Copago" formControlName="CoPaymentFrecuencyId" required>
+        <mat-option *ngFor="let coFrec of copaymentFrecuencies$ | async" [value]="coFrec.CoPaymentFrecuencyId">
+          {{ coFrec.Name }}
+        </mat-option>
+      </mat-select>
+      <mat-error>{{ getErrorMessage(form.get('CoPaymentFrecuencyId')) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="number" placeholder="Valor de copago" formControlName="CoPaymentAmount" min="0" required>
+      <mat-error>{{ getErrorMessage(form.get('CoPaymentAmount')) }}</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
@@ -32,8 +63,9 @@
 <mat-dialog-actions>
   <div class="form-button">
     <button mat-button mat-dialog-close>SALIR</button>
+
     <button mat-raised-button class="button-green" style="margin-bottom: 15px;" (click)="submitForm(currentAssignedService)"
-      [disabled]="formInvalid()">MODIFICAR
+      [disabled]="form.invalid">MODIFICAR
       <mat-icon style="margin-left: 10px;">save</mat-icon>
     </button>
   </div>
