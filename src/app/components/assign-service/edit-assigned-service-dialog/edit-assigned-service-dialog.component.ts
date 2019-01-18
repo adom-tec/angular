@@ -53,13 +53,20 @@ export class EditAssignedServiceDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      ServiceFrecuencyId: [{ value: this.currentAssignedService.ServiceFrecuencyId, disabled: true }],
-      InitialDate: [this.currentAssignedService.InitialDate],
-      FinalDate: [{ value: this.currentAssignedService.FinalDate, disabled: true }],
+      ServiceFrecuencyId: [{ value: this.currentAssignedService.ServiceFrecuencyId, disabled: true }, [Validators.required]],
+      FinalDate: [{ value: this.currentAssignedService.FinalDate, disabled: true }, [Validators.required]],
       CoPaymentFrecuencyId: [{ value: this.currentAssignedService.CoPaymentFrecuencyId, disabled: true }, [Validators.required]],
       CoPaymentAmount: [this.currentAssignedService.CoPaymentAmount, [Validators.required, Validators.min(0)]],
+      //visibles solo si el servicio no esta iniciado
+      InitialDate: [this.currentAssignedService.InitialDate],
       ReasonChangeInitDateId: [{ value: null, disabled: true }]
     });
+
+    //si la vista no esta iniciada se establece como requerido la fecha de inicio para poder editar
+    if (this.showServiceInitDate) {
+      this.form.get('InitialDate').setValidators(Validators.required);
+      this.form.get('InitialDate').updateValueAndValidity();
+    }
 
     this.changeReasons$ = this.http.get(`${environment.apiUrl}/api/reasonchangeinitdate`)
       .pipe(
@@ -89,6 +96,15 @@ export class EditAssignedServiceDialogComponent implements OnInit {
       .subscribe(date => {
         let diff = moment(this.currentAssignedService.InitialDate).diff(date);
         this.hideChangeReasons = diff ? false : true;
+
+        //si se modifica la fecha de inicio se establece como requerido ReasonChangeInitDateId para poder editar
+        if (this.hideChangeReasons) {
+          this.form.get('ReasonChangeInitDateId').clearValidators();
+        } else {
+          this.form.get('ReasonChangeInitDateId').setValidators(Validators.required);
+        }
+
+        this.form.get('ReasonChangeInitDateId').updateValueAndValidity();
       });
   }
 
@@ -101,8 +117,8 @@ export class EditAssignedServiceDialogComponent implements OnInit {
     return (err) => {
       let message = err.status >= 500
         ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema'
-        : err.error.message
-          ? err.error.message
+        : err.json().message
+          ? err.json().message
           : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente';
 
       if (err.status === 401) { return; }
@@ -142,7 +158,10 @@ export class EditAssignedServiceDialogComponent implements OnInit {
       formcontrol.hasError('min') ? 'El valor no puede ser menor a 1' : '';
   }
 
-  submitForm(assignedService: AssignService): void {
+  submitForm(): void {
+    let formData = this.form.getRawValue();
+    let assignedService = Object.assign(this.currentAssignedService, formData);
+
     this.loading = true;
 
     this.asgServService.createOrUpdate(this.patientId, assignedService, assignedService.AssignServiceId)

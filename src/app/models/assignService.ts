@@ -42,10 +42,11 @@ export class AssignService {
   OtherValuesReceived?: number;
   TotalCopaymentReceived?: number;
   copaymentReceived?: number;
-
-  //keys just to modal assign service
   InitDateAuthorizationNumber?: string | Moment;
   FinalDateAuthorizationNumber?: string | Moment;
+
+  //keys just to modal assign service
+  ReasonChangeInitDateId?: number;
 
   //relationships
   patient?: Patient;

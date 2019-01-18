@@ -1,33 +1,36 @@
 <div class="spinner-container" *ngIf="mainSpinner">
-    <mat-spinner></mat-spinner>
+  <mat-spinner></mat-spinner>
 </div>
 
 <h2 mat-dialog-title>Observaciones
-    <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
+  <button mat-icon-button mat-dialog-close style="float: right;" tabindex="-1">
     <mat-icon>close</mat-icon>
   </button>
 </h2>
 
 <mat-dialog-content>
-    <form novalidate autocomplete="off" id="form-observations" #formDirective="ngForm" (ngSubmit)="clearForm()" *ngIf="permissions.update">
-        <mat-form-field style="width: 80%;">
-            <textarea matInput placeholder="Observacion" rows="2" [(ngModel)]="obvs.Description" name="description" [formControl]="validator.description" required></textarea>
-            <mat-error *ngIf="validator.description.invalid">{{ getErrorMessage(validator.description) }}</mat-error>
-        </mat-form-field>
+  <form novalidate autocomplete="off" id="form-observations" #formDirective="ngForm" (ngSubmit)="clearForm()" *ngIf="permissions.update">
+    <mat-form-field style="width: 80%;">
+      <textarea matInput placeholder="Observacion" rows="2" [(ngModel)]="obvs.Description" name="description"
+        [formControl]="validator.description" required></textarea>
+      <mat-error *ngIf="validator.description.invalid">{{ getErrorMessage(validator.description) }}</mat-error>
+    </mat-form-field>
 
-        <button mat-raised-button class="button-purple" style="margin: 15px 0 15px 15px;" (click)="submitForm(obvs)" [disabled]="formInvalid()">CREAR
-          <mat-icon style="margin-left: 10px;">send</mat-icon>
+    <button mat-raised-button class="button-purple" style="margin: 15px 0 15px 15px;" (click)="submitForm(obvs)"
+      [disabled]="formInvalid()">CREAR
+      <mat-icon style="margin-left: 10px;">send</mat-icon>
+    </button>
+  </form>
+
+  <ul id="observations-list">
+    <li *ngFor="let obvs of observations" class="mat-elevation-z2">
+      <h4>Creada el: <strong>{{ obvs.RecordDate | date:'dd MMMM, yyyy hh:mm a' }}</strong> Por: <strong>{{
+          obvs.user.FirstName + ' ' + obvs.user.Surname }}</strong>
+        <button mat-icon-button color="warn" (click)="delete(obvs.AssignServiceObservationId)">
+          <mat-icon>delete</mat-icon>
         </button>
-    </form>
-
-    <ul id="observations-list">
-        <li *ngFor="let obvs of observations" class="mat-elevation-z2">
-            <h4>Creada el: <strong>{{ obvs.RecordDate | date:'dd MMMM, yyyy hh:mm a' }}</strong> Por: <strong>{{ obvs.user.FirstName }} {{ obvs.user.surname }}</strong>
-                <button mat-icon-button color="warn" (click)="delete(obvs.AssignServiceObservationId)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </h4>
-            <p>{{ obvs.Description }}</p>
-        </li>
-    </ul>
+      </h4>
+      <p>{{ obvs.Description }}</p>
+    </li>
+  </ul>
 </mat-dialog-content>
