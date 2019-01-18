@@ -11,25 +11,20 @@ import { SelectOption } from '../../../models/selectOption';
 import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-cancel-visits-dialog',
-  templateUrl: './cancel-visits-dialog.component.html',
-  styleUrls: ['./cancel-visits-dialog.component.css']
+  selector: 'app-suspend-visits-dialog',
+  templateUrl: './suspend-visits-dialog.component.html',
+  styleUrls: ['./suspend-visits-dialog.component.css']
 })
-export class CancelVisitsDialogComponent implements OnInit, OnDestroy {
-  public loading: boolean = false;
-  public visits: AssignServiceDetail[] = [];
-  public cancelReasons: SelectOption[];
-
-  //Validators
-  public validator = {
-    cancelReason: new FormControl('', [Validators.required])
-  };
+export class SuspendVisitsDialogComponent implements OnInit, OnDestroy {
+  loading: boolean = false;
+  visits: AssignServiceDetail[] = [];
+  reasons: SelectOption[];
 
   private onDestroy$ = new Subject<void>();
 
   constructor(
-    public dialogRef: MatDialogRef<CancelVisitsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<SuspendVisitsDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: any,
     private http: HttpService,
     private notifier: NotifierService
   ) {
@@ -39,11 +34,11 @@ export class CancelVisitsDialogComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loading = true;
 
-    this.http.get(`${environment.apiUrl}/api/cancelreasons`)
+    this.http.get(`${environment.apiUrl}/api/reasonsuspensionservice`)
       .map(res => res.json())
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(data => {
-        this.cancelReasons = data;
+        this.reasons = data.map(reason => new SelectOption(reason));
         this.loading = false;
       }, err => {
         this.loading = false;
@@ -64,33 +59,33 @@ export class CancelVisitsDialogComponent implements OnInit, OnDestroy {
     return formcontrol.hasError('required') ? 'El campo no puede estar vacío' : '';
   }
 
-  public formInvalid(): boolean {
+  formInvalid(): boolean {
     let invalid = false;
 
-    this.visits.forEach(question => {
-      invalid = !Object.keys(question).includes('cancelReasonId') || invalid;
+    this.visits.forEach(visit => {
+      invalid = !Object.keys(visit).includes('ReasonSuspensionId') || invalid;
     });
 
     return invalid;
   }
 
-  submitForm(visits: AssignServiceDetail[]): void {
+  submitForm(): void {
     this.loading = true;
 
     let data = {
-      reasons: visits.map(visit => {
+      reasons: this.visits.map(visit => {
         return {
-          CancelReasonId: visit.cancelReasonId,
+          ReasonSuspensionId: visit.ReasonSuspensionId,
           AssignServiceDetailId: visit.AssignServiceDetailId
         }
       })
     };
 
-    this.http.post(`${environment.apiUrl}/api/cancelreasons`, JSON.stringify(data))
+    this.http.post(`${environment.apiUrl}/api/reasonsuspensionservicedetail`, JSON.stringify(data))
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(() => {
-        this.notifier.notify('success', 'Se cancelaron las visitas con éxito');
-        this.onNoClick(visits);
+        this.notifier.notify('success', 'Se suspendieron las visitas con éxito');
+        this.onNoClick(this.visits);
       }, err => {
         this.loading = false;
         if (err.status === 401) { return; } this.notifier.notify('error', err.status >= 500 ? 'Ha ocurrido un error, por favor comuníquese con el administrador de sistema' : err.json().message ? err.json().message : 'No se pudo obtener la información, por favor recargue la página e intente nuevamente');

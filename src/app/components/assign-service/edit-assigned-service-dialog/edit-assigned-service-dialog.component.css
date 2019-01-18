@@ -14,3 +14,7 @@
     flex-flow: row wrap;
     justify-content: center;
 }
+
+.mat-dialog-content {
+  max-height: none;
+}

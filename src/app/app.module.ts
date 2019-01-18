@@ -1,16 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
-import { HttpModule, BaseRequestOptions } from '@angular/http';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import lcoaleESCO from '@angular/common/locales/es-CO';
-import { Routing } from './app.routing';
 import { AngularMaterialModule } from './angular-material.module';
 import { NotifierModule } from 'angular-notifier';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ChartsModule } from 'ng2-charts';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
+
+//modules
+import { AppRoutingModule } from './app-routing.module';
 
 //components
 import { AppComponent } from './app.component';
@@ -22,7 +24,7 @@ import { ChangePasswordComponent } from './components/security/change-password/c
 import { RoleActionResourceComponent } from './components/security/role-resources/role.action.resource.component';
 import { PatientComponent } from './components/patients/patients.components';
 import { EntityComponent } from './components/entity/entity.component';
-import { PlansRatesDialog } from './components/entity/plans-rates/plans-rates.component';
+import { PlansRatesDialogComponent } from './components/entity/plans-rates/plans-rates.component';
 import { CoordinatorsComponent } from './components/coordinators/coordinators.component';
 import { ProfessionalComponent } from './components/professionals/professionals.component';
 import { AssignServiceComponent } from './components/assign-service/assign-service.component';
@@ -43,7 +45,7 @@ import { CancelVisitsDialogComponent } from './components/assign-service/cancel-
 import { CopaymentComponent } from './components/copayment/copayment.component';
 import { CopaymentDialogComponent } from './components/copayment/copayment-dialog/copayment-dialog.component';
 import { CopaymentReportComponent } from './components/reports/copayment-report/copayment-report.component';
-import { GraphicReportComponent } from './components/graphic-report/graphic-report.component';
+import { GraphicReportComponent } from './components/reports/graphic-report/graphic-report.component';
 import { SpecialReportComponent } from './components/reports/special-report/special-report.component';
 import { PaymentReportComponent } from './components/reports/payment-report/payment-report.component';
 import { RipsComponent } from './components/rips/rips.component';
@@ -54,6 +56,7 @@ import { WorkSchedulesComponent } from './components/work-schedules/work-schedul
 //services
 import { AuthGuard } from './guards/auth.guard';
 import { AuthenticationService, HttpService, RoleService, UserService, PatientService, EntityService, PlansEntityService, PlanRatesService, CoordinatorService, ProfessionalService, AssignServiceService, ObservationService, AssignServiceSupplyService, SupplyService, ServicesService, ProfessionalAssignedServicesService, AssignServiceDetailService, WorkSchedulesService } from './services/index';
+import { SuspendVisitsDialogComponent } from './components/assign-service/suspend-visits-dialog/suspend-visits-dialog.component';
 
 registerLocaleData(lcoaleESCO)
 
@@ -62,7 +65,7 @@ registerLocaleData(lcoaleESCO)
     BrowserModule,
     HttpModule,
     FormsModule,
-    Routing,
+    AppRoutingModule,
     ChartsModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
@@ -109,7 +112,7 @@ registerLocaleData(lcoaleESCO)
     RipsComponent,
     WorkSchedulesComponent,
     //dialogs
-    PlansRatesDialog,
+    PlansRatesDialogComponent,
     AssignServiceDialogComponent,
     PatientDialogComponent,
     ObservationsDialogComponent,
@@ -117,10 +120,11 @@ registerLocaleData(lcoaleESCO)
     EditAssignedServiceDialogComponent,
     QuialityTestDialogComponent,
     CancelVisitsDialogComponent,
-    CopaymentDialogComponent
-],
+    CopaymentDialogComponent,
+    SuspendVisitsDialogComponent
+  ],
   entryComponents: [
-    PlansRatesDialog,
+    PlansRatesDialogComponent,
     AssignServiceDialogComponent,
     PatientDialogComponent,
     ObservationsDialogComponent,
@@ -128,7 +132,8 @@ registerLocaleData(lcoaleESCO)
     EditAssignedServiceDialogComponent,
     QuialityTestDialogComponent,
     CancelVisitsDialogComponent,
-    CopaymentDialogComponent
+    CopaymentDialogComponent,
+    SuspendVisitsDialogComponent
   ],
   providers: [
     HttpService,

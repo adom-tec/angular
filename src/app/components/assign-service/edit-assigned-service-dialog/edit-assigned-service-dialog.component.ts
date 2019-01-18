@@ -57,6 +57,8 @@ export class EditAssignedServiceDialogComponent implements OnInit {
       FinalDate: [{ value: this.currentAssignedService.FinalDate, disabled: true }, [Validators.required]],
       CoPaymentFrecuencyId: [{ value: this.currentAssignedService.CoPaymentFrecuencyId, disabled: true }, [Validators.required]],
       CoPaymentAmount: [this.currentAssignedService.CoPaymentAmount, [Validators.required, Validators.min(0)]],
+      InitDateAuthorizationNumber: [this.currentAssignedService.InitDateAuthorizationNumber],
+      FinalDateAuthorizationNumber: [this.currentAssignedService.FinalDateAuthorizationNumber],
       //visibles solo si el servicio no esta iniciado
       InitialDate: [this.currentAssignedService.InitialDate],
       ReasonChangeInitDateId: [{ value: null, disabled: true }]

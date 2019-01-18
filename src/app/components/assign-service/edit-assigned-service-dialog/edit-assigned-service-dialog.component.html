@@ -10,7 +10,8 @@
 <mat-dialog-content>
   <form novalidate autocomplete="off" id="form-edit-assigned-service" [formGroup]="form">
     <mat-form-field>
-      <mat-select placeholder="Frec. del Servicio" formControlName="ServiceFrecuencyId" (change)="calculateFinalDate()">
+      <mat-select placeholder="Frec. del Servicio" formControlName="ServiceFrecuencyId" (change)="calculateFinalDate()"
+        required>
         <mat-option *ngFor="let serFrec of serviceFrecuencies$ | async" [value]="serFrec.ServiceFrecuencyId">
           {{ serFrec.Name }}
         </mat-option>
@@ -38,7 +39,8 @@
     </ng-container>
 
     <mat-form-field>
-      <input matInput [matDatepicker]="pickerEndDate" placeholder="Fecha de Finalización" formControlName="FinalDate">
+      <input matInput [matDatepicker]="pickerEndDate" placeholder="Fecha de Finalización" formControlName="FinalDate"
+        required>
       <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
       <mat-datepicker #pickerEndDate></mat-datepicker>
       <mat-error>{{ getErrorMessage(form.get('FinalDate')) }}</mat-error>
@@ -56,6 +58,18 @@
     <mat-form-field>
       <input matInput type="number" placeholder="Valor de copago" formControlName="CoPaymentAmount" min="0" required>
       <mat-error>{{ getErrorMessage(form.get('CoPaymentAmount')) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="validFrom" placeholder="Vigente desde" name="valid-from" formControlName="InitDateAuthorizationNumber">
+      <mat-datepicker-toggle matSuffix [for]="validFrom"></mat-datepicker-toggle>
+      <mat-datepicker #validFrom></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="validTo" placeholder="Vigente hasta" name="valid-to" formControlName="FinalDateAuthorizationNumber">
+      <mat-datepicker-toggle matSuffix [for]="validTo"></mat-datepicker-toggle>
+      <mat-datepicker #validTo></mat-datepicker>
     </mat-form-field>
   </form>
 </mat-dialog-content>

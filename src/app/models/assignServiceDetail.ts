@@ -27,12 +27,14 @@ export class AssignServiceDetail {
   VerificationDate: string | object;
   Professional: string;
   detail_cancel_reason: any;
+  detail_suspension_reason: any;
   professional_rate_id: number;
   InitDateAuthorizationNumber: string | Moment;
   FinalDateAuthorizationNumber: string | Moment;
   //key front-end
   isSelected?: boolean;
   cancelReasonId?: number;
+  ReasonSuspensionId?: number;
   authorizationFC?: FormControl;
   //professional filter
   selectFilter?: string;

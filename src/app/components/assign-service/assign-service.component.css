@@ -57,6 +57,11 @@
     color: #FFF;
 }
 
+.chip-suspend {
+    background-color: #ffb544;
+    color: #FFF;
+}
+
 .mat-column-state {
     flex: 0 0 15%;
     display: flex;
@@ -121,15 +126,27 @@
     margin-right: 30px;
 }
 
-.alert-cancel-reason {
-    background-color: #cce9f9;
+.alert-visit-state {
     padding: 5px;
     border-radius: 5px;
     font-size: 12px;
     text-align: left;
 }
 
+.alert-cancel-reason {
+    background-color: #cce9f9;
+}
+
+.alert-suspend-reason {
+    background-color: #ffb544;
+}
+
 .table-container {
     overflow-x: scroll;
     max-height: 500px;
+}
+
+.btn-suspend {
+    background-color: #f3970e;
+    color: #FFF;
 }

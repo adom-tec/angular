@@ -2,30 +2,31 @@ import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 import { Observable } from 'rxjs/Observable';
 import { Subject, ReplaySubject } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 import * as moment from 'moment';
 
 import { AssignServiceService } from './../../services/assignService.service';
-import { AssignService } from './../../models/assignService';
 import { ProfessionalService } from './../../services/professional.service';
-import { environment } from './../../../environments/environment';
 import { HttpService } from './../../services/http-interceptor.service';
 import { AuthenticationService } from '../../services/authentication.service';
-import { SelectOption } from '../../models/selectOption';
 import { PatientService, AssignServiceSupplyService, AssignServiceDetailService } from '../../services';
-import { Patient } from '../../models/patient';
 import { AssignServiceDialogComponent } from './assign-service-dialog/assign-service-dialog.component';
 import { PatientDialogComponent } from './patient-dialog/patient-dialog.component';
 import { ObservationsDialogComponent } from './observations-dialog/observations-dialog.component';
-import { AssignServiceSupply, AssignServiceDetail } from '../../models';
 import { ServiceSupplyDialogComponent } from './service-supply-dialog/service-supply-dialog.component';
-import { NotifierService } from 'angular-notifier';
 import { EditAssignedServiceDialogComponent } from './edit-assigned-service-dialog/edit-assigned-service-dialog.component';
+import { SuspendVisitsDialogComponent } from './suspend-visits-dialog/suspend-visits-dialog.component';
 import { QuialityTestDialogComponent } from './quiality-test-dialog/quiality-test-dialog.component';
 import { CancelVisitsDialogComponent } from './cancel-visits-dialog/cancel-visits-dialog.component';
+import { AssignServiceSupply, AssignServiceDetail } from '../../models';
+import { AssignService } from './../../models/assignService';
+import { SelectOption } from '../../models/selectOption';
+import { Patient } from '../../models/patient';
 import { AssignServiceParams } from '../../models/assign-service-params';
+import { environment } from './../../../environments/environment';
 
 @Component({
   selector: 'app-assign-service',
@@ -116,7 +117,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
     this.route
       .queryParams
       .subscribe((params: AssignServiceParams) => {
-        this.routeParams = params;
+        this.routeParams = { ...params };
         this.getData();
       });
   }
@@ -368,7 +369,7 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
 
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
-        this.patientAssignServices = this.patientAssignServices.map(service => service.AssignServiceId === data.AssignServiceId ? data : service);
+        this.patientAssignServices = this.patientAssignServices.map(service => (+service.AssignServiceId) === (+data.AssignServiceId) ? data : service);
         this.currentAssignService = data;
       }
     });
@@ -411,13 +412,38 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
     });
   }
 
+  openDialogSuspendVisits(assignServiceDetail: AssignServiceDetail[]): void {
+    let dialogRef = this.dialog.open(SuspendVisitsDialogComponent, {
+      width: '700px',
+      height: '600px',
+      panelClass: 'myapp-position-relative-dialog',
+      data: {
+        visits: assignServiceDetail
+          .filter(visit => visit.isSelected)
+          .map(visit => Object.assign({}, visit))
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((visits: AssignServiceDetail[]) => {
+      if (visits) {
+        visits = visits.map(visit => {
+          visit.StateId = 4;
+          return visit;
+        });
+        this.saveVisits(visits);
+      }
+    });
+  }
+
   showDetailAssignService(row: any) {
     this.currentAssignService = this.patientAssignServices.find(service => service.AssignServiceId === row.assignServiceId);
 
-    if (this.routeParams.assignServiceId) {
-      let serviceDate = moment(this.currentAssignService.InitialDate).format('DD/MM/YYYY');
-      this.filterAssignServices = serviceDate;
-      this.applyFilter(serviceDate, 'service');
+    if (this.currentAssignService.AssignServiceId == this.routeParams.assignServiceId) {
+      this.filterAssignServices = this.routeParams.assignServiceId.toString();
+      this.applyFilter(this.routeParams.assignServiceId.toString(), 'service');
+    } else {
+      this.routeParams.assignServiceId = 0;
+      this.applyFilter(' ', 'service');
     }
 
     this.getServiceSupplies(row.assignServiceId);
@@ -495,7 +521,13 @@ export class AssignServiceComponent implements OnInit, OnDestroy, AfterViewInit 
   filterStates(assignServiceDetailId: number): SelectOption[] {
     let row = this.assignServiceDetailCopy.find(visit => visit.AssignServiceDetailId === assignServiceDetailId);
 
-    return this.states.filter(state => row.StateId === 3 ? state : state.Id !== 3);
+    return this.states.filter(state => {
+      return row.StateId === 3
+        ? state.Id !== 4
+        : row.StateId === 4
+          ? state.Id !== 3
+          : [1, 2].includes(state.Id);
+    });
   }
 
   saveVisits(assignServiceDetail: AssignServiceDetail[]): void {

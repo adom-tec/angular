@@ -10,11 +10,11 @@ import 'rxjs/add/observable/forkJoin';
 import * as moment from 'moment';
 import * as FileSaver from 'file-saver';
 
-import { AssignService } from './../../models/assignService';
-import { HttpService, AuthenticationService } from '../../services';
-import { environment } from '../../../environments/environment';
-import { ServiceChartStatus } from './../../models/serviceChartStatus';
-import { PatientReportData } from '../../models/patientReportData';
+import { AssignService } from './../../../models/assignService';
+import { HttpService, AuthenticationService } from '../../../services';
+import { environment } from '../../../../environments/environment';
+import { ServiceChartStatus } from './../../../models/serviceChartStatus';
+import { PatientReportData } from '../../../models/patientReportData';
 
 @Component({
   selector: 'app-graphic-report',
@@ -25,6 +25,10 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
   irregularServiceColumns: string[] = [];
   irregularServices = new MatTableDataSource([]);
   filterIrregularServices: string;
+
+  suspendServiceColumns: string[] = [];
+  suspendServices = new MatTableDataSource([]);
+  filterSuspendServices: string;
 
   withoutProfessionalColumns: string[] = [];
   withoutProfessional = new MatTableDataSource([]);
@@ -58,6 +62,8 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
 
   @ViewChild('irregularServPager') irregularServPager: MatPaginator;
   @ViewChild('irregularServTable') irregularServTable: MatSort;
+  @ViewChild('suspendServPager') suspendServPager: MatPaginator;
+  @ViewChild('suspendServTable') suspendServTable: MatSort;
   @ViewChild('noProfessionalPager') noProfessionalPager: MatPaginator;
   @ViewChild('noProfessionalTable') noProfessionalTable: MatSort;
   @ViewChild('copaymentPager') copaymentPager: MatPaginator;
@@ -78,9 +84,10 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
     Observable.forkJoin(
       this.http.get(`${environment.apiUrl}/api/getchartdata/2`),//horas de enfermeria
       this.http.get(`${environment.apiUrl}/api/getchartdata/3`), //informe de terapias
-      this.http.get(`${environment.apiUrl}/api/irregularservices`),
+      this.http.get(`${environment.apiUrl}/api/irregularservices`),//servicios irregulares
       this.http.get(`${environment.apiUrl}/api/professionals/-1/services`), //servicios sin profesional asignado
-      this.http.get(`${environment.apiUrl}/api/professionals/copayment`) //copagos sin entregar por profesional
+      this.http.get(`${environment.apiUrl}/api/professionals/copayment`), //copagos sin entregar por profesional
+      this.http.get(`${environment.apiUrl}/api/suspendedservices`) //servicios suspendidos
     )
       .pipe(takeUntil(this._onDestroy))
       .subscribe(res => {
@@ -97,6 +104,9 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
           }
         });
         this.irregularServiceColumns = this.irregularServices.data.length ? Object.keys(this.irregularServices.data[0]).filter(val => val !== 'PatientId') : [];
+
+        this.suspendServices.data = res[5].json();
+        this.suspendServiceColumns = this.suspendServices.data.length ? Object.keys(this.suspendServices.data[0]).filter(val => val !== 'PatientId') : [];
 
         this.withoutProfessional.data = res[3].json().map((assignService: AssignService) => {
           return {
@@ -126,6 +136,8 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit() {
     this.irregularServices.paginator = this.irregularServPager;
     this.irregularServices.sort = this.irregularServTable;
+    this.suspendServices.paginator = this.suspendServPager;
+    this.suspendServices.sort = this.suspendServTable;
     this.withoutProfessional.paginator = this.noProfessionalPager;
     this.withoutProfessional.sort = this.noProfessionalTable;
     this.copayments.paginator = this.copaymentPager;
@@ -145,6 +157,10 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
     switch (type) {
       case 'irregularServ':
         this.irregularServices.filter = filterValue;
+        break;
+
+      case 'suspendServ':
+        this.suspendServices.filter = filterValue;
         break;
 
       case 'noProfessional':

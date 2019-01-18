@@ -193,7 +193,7 @@
         <ng-container matColumnDef="state">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <span class="chip-default" [ngClass]="{'chip-primary': element.state === 'COMPLETADA', 'chip-warn': element.state === 'CANCELADA'}">{{
+            <span class="chip-default" [ngClass]="{'chip-primary': element.state === 'COMPLETADA', 'chip-warn': element.state === 'CANCELADA', 'chip-suspend': element.state === 'SUSPENDIDA'}">{{
               element.state }}</span>
           </mat-cell>
         </ng-container>
@@ -235,6 +235,14 @@
         <mat-list-item>
           <p mat-line>
             <strong>Nro. de Autorización:</strong> {{ currentAssignService.AuthorizationNumber }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Vigente desde:</strong> {{ currentAssignService.InitDateAuthorizationNumber | date:'dd/MM/yyyy' }}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <p mat-line>
+            <strong>Vigente Hasta:</strong> {{ currentAssignService.FinalDateAuthorizationNumber | date:'dd/MM/yyyy' }}</p>
         </mat-list-item>
         <mat-list-item>
           <p mat-line>
@@ -283,6 +291,9 @@
         [disabled]="notVisitsSelected">CANCELAR VISITAS
         <mat-icon style="margin-left: 10px;">cancel</mat-icon>
       </button>
+      <button style="margin-left: 20px;" class="btn-suspend" mat-raised-button (click)="openDialogSuspendVisits(assignServiceDetail)"
+        [disabled]="notVisitsSelected">SUSPENDER VISITAS
+      </button>
       <button style="margin-left: 20px;" mat-raised-button (click)="openDialogQualitytest()" *ngIf="showQualityTest">CALIFICAR
         SERVICIO
         <mat-icon style="margin-left: 10px;">done_outline</mat-icon>
@@ -297,8 +308,6 @@
             <th>Visita</th>
             <th>Fecha</th>
             <th>Nro. de Autorización</th>
-            <th>Vig. Desde</th>
-            <th>Vig. Hasta</th>
             <th>Profesional</th>
             <th>Estado</th>
             <th>Comentarios</th>
@@ -348,34 +357,6 @@
               </ng-template>
             </td>
             <td>
-              <div *ngIf="permissions.update && visit.isSelected; else onlyShowValidFrom">
-                <mat-form-field>
-                  <input matInput [matDatepicker]="validFrom" placeholder="Vigente desde" [name]="'valid-from-' + visit.AssignServiceDetailId"
-                    [(ngModel)]="visit.InitDateAuthorizationNumber">
-                  <mat-datepicker-toggle matSuffix [for]="validFrom"></mat-datepicker-toggle>
-                  <mat-datepicker #validFrom></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <ng-template #onlyShowValidFrom>
-                {{ visit.InitDateAuthorizationNumber ? visit.InitDateAuthorizationNumber.format('DD/MM/YYYY') : 'No
-                registrado' }}
-              </ng-template>
-            </td>
-            <td>
-              <div *ngIf="permissions.update && visit.isSelected; else onlyShowValidTo">
-                <mat-form-field>
-                  <input matInput [matDatepicker]="validTo" placeholder="Vigente hasta" [name]="'valid-to-' + visit.AssignServiceDetailId"
-                    [(ngModel)]="visit.FinalDateAuthorizationNumber">
-                  <mat-datepicker-toggle matSuffix [for]="validTo"></mat-datepicker-toggle>
-                  <mat-datepicker #validTo></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <ng-template #onlyShowValidTo>
-                {{ visit.FinalDateAuthorizationNumber ? visit.FinalDateAuthorizationNumber.format('DD/MM/YYYY') : 'No
-                registrado' }}
-              </ng-template>
-            </td>
-            <td>
               <div *ngIf="permissions.update && visit.isSelected; then professional else onlyShowProfessional">here is
                 ignored</div>
               <ng-template #professional>
@@ -416,8 +397,14 @@
               <ng-template #onlyShowState>
                 <p style="margin: 5px 0;">{{ visit.state.Name }}</p>
               </ng-template>
-              <div class="alert-cancel-reason" *ngIf="visit.StateId === 3">
+              <div class="alert-visit-state alert-cancel-reason" *ngIf="visit.StateId === 3">
                 <strong>Motivo: </strong>{{ visit.detail_cancel_reason ? visit.detail_cancel_reason.cancel_reason.name
+                : 'No Registrado'
+                }}
+              </div>
+              <div class="alert-visit-state alert-suspend-reason" *ngIf="visit.StateId === 4">
+                <strong>Motivo: </strong>{{ visit.detail_suspension_reason ?
+                visit.detail_suspension_reason.suspension_reason.name
                 : 'No Registrado'
                 }}
               </div>

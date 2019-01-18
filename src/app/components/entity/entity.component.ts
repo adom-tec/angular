@@ -7,7 +7,7 @@ import 'rxjs/add/observable/forkJoin';
 import { HttpService } from './../../services/http-interceptor.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Entity } from '../../models';
-import { PlansRatesDialog } from './plans-rates/plans-rates.component';
+import { PlansRatesDialogComponent } from './plans-rates/plans-rates.component';
 import { NotifierService } from 'angular-notifier';
 
 @Component({
@@ -89,7 +89,7 @@ export class EntityComponent implements OnInit {
 	}
 
 	openDialog(id: number, name: string): void {
-		let dialogRef = this.dialog.open(PlansRatesDialog, {
+		let dialogRef = this.dialog.open(PlansRatesDialogComponent, {
 			width: '900px',
 			height: '600px',
 			panelClass: 'myapp-position-relative-dialog',
