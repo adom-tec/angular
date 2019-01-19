@@ -9,7 +9,7 @@
 
   <mat-card-content *ngIf="showChart">
     <canvas baseChart [datasets]="barChartNursingData" [labels]="barChartNursingLabels" [options]="barChartOptions"
-      [legend]="barChartLegend" [chartType]="barChartType"></canvas>
+      [legend]="barChartLegend" [chartType]="barChartType" [colors]="colors"></canvas>
   </mat-card-content>
 </mat-card>
 
@@ -20,7 +20,7 @@
 
   <mat-card-content *ngIf="showChart">
     <canvas baseChart [datasets]="barChartTherapyData" [labels]="barChartTherapyLabels" [options]="barChartOptions"
-      [legend]="barChartLegend" [chartType]="barChartType"></canvas>
+      [legend]="barChartLegend" [chartType]="barChartType" [colors]="colors"></canvas>
   </mat-card-content>
 </mat-card>
 

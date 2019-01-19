@@ -57,6 +57,24 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
       }]
     }
   };
+  colors: Array<any> = [
+    {
+      backgroundColor: '#e0e0e0',
+      pointBackgroundColor: '#e0e0e0'
+    },
+    {
+      backgroundColor: '#03bd4a',
+      pointBackgroundColor: '#03bd4a'
+    },
+    {
+      backgroundColor: '#fa4b4b',
+      pointBackgroundColor: '#fa4b4b'
+    },
+    {
+      backgroundColor: '#ffb544',
+      pointBackgroundColor: '#ffb544'
+    }
+  ];
   barChartType: string = 'bar';
   barChartLegend: boolean = true;
 
@@ -182,23 +200,26 @@ export class GraphicReportComponent implements OnInit, AfterViewInit, OnDestroy 
 
     //ordena el array por mes y status
     nursing = nursing.sort((a, b) => {
-      return (+a.Month) > (+b.Month) ? 1 : (+a.Month) < (+b.Month) ? -1 : (+a.Status) > (+b.Status) ? -1 : (+a.Status) < (+b.Status) ? 1 : 0;
+      return (+a.Month) > (+b.Month) ? 1 : (+a.Month) < (+b.Month) ? -1 : (+a.Status) > (+b.Status) ? 1 : (+a.Status) < (+b.Status) ? -1 : 0;
     });
 
     //devuelve un array con los status existentes
-    nursing.map(obj => (+obj.Status)).forEach(status => {
-      if (!nursingStatus.includes(status)) {
-        nursingStatus.push(status);
-      }
-    });
+    nursing
+      .map(obj => (+obj.Status))
+      .forEach(status => {
+        if (!nursingStatus.includes(status)) {
+          nursingStatus.push(status);
+        }
+      });
 
     //mapea los datos a la estructura del chart
-    nursingStatus.forEach(status => {
-      dataSource.push({
-        data: nursing.filter(obj => (+obj.Status) === status).map(obj => (+obj.Amount)),
-        label: status === 1 ? 'PROGRAMADAS' : status === 2 ? 'COMPLETADAS' : 'CANCELADAS'
+    nursingStatus
+      .forEach(status => {
+        dataSource.push({
+          data: nursing.filter(obj => (+obj.Status) === status).map(obj => (+obj.Amount)),
+          label: status === 1 ? 'PROGRAMADAS' : status === 2 ? 'COMPLETADAS' : status === 3 ? 'CANCELADAS' : 'SUSPENDIDAS'
+        });
       });
-    });
 
     //obtiene el nombre de los meses
     nursing
